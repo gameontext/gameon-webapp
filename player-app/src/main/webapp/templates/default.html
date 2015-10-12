@@ -1,0 +1,48 @@
+<div class="container" data-ng-switch="$state.current.name">
+  <div class="header">
+    <h1>Game On!
+    <span class="lead">A throwback adventure</span>
+    </h1>
+  </div>
+  <div data-ng-switch-default>
+    <div class="center">
+      <p>You are in a maze of little interconnected rooms, none alike.</p>
+      <p>And you aren't alone.</p>
+      <p><a class="button" ui-sref="default.login">Login</a></p>
+    </div>
+    <div class="section">
+      <h2>How to play</h2>
+      <p>Stuff</p>
+    </div>
+    <div class="section">
+      <h2>How it works</h2>
+      <p>Stuff</p>
+    </div>
+    <div class="section">
+      <h2>How to grow</h2>
+      <p>Stuff</p>
+    </div>
+  </div>
+  <div class="section" data-ng-switch-when="default.login">
+    <div class="row">
+      <div class="one-half column">
+        <button class="button u-full-width" data-ng-click="authenticate('twitter')">Sign in with Twitter</button>
+      </div>
+      <div class="one-half column">
+        <button class="button u-full-width" data-ng-click="authenticate('google')">Sign in with Google</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="one-half column">
+        <button class="button u-full-width" data-ng-click="authenticate('facebook')">Sign in with Facebook</button>
+      </div>
+      <div class="one-half column">
+        <button class="button u-full-width" data-ng-click="authenticate('linkedin')">Sign in with LinkedIn</button>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="footer section container">
+  <div title="peace, love, play"><i class="fa fa-hand-peace-o"></i> <i class="fa fa-heart-o"></i> <i class="fa fa-play"></i></div>
+    the <a href="http://wasdevnet">wasdev</a> team
+</footer>

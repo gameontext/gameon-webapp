@@ -1,0 +1,34 @@
+plugins {
+  id "com.moowork.grunt" version "0.11"
+}
+
+node {
+    version = '4.1.2'
+    download = false
+}
+
+// Install the bower components for front-end library management
+task bowerInstall(dependsOn: 'npmInstall', type: Exec)  {
+    commandLine "node_modules/bower/bin/bower", 'install'
+}
+
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+
+sourceCompatibility = 1.8
+
+dependencies {
+    providedCompile group:'javax.websocket', name:'javax.websocket-api', version:'1.1'
+}
+
+// Set the Eclipse facets to use 3.1 of the Dynamic Web Module which requires Java 1.7 by default.
+// Also include the JAX-RS facet.
+eclipse.wtp.facet {
+    // Clear default facets to work around bug where you get duplicates including wst 2.4
+    facets = []
+    facet name: 'jst.java', type: 'fixed'
+    facet name: 'jst.web', type: 'fixed'
+    facet name: 'jst.web', version: '3.1'
+    facet name: 'jst.java', version: '1.8'
+    facet name: 'jst.jaxrs', version: '2.0'
+}

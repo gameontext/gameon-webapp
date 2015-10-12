@@ -1,0 +1,24 @@
+.*.swp
+.gradle
+.classpath
+.project
+.settings
+.DS_Store
+/bin
+/build
+/.settings/
+/.project
+
+# dependencies
+/node_modules
+src/main/webapp/bower_components/
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/.tmp/
+/dist/
