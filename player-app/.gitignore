@@ -1,17 +1,20 @@
 .*.swp
-.gradle
-.classpath
-.project
-.settings
 .DS_Store
-/bin
-/build
+/.apt_generated/
 /.settings/
 /.project
+/.gradle
+/.classpath
+/.project
+/.settings
+/.factorypath
+/bin
+/build
+/src/main/webapp/META-INF/
 
 # dependencies
 /node_modules
-src/main/webapp/bower_components/
+/src/main/webapp/bower_components/
 
 # misc
 /.sass-cache
