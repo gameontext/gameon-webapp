@@ -42,11 +42,11 @@ Gradle integration should mean running e2e tests for JS and Java app in one go (
 
 ## TODO
 
-[ ] OAuth2
-[ ] Karma/Jasmine tests
-[ ] Make sure build gradle runs the whole show and builds the final war in the right order
+- [ ] OAuth2
+- [ ] Karma/Jasmine tests
+- [ ] Make sure build gradle runs the whole show and builds the final war in the right order
 
 
 
 Mebbe
-[ ] Maybe switch from grunt to gulp (see syntax behavior diffs)
+- [ ] Maybe switch from grunt to gulp (see syntax behavior diffs)
