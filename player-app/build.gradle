@@ -24,7 +24,7 @@ dependencies {
 }
 
 // Set the Eclipse facets to use 3.1 of the Dynamic Web Module which requires Java 1.7 by default.
-// Also include the JAX-RS facet.
+// Also include the JAX-RS and javascript
 eclipse.wtp.facet {
     // Clear default facets to work around bug where you get duplicates including wst 2.4
     facets = []
@@ -33,4 +33,20 @@ eclipse.wtp.facet {
     facet name: 'jst.web', version: '3.1'
     facet name: 'jst.java', version: '1.8'
     facet name: 'jst.jaxrs', version: '2.0'
+    facet name: 'wst.jsdt.web', type: 'fixed'
+    facet name: 'wst.jsdt.web', version: '1.0'
+}
+
+eclipse.project.file {
+    // Exclude node resources from validation
+    withXml { xmlProvider ->
+        Node project = xmlProvider.asNode()
+        Node filter = project.appendNode('filteredResources').appendNode('filter')
+        filter.appendNode('id', 2889034)
+        filter.appendNode('name', 'node_modules')
+        filter.appendNode('type', 22)
+        Node matcher = filter.appendNode('matcher')
+        matcher.appendNode('id', 'org.eclipse.ui.ide.multiFilter')
+        matcher.appendNode('arguments', '1.0-name-matches-false-false-*')
+    }
 }
