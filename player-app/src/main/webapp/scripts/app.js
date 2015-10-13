@@ -95,9 +95,9 @@ angular
            url: '/go',
            templateUrl: 'templates/play.go.html'
        })
-       .state('play.chat', {
-           url: '/chat',
-           templateUrl: 'templates/play.chat.html'
+       .state('play.pockets', {
+           url: '/pockets',
+           templateUrl: 'templates/play.pockets.html'
        })
        .state('play.trophies', {
            url: '/trophies',
