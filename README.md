@@ -19,6 +19,7 @@ client side build/test workflow.
 
 ### JavaScript client (in player-app): 
 
+* `gradle npmInstall` to install npm if you don't have it already
 * `gradle bowerInstall` will make sure you have bower and related project dependencies ready to go
   * This will include setting up development dependencies like grunt, see https://github.com/WASdev/gameon-player/blob/master/player-app/package.json
 * Use `grunt` for building the JavaScript client
