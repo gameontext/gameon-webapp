@@ -30,7 +30,7 @@ Full E2E build isn't there yet.. coming. ;)
 
 ### Java application: 
 
-Run live in WDR
+Run live in WDT
 Run `gradle build` to build the final server package for deployment.
 
 ## Testing
