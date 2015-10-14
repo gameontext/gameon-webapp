@@ -15,8 +15,24 @@
  *******************************************************************************/
 package net.wasdev.gameon.player;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Providers;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 /**
  * All the players, and searching for players.
@@ -24,10 +40,38 @@ import javax.ws.rs.Path;
  */
 @Path("/players")
 public class AllPlayersResource {
-
+	@Context Providers ps;
+	
     @GET
-    public String getAllPlayers() {
-        // return listing of all the players
-        return "YAY";
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Player> getAllPlayers() throws IOException{
+		DBCollection players = PlayerApplication.playerDB.getCollection("players");
+    	DBObject query = null;
+    	DBCursor cursor = players.find(query);
+    		
+    	List<Player> results = new ArrayList<Player>();
+    	for(DBObject player : cursor){ 
+        	Player p = Player.fromDBObject(ps, player);
+    		results.add(p);
+    	}
+    	
+    	return results;
     }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createPlayer(Player player) throws IOException{
+		DBCollection players = PlayerApplication.playerDB.getCollection("players");
+    	DBObject query = new BasicDBObject("name",player.getName());
+    	DBCursor cursor = players.find(query);
+    	
+    	if(cursor.hasNext()){
+    		return Response.status(409).entity("Error player : "+player.getName()+" already exists").build();
+    	}
+    	
+		DBObject playerToStore = player.toDBObject();    	
+    	players.insert(playerToStore);
+    	
+		return Response.status(201).build();
+	}
 }

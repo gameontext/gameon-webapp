@@ -21,6 +21,7 @@ dependencies {
     providedCompile group:'javax.websocket', name:'javax.websocket-api', version:'1.1'
     providedCompile group:'javax.ws.rs', name:'javax.ws.rs-api', version:'2.0'
     providedCompile group:'javax.json', name:'javax.json-api', version:'1.0'
+    compile 'org.mongodb:mongo-java-driver:2.12.3'
 }
 
 // Set the Eclipse facets to use 3.1 of the Dynamic Web Module which requires Java 1.7 by default.

@@ -2,15 +2,22 @@
 
     <!-- Enable features -->
     <featureManager>
-	<feature>jaxrs-2.0</feature>
 	<feature>websocket-1.1</feature>
 	<feature>localConnector-1.0</feature>
-    </featureManager>
+    <feature>jaxws-2.2</feature>
+	<feature>jaxrs-2.0</feature>
+	</featureManager>
+    
+    <library id="MongoLib">
+   		<file name="lib/mongo-java-driver-2.12.3.jar" />
+	</library>
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint host="*" httpPort="9081" httpsPort="9443" id="defaultHttpEndpoint"/>
 
     <applicationMonitor updateTrigger="mbean"/>
 
-    <webApplication id="player-app" location="player-app.war" contextRoot="/" />
+    <webApplication contextRoot="/" id="player-app" location="player-app.war">
+    	<classloader commonLibraryRef="MongoLib"/>
+    </webApplication>
 </server>
