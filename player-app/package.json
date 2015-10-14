@@ -38,5 +38,6 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "dependencies": {}
 }

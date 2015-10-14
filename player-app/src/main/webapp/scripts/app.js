@@ -10,10 +10,10 @@
  */
 angular
   .module('playerApp', [
-      'ngCookies',
       'ngResource',
       'ngSanitize',
-      'ui.router'
+      'ui.router',
+      'ngWebSocket'
   ])
   .run(
   [          '$rootScope', '$state', '$stateParams',
