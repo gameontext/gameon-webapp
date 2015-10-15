@@ -16,10 +16,8 @@
 package net.wasdev.gameon.player;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 import javax.annotation.Resource;
-import javax.naming.NamingException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -51,7 +49,7 @@ public class PlayerResource {
 		
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Player getPlayerInformation(@PathParam("username") String username) throws UnknownHostException,IOException,NamingException { 	
+    public Player getPlayerInformation(@PathParam("username") String username) throws IOException { 	
 		DBCollection players = playerDB.getCollection("players");
     	DBObject query = new BasicDBObject("name",username);
     	DBCursor cursor = players.find(query);
@@ -65,7 +63,7 @@ public class PlayerResource {
     }
     
     @PUT
-    public Response updatePlayer(@PathParam("username") String username, Player newPlayer) throws UnknownHostException, IOException,NamingException { 	
+    public Response updatePlayer(@PathParam("username") String username, Player newPlayer) throws IOException { 	
 		DBCollection players = playerDB.getCollection("players");
     	DBObject query = new BasicDBObject("name",username);
     	DBCursor cursor = players.find(query);
@@ -81,7 +79,7 @@ public class PlayerResource {
     }
     
     @DELETE
-    public Response removePlayer(@PathParam("username") String username) throws UnknownHostException,NamingException { 	
+    public Response removePlayer(@PathParam("username") String username) { 	
 		DBCollection players = playerDB.getCollection("players");
     	DBObject query = new BasicDBObject("name",username);
     	DBCursor cursor = players.find(query);

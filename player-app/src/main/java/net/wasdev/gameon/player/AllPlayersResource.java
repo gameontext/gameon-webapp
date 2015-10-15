@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -50,7 +49,7 @@ public class AllPlayersResource {
 	
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Player> getAllPlayers() throws IOException, NamingException{   	
+    public List<Player> getAllPlayers() throws IOException{   	
 		DBCollection players = playerDB.getCollection("players");
     	DBObject query = null;
     	DBCursor cursor = players.find(query);
@@ -66,7 +65,7 @@ public class AllPlayersResource {
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPlayer(Player player) throws IOException, NamingException{
+    public Response createPlayer(Player player) throws IOException{
 		DBCollection players = playerDB.getCollection("players");
     	DBObject query = new BasicDBObject("name",player.getName());
     	DBCursor cursor = players.find(query);
