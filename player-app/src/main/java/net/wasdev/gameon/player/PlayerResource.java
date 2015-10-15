@@ -18,6 +18,8 @@ package net.wasdev.gameon.player;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import javax.annotation.Resource;
+import javax.naming.NamingException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -30,6 +32,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Providers;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -39,14 +42,17 @@ import com.mongodb.DBObject;
  * in their pockets.
  *
  */
-@Path("/players/{username}")
+@Path("/{username}")
 public class PlayerResource {
 	@Context Providers ps;
 	
+	@Resource(name = "mongo/playerDB")
+	protected DB playerDB;
+		
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Player getPlayerInformation(@PathParam("username") String username) throws UnknownHostException,IOException { 	
-		DBCollection players = PlayerApplication.playerDB.getCollection("players");
+    public Player getPlayerInformation(@PathParam("username") String username) throws UnknownHostException,IOException,NamingException { 	
+		DBCollection players = playerDB.getCollection("players");
     	DBObject query = new BasicDBObject("name",username);
     	DBCursor cursor = players.find(query);
     	if(!cursor.hasNext()){
@@ -59,8 +65,8 @@ public class PlayerResource {
     }
     
     @PUT
-    public Response updatePlayer(@PathParam("username") String username, Player newPlayer) throws UnknownHostException, IOException { 	
-		DBCollection players = PlayerApplication.playerDB.getCollection("players");
+    public Response updatePlayer(@PathParam("username") String username, Player newPlayer) throws UnknownHostException, IOException,NamingException { 	
+		DBCollection players = playerDB.getCollection("players");
     	DBObject query = new BasicDBObject("name",username);
     	DBCursor cursor = players.find(query);
     	if(!cursor.hasNext()){
@@ -75,8 +81,8 @@ public class PlayerResource {
     }
     
     @DELETE
-    public Response removePlayer(@PathParam("username") String username) throws UnknownHostException { 	
-		DBCollection players = PlayerApplication.playerDB.getCollection("players");
+    public Response removePlayer(@PathParam("username") String username) throws UnknownHostException,NamingException { 	
+		DBCollection players = playerDB.getCollection("players");
     	DBObject query = new BasicDBObject("name",username);
     	DBCursor cursor = players.find(query);
     	if(!cursor.hasNext()){

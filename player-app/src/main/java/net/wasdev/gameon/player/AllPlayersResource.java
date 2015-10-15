@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -30,6 +32,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Providers;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -38,14 +41,17 @@ import com.mongodb.DBObject;
  * All the players, and searching for players.
  *
  */
-@Path("/players")
+@Path("/")
 public class AllPlayersResource {
 	@Context Providers ps;
 	
+	@Resource(name = "mongo/playerDB")
+	protected DB playerDB;
+	
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Player> getAllPlayers() throws IOException{
-		DBCollection players = PlayerApplication.playerDB.getCollection("players");
+    public List<Player> getAllPlayers() throws IOException, NamingException{   	
+		DBCollection players = playerDB.getCollection("players");
     	DBObject query = null;
     	DBCursor cursor = players.find(query);
     		
@@ -60,8 +66,8 @@ public class AllPlayersResource {
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPlayer(Player player) throws IOException{
-		DBCollection players = PlayerApplication.playerDB.getCollection("players");
+    public Response createPlayer(Player player) throws IOException, NamingException{
+		DBCollection players = playerDB.getCollection("players");
     	DBObject query = new BasicDBObject("name",player.getName());
     	DBCursor cursor = players.find(query);
     	
