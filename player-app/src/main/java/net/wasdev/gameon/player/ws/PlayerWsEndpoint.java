@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import javax.websocket.CloseReason;
+import javax.websocket.CloseReason.CloseCodes;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -35,6 +36,8 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint(value = "/ws")
 public class PlayerWsEndpoint {
 
+    static final int version = 1;
+
     /**
      * Called when a new connection has been established.
      *
@@ -44,6 +47,9 @@ public class PlayerWsEndpoint {
     @OnOpen
     public void onOpen(Session session, EndpointConfig ec) {
         Log.log(Level.FINE, this, "I'm open!");
+
+        // Send acknowledgement, include server version
+        sendText(session, "ack," + version);
 
         //Guessing here..
         session.getUserProperties().put("userName", "player id!");
@@ -72,20 +78,19 @@ public class PlayerWsEndpoint {
     @OnMessage
     public void receiveMessage(String message, Session session) throws IOException {
         // Called when a message is received.
-        if ("stop".equals(message)) {
+        if ("ackuser".equals(message)) {
             Log.log(Level.FINE, this, "I was asked to stop, " + this);
             session.close();
         } else {
             Log.log(Level.FINE, this, "I got a message: " + message);
             // Send something back to the client for feedback
-            session.getBasicRemote().sendText("server received:  " + message);
+            sendText(session, "server received:  " + message);
         }
     }
 
     @OnError
     public void onError(Throwable t) {
-        // (lifecycle) Called if/when an error occurs and the connection is
-        // disrupted
+        // (lifecycle) Called if/when an error occurs and the connection is disrupted
         Log.log(Level.FINE, this, "oops: " + t);
     }
 
@@ -100,13 +105,32 @@ public class PlayerWsEndpoint {
         // Look, Ma! Broadcast!
         // Easy as pie to send the same data around to different sessions.
         for (Session s : session.getOpenSessions()) {
+            sendText(s, message);
+        }
+    }
+
+    void sendText(Session session, String payload) {
+        if (session.isOpen()) {
             try {
-                if (s.isOpen()) {
-                    s.getBasicRemote().sendText(message);
-                }
+                session.getBasicRemote().sendText(payload);
             } catch (IOException e) {
-                tryToClose(s);
+                tryToClose(session, new CloseReason(CloseCodes.UNEXPECTED_CONDITION, e.toString()));
             }
+        }
+    }
+
+
+    /**
+     * Try to close the WebSocket session and give a reason for
+     * doing so.
+     * @param s Session to close
+     * @param reason  {@link CloseReason} the WebSocket is closing.
+     */
+    private final void tryToClose(Session s, CloseReason reason) {
+        try {
+            s.close(reason);
+        } catch (IOException e) {
+            tryToClose(s);
         }
     }
 

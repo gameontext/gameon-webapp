@@ -83,6 +83,7 @@ angular
             abstract: true,
             url: '/play',
             templateUrl: 'templates/play.html',
+            controller: 'PlayCtrl as play',
             resolve: {
                 loginRequired: loginRequired
             }
