@@ -5,12 +5,9 @@ public class PlayerNotFoundException extends RuntimeException {
 
 	public PlayerNotFoundException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public PlayerNotFoundException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
-	
 }

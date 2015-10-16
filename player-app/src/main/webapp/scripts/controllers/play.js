@@ -8,10 +8,10 @@
  * Controller of the playerApp
  */
 angular.module('playerApp')
-  .controller('PlayCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+  .controller('PlayCtrl', 
+  [          '$scope','$log','playerService',
+    function ($scope,  $log,  playerService) {
+      $log.debug('Player service created with %o', playerService);
+      
+      $scope.playerService = playerService;
+  }]);

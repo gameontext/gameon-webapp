@@ -8,13 +8,7 @@
  *
  * Main module of the application.
  */
-angular
-  .module('playerApp', [
-      'ngResource',
-      'ngSanitize',
-      'ui.router',
-      'ngWebSocket'
-  ])
+angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'])
   .run(
   [          '$rootScope', '$state', '$stateParams',
     function ($rootScope,   $state,   $stateParams) {
@@ -26,37 +20,14 @@ angular
       $rootScope.$stateParams = $stateParams;
     }
   ])
+  .constant("API", {
+    "PROFILE_URL": "http://"+window.location.host+"/players/",
+    "WS_URL": "wss://"+window.location.host+"/ws/1/",
+  })
   .config(
-  [          '$stateProvider', '$urlRouterProvider',
-    function ($stateProvider,   $urlRouterProvider) {
+  [          '$stateProvider','$urlRouterProvider',
+    function ($stateProvider,  $urlRouterProvider) {
 
-      //////////////////////////
-      // OAuth Configurations (define functions the state provider needs to 
-      // check for auth state up front)
-      // e.g. https://github.com/sahat/satellizer/blob/master/examples/client/app.js 
-
-//    function skipIfLoggedIn($q, $auth) {
-      function skipIfLoggedIn($q) {
-        var deferred = $q.defer();
-        //if ($auth.isAuthenticated()) {
-        //  deferred.reject();
-        //} else {
-          deferred.resolve();
-        //}
-        return deferred.promise;
-      }
-
-//    function loginRequired($q, $location, $auth) {
-      function loginRequired($q) {
-        var deferred = $q.defer();
-        //if ($auth.isAuthenticated()) {
-          deferred.resolve();
-        //} else {
-        //  $location.path('/login'); // redirect
-        //}
-        return deferred.promise;
-      }
-      
       // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
       // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
       $urlRouterProvider
@@ -73,9 +44,11 @@ angular
         })
         .state('default.login', {
             url: '^/login',
-            resolve: {
-                skipIfLoggedIn: skipIfLoggedIn
+            onEnter: function($state,auth){
+              if(auth.isAuthenticated() ){
+                $state.go('play.room');
               }
+            }
         })
         .state('play', {
             // With abstract set to true, that means this state can not be explicitly activated.
@@ -83,10 +56,13 @@ angular
             abstract: true,
             url: '/play',
             templateUrl: 'templates/play.html',
-            resolve: {
-                loginRequired: loginRequired
+            controller: 'PlayCtrl as play',
+            onEnter: function($state,auth){
+              if(!auth.isAuthenticated() ){
+                  $state.go('default.login');
+              }
             }
-       })
+        })
        .state('play.room', {
            url: '',
            templateUrl: 'templates/play.room.html'

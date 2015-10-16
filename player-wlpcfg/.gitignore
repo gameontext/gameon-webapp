@@ -3,6 +3,8 @@
 .*.swp
 /servers/*/apps
 /servers/*/logs
+/servers/*/resources/security/key.jks
+/servers/*/resources/security/ltpa.keys
 /servers/*/workarea
 /servers/.pid
 /build/

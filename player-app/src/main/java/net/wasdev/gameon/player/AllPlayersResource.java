@@ -43,40 +43,41 @@ import com.mongodb.DBObject;
 @Path("/")
 public class AllPlayersResource {
 	@Context Providers ps;
-	
+
 	@Resource(name = "mongo/playerDB")
 	protected DB playerDB;
-	
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Player> getAllPlayers() throws IOException{   	
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Player> getAllPlayers() throws IOException{
+		// TODO: wrap this in a reactive / lazy stream
 		DBCollection players = playerDB.getCollection("players");
-    	DBObject query = null;
-    	DBCursor cursor = players.find(query);
-    		
-    	List<Player> results = new ArrayList<Player>();
-    	for(DBObject player : cursor){ 
-        	Player p = Player.fromDBObject(ps, player);
-    		results.add(p);
-    	}
-    	
-    	return results;
-    }
-    
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPlayer(Player player) throws IOException{
+		DBObject query = null;
+		DBCursor cursor = players.find(query);
+
+		List<Player> results = new ArrayList<Player>();
+		for(DBObject player : cursor){
+			Player p = Player.fromDBObject(ps, player);
+			results.add(p);
+		}
+
+		return results;
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response createPlayer(Player player) throws IOException{
 		DBCollection players = playerDB.getCollection("players");
-    	DBObject query = new BasicDBObject("name",player.getName());
-    	DBCursor cursor = players.find(query);
-    	
-    	if(cursor.hasNext()){
-    		return Response.status(409).entity("Error player : "+player.getName()+" already exists").build();
-    	}
-    	
-		DBObject playerToStore = player.toDBObject();    	
-    	players.insert(playerToStore);
-    	
+		DBObject query = new BasicDBObject("name",player.getName());
+		DBCursor cursor = players.find(query);
+
+		if(cursor.hasNext()){
+			return Response.status(409).entity("Error player : "+player.getName()+" already exists").build();
+		}
+
+		DBObject playerToStore = player.toDBObject();
+		players.insert(playerToStore);
+
 		return Response.status(201).build();
 	}
 }

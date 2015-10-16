@@ -1,29 +1,32 @@
 <server description="Game On! Player Service">
 
     <!-- Enable features -->
-    <featureManager>
-	<feature>websocket-1.1</feature>
-	<feature>localConnector-1.0</feature>
+  <featureManager>
+    <feature>websocket-1.1</feature>
+    <feature>localConnector-1.0</feature>
     <feature>jaxws-2.2</feature>
-	<feature>jaxrs-2.0</feature>
+    <feature>jaxrs-2.0</feature>
     <feature>mongodb-2.0</feature>
-	<feature>cdi-1.2</feature>
-    </featureManager>
-    
-    <library id="MongoLib">
-   		<file name="lib/mongo-java-driver-2.12.3.jar"/>
-	</library>
-	
-	<mongo id="mongo" libraryRef="MongoLib"/>
-	
-	<mongoDB databaseName="playerDB" jndiName="mongo/playerDB" mongoRef="mongo"/>
-
-    <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
-    <httpEndpoint host="*" httpPort="9081" httpsPort="9443" id="defaultHttpEndpoint"/>
-
-    <applicationMonitor updateTrigger="mbean"/>
-
-    <webApplication contextRoot="/" id="player-app" location="player-app.war" name="player-app">
-    <classloader commonLibraryRef="MongoLib"/>
-    </webApplication>
+    <feature>cdi-1.2</feature>
+    <feature>ssl-1.0</feature>
+  </featureManager>
+  
+  <keyStore id="defaultKeyStore" password="testOnlyKeystore" />
+  
+  <library id="MongoLib">
+    <file name="lib/mongo-java-driver-2.12.3.jar" />
+  </library>
+  
+  <mongo id="mongo" libraryRef="MongoLib" />
+  <mongoDB databaseName="playerDB" jndiName="mongo/playerDB" mongoRef="mongo" />
+  
+  <!-- To access this server from a remote client add a host attribute to 
+    the following element, e.g. host="*" -->
+  <httpEndpoint host="*" httpPort="9081" httpsPort="9443" id="defaultHttpEndpoint" />
+  
+  <applicationMonitor updateTrigger="mbean" />
+  
+  <webApplication contextRoot="/" id="player-app" location="player-app.war" name="player-app">
+    <classloader commonLibraryRef="MongoLib" />
+  </webApplication>
 </server>
