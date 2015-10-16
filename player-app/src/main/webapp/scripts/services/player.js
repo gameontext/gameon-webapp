@@ -19,15 +19,23 @@
  */
 angular.module('playerApp')
   .factory('playerService',
-  [          '$websocket','$log',
-    function ($websocket,  $log) {
+  [          '$websocket','$log','auth','API',
+    function ($websocket,  $log,  auth,  API) {
 
-      // Create websocket
-      var ws = $websocket('ws://localhost:9081/ws');
-      $log.debug('websocket %o', ws);
+      // Create a v1 websocket
+    $log.debug('websocket %o', API.WS_URL);
+      var ws = $websocket(API.WS_URL);
                  
       // Create a collection for holding data
       var roomEvents = [];
+
+      // On open, check in with the concierge
+      ws.onOpen(function() {
+        console.log('connection open');
+        ws.send('Hello World');
+        ws.send('again');
+        ws.send('and again');
+      });
 
       // On received message, push to the correct collection 
       ws.onMessage(function(event) {
@@ -56,14 +64,7 @@ angular.module('playerApp')
       ws.onClose(function(event) {
         console.log('connection closed', event);
       });
-
-      ws.onOpen(function() {
-        console.log('connection open');
-        ws.send('Hello World');
-        ws.send('again');
-        ws.send('and again');
-      });
-
+      
       var methods = {
           roomEvents: roomEvents,
           get: function() {

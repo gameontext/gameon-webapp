@@ -24,8 +24,8 @@ dependencies {
     compile 'org.mongodb:mongo-java-driver:2.12.3'
 }
 
-// Set the Eclipse facets to use 3.1 of the Dynamic Web Module which requires Java 1.7 by default.
-// Also include the JAX-RS and javascript
+// Set the Eclipse facets to use 3.1 of the Dynamic Web Module which requires Java 1.7 (at least)
+// Also include JAX-RS and javascript
 eclipse.wtp.facet {
     // Clear default facets to work around bug where you get duplicates including wst 2.4
     facets = []

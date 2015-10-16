@@ -14,5 +14,4 @@ angular.module('playerApp')
       $log.debug('Player service created with %o', playerService);
       
       $scope.playerService = playerService;
-      $scope.player = 'dummy;'
   }]);

@@ -9,15 +9,16 @@
  */
 angular.module('playerApp')
   .controller('DefaultCtrl', 
-  [            '$scope','$stateParams','$state','$log', 
-    function (  $scope,  $stateParams,  $state,  $log ) {
+  [            '$scope','$state','$log','auth', 
+    function (  $scope,  $state,  $log,  auth ) {
       $log.debug('Loading default controller %o', $state);
 
       $scope.authenticate = function(provider) {
-          $log.debug('Authenticate using %o', provider);
+          if ( auth.oauth_authenticate(provider) ) {
+            $state.go('play.room');
+          }
           
-          // TODO: Something here for real authentication
-          $state.go('play.room');
+          // TODO -- we need a sad state/page. :(
       };
       
     }
