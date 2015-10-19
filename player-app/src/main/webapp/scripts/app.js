@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','ngStorage'])
+angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'])
   .run(
   [          '$rootScope', '$state', '$stateParams',
     function ($rootScope,   $state,   $stateParams) {
@@ -25,11 +25,8 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "WS_URL": "wss://"+window.location.host+"/play/ws1/",
   })
   .config(
-  [          '$stateProvider','$urlRouterProvider','$localStorageProvider',
-    function ($stateProvider,  $urlRouterProvider,  $localStorageProvider) {
-
-      // Set the prefix for localstorage
-      $localStorageProvider.setKeyPrefix('gameontext');
+  [          '$stateProvider','$urlRouterProvider',
+    function ($stateProvider,  $urlRouterProvider) {
     
       // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
       // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
