@@ -30,7 +30,7 @@ public class PlayerSession {
 
 	private final String userName;
 	private final String mediatorId;
-	private String roomId = FirstRoom.FIRST_ROOM;
+	private String roomId = "fish"; // FirstRoom.FIRST_ROOM;
 	private int suspendCount = 0;
 
 	public PlayerSession(String userName) {
