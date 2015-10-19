@@ -19,22 +19,43 @@
  */
 angular.module('playerApp')
   .factory('playerService',
-  [          '$websocket','$log','auth','API',
-    function ($websocket,  $log,  auth,  API) {
+  [          '$websocket','$log','$http','auth','API',
+    function ($websocket,  $log,  $http,  auth,  API) {
+      var q, ws;
 
-      // Create a v1 websocket
-    $log.debug('websocket %o', API.WS_URL);
-      var ws = $websocket(API.WS_URL);
-                 
       // Create a collection for holding data
       var roomEvents = [];
+      
+      // TODO: need username to query... 
+      var playerURL = API.PROFILE_URL + 'wasdev'
+      var websocketURL = API.WS_URL + 'wasdev'
 
+      var parameters = {};
+      var playerSession = {};
+
+      // Create a v1 websocket
+      $log.debug('websocket %o', websocketURL);
+      ws = $websocket(websocketURL);
+      
+      // Fetch data about the user
+      $log.debug('fetch data from %o', playerURL);
+      q = $http({
+          method : 'GET',
+          url : playerURL,
+          cache : false,
+          params : parameters
+      }).then(function(response) {
+          $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
+
+      }, function(response) {
+        $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
+
+      });
+                 
       // On open, check in with the concierge
       ws.onOpen(function() {
         console.log('connection open');
-        ws.send('Hello World');
-        ws.send('again');
-        ws.send('and again');
+        ws.send('ready,' + angular.toJson(playerSession, 0));
       });
 
       // On received message, push to the correct collection 
@@ -65,12 +86,9 @@ angular.module('playerApp')
         console.log('connection closed', event);
       });
       
-      var methods = {
+      var sharedApi = {
           roomEvents: roomEvents,
-          get: function() {
-            dataStream.send(JSON.stringify({ action: 'get' }));
-          }
-        };
+      };
 
-      return methods;
+      return sharedApi;
   }]);

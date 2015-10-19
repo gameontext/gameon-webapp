@@ -6,6 +6,4 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("/players/*")
 public class PlayerApplication extends Application {
 
-	public PlayerApplication() {	
-	}
 }
