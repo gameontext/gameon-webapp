@@ -14,7 +14,12 @@ import com.mongodb.util.JSON;
 
 public class Player {
 	@Context
-	Providers ps;
+	private Providers ps;
+
+	private String name;
+	private String authBy;
+	private String location;
+	private String favoriteColor;
 
 	public Player(String name, String authBy, String location, String favoriteColor) {
 		this.name = name;
@@ -22,11 +27,6 @@ public class Player {
 		this.location = location;
 		this.favoriteColor = favoriteColor;
 	}
-
-	private String name;
-	private String authBy;
-	private String location;
-	private String favoriteColor;
 
 	public String getName() {
 		return name;

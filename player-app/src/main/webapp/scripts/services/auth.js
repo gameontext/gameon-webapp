@@ -22,6 +22,7 @@ angular.module('playerApp')
           $log.debug('Authenticate using %o', provider);
           // TODO: Something here for real authentication: 
           authenticate(provider);
+          return true;
         }
 
         function authenticate(identity) {
