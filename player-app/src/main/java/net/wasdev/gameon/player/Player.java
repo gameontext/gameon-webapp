@@ -21,6 +21,10 @@ public class Player {
 	private String location;
 	private String favoriteColor;
 
+	public Player() {
+		// required for Java POJO stuff.
+	}
+
 	public Player(String name, String authBy, String location, String favoriteColor) {
 		this.name = name;
 		this.authBy = authBy;

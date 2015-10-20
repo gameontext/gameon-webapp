@@ -37,7 +37,7 @@ public class PlayerSession {
 	private final String username;
 	private final String mediatorId;
 
-	private String roomId = FirstRoom.FIRST_ROOM;
+	private String roomId = Constants.FIRST_ROOM;
 	private Room currentRoom = null;
 	private int suspendCount = 0;
 
@@ -184,14 +184,16 @@ public class PlayerSession {
 		// We expect room,id,{...}
 		if ( routing.length > 2 ) {
 			switch(routing[0]) {
-				case "room" :
+				case Constants.ROOM :
 					if ( roomId.equals(routing[1]) ) {
 						currentRoom.sendToRoom(routing);
 					}
-				case "player":
+					break;
+				case Constants.PLAYER:
 					if ( username.equals(routing[1]) ) {
 						toClient.offer(String.join(",", routing));
 					}
+					break;
 				default :
 					// toss it.
 					break;
