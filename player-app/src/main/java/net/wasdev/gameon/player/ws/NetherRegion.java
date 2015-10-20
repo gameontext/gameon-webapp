@@ -28,5 +28,4 @@ public class NetherRegion extends Room {
 		super(roomId);
 		// TODO Auto-generated constructor stub
 	}
-
 }
