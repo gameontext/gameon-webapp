@@ -1,0 +1,9 @@
+<server>
+  <!-- Twitter Application info..  -->
+  <jndiEntry jndiName="twitterOAuthConsumerKey" value="PLACE YOUR TWITTER OAUTH CONSUMER KEY HERE"/>
+  <jndiEntry jndiName="twitterOAuthConsumerSecret" value="PLACE YOUR TWITTER OAUTH CONSUMER SECRET HERE"/>
+  
+  <!-- Facebook Application info..  -->
+  <jndiEntry jndiName="facebookAppID" value="PLACE YOUR FACEBOOK APP ID HERE"/>
+  <jndiEntry jndiName="facebookAppSecret" value="PLACE YOUR FACEBOOK APP SECRET HERE"/>
+</server>

@@ -20,7 +20,11 @@ public class Player {
 	private String authBy;
 	private String location;
 	private String favoriteColor;
-
+	
+	//default constructor, required for jax-rs to use when creating instances of pojo
+	public Player(){	
+	}
+	
 	public Player(String name, String authBy, String location, String favoriteColor) {
 		this.name = name;
 		this.authBy = authBy;
