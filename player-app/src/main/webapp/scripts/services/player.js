@@ -27,10 +27,13 @@ angular.module('playerApp')
       var roomEvents = [];
       
       // TODO: need username to query... 
-      var playerURL = API.PROFILE_URL + 'wasdev'
-      var websocketURL = API.WS_URL + 'wasdev'
+      var playerURL = API.PROFILE_URL + 'wasdev';
+      var websocketURL = API.WS_URL + 'wasdev';
 
       var parameters = {};
+      var username = 'anonymous';
+      
+      // Information about the player retrieved from the HTTP request
       var playerSession = {};
 
       // Create a v1 websocket
@@ -60,34 +63,60 @@ angular.module('playerApp')
 
       // On received message, push to the correct collection 
       ws.onMessage(function(event) {
-        $log.debug('message: ', event);
+        
+        var comma = event.data.indexOf(',');
+        var command = event.data.slice(0,comma);
+        var payload = event.data.slice(comma+1);
         var res;
-        try {
-          res = JSON.parse(event.data);
-        } catch(e) {
-          res = {'username': 'anonymous', 'message': event.data};
+        
+        if ( "ack" == command ) {
+          res = parseJson(payload);
+          playerSession.mediatorId = res.mediatorId;
+          playerSession.roomId = res.roomId;
+        } else {
+          comma = payload.indexOf(',');
+          payload = payload.slice(comma+1);
+          res = parseJson(payload);
+          
+          roomEvents.push({
+            username: res.username,
+            content: res.content,
+            timeStamp: event.timeStamp
+          });
         }
 
-        roomEvents.push({
-          username: res.username,
-          content: res.message,
-          timeStamp: event.timeStamp
-        });
       });
 
       // On error, report the error, and close the connection 
       // (try to reconnect)
       ws.onError(function(event) {
-        console.log('connection Error', event);
+        $log.debug('connection Error', event);
       });
 
       // On close, close gracefully
       ws.onClose(function(event) {
-        console.log('connection closed', event);
+        $log.debug('connection closed', event);
       });
       
+      var parseJson = function(message) {
+        var res;
+        try {
+          res = JSON.parse(message);
+        } catch(e) {
+          res = {'username': username, 'message': payload};
+        }
+        $log.debug('message: %o', res);
+        return res;
+      }
+      
+      var send = function(message) {
+        ws.send("room,"+playerSession.roomId+","+angular.toJson(message));
+      };
+      
       var sharedApi = {
-          roomEvents: roomEvents,
+        username: username,
+        roomEvents: roomEvents,
+        send: send
       };
 
       return sharedApi;

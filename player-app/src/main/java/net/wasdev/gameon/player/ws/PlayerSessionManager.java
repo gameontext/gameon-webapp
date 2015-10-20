@@ -19,7 +19,8 @@ import java.io.StringReader;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.enterprise.concurrent.ManagedScheduledExecutorService;
+import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.Json;
 import javax.json.stream.JsonParser;
@@ -38,9 +39,13 @@ public class PlayerSessionManager {
 
 	private final ConcurrentHashMap<String, PlayerSession> parkedSessions = new ConcurrentHashMap<String, PlayerSession>();
 
-	/** CDI injection of Java EE7 Managed executor service */
+	/** CDI injection of Java EE7 Managed scheduled executor service */
 	@Resource
-	protected ManagedExecutorService executor;
+	protected ManagedScheduledExecutorService executor;
+
+	@Resource
+	ManagedThreadFactory threadFactory;
+
 
 	/**
 	 * Set the PlayerSession into the websocket session user properties.
@@ -126,15 +131,17 @@ public class PlayerSessionManager {
 
 		if ( playerSession == null ) {
 			// We don't have a session we can resume, make a new one
-			playerSession = new PlayerSession(userName);
+			playerSession = new PlayerSession(userName, roomId);
 			lastmessage = 0;
 		}
 
 		// Send the ack back to the client with the (new or confirmed) mediator id
 		ConnectionUtils.sendText(clientSession, playerSession.ack());
 
-		// catch up on missed messages
-		playerSession.catchUp(lastmessage);
+		// catch up on (and continue to drain) messages headed to the client.
+		// when the connection is closed, this thread will clean up on its own
+		// as the Runnable exits.
+		threadFactory.newThread(playerSession.connect(lastmessage, clientSession)).start();
 
 		return playerSession;
 	}
@@ -146,6 +153,7 @@ public class PlayerSessionManager {
 	 */
 	public void suspendSession(PlayerSession session) {
 		if ( session != null ) {
+			session.disconnect();
 			parkedSessions.put(session.getMediatorId(), session);
 		}
 	}
