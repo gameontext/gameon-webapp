@@ -37,7 +37,7 @@ import javax.websocket.server.ServerEndpoint;
  * player's devices if connected to more than one.
  *
  */
-@ServerEndpoint("/ws1/{username}")
+@ServerEndpoint(value = "/ws1/{username}", configurator = EndpointConfigurator.class)
 public class PlayerEndpoint {
 
 	@Inject
@@ -51,7 +51,7 @@ public class PlayerEndpoint {
 	 */
 	@OnOpen
 	public void onOpen(@PathParam("username") String username, Session session, EndpointConfig ec) {
-		Log.log(Level.WARNING, session, "client {0} open", username);
+		Log.log(Level.FINER, session, "client open - {0}", username);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class PlayerEndpoint {
 	 */
 	@OnClose
 	public void onClose(@PathParam("username") String username, Session session, CloseReason reason) {
-		Log.log(Level.WARNING, session, "client {0} closed", username);
+		Log.log(Level.FINER, session, "client closed - {0}", username);
 
 		PlayerSession ps = playerSessionManager.getPlayerSession(session);
 		playerSessionManager.suspendSession(ps);
@@ -77,9 +77,9 @@ public class PlayerEndpoint {
 	 */
 	@OnMessage
 	public void onMessage(@PathParam("username") String username, String message, Session session) throws IOException {
-		Log.log(Level.WARNING, session, "received from client {0}: {1}", username, message);
+		Log.log(Level.FINER, session, "received from client {0}: {1}", username, message);
 
-		String[] routing = message.split(",");
+		String[] routing = ConnectionUtils.splitRouting(message);
 		switch(routing[0]) {
 			case "ready" : {
 				// create a new or resume an existing player session
@@ -90,10 +90,8 @@ public class PlayerEndpoint {
 				break;
 			}
 			default : {
-				ConnectionUtils.sendText(session, "received " + message);
-
 				PlayerSession ps = playerSessionManager.getPlayerSession(session);
-				ps.forward(routing);
+				ps.route(routing);
 				break;
 			}
 		}
@@ -102,9 +100,9 @@ public class PlayerEndpoint {
 
 	@OnError
 	public void onError(@PathParam("username") String username, Session session, Throwable t) {
-		Log.log(Level.WARNING, session, "oops for client "+username+" connection", t);
+		Log.log(Level.FINER, session, "oops for client "+username+" connection", t);
 
 		ConnectionUtils.tryToClose(session,
-				new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, t.toString()));
+				new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, t.getClass().getName()));
 	}
 }
