@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 
 /**
@@ -30,8 +31,6 @@ import javax.json.JsonReader;
  * and does a little about showing how the UI works.
  */
 public class FirstRoom extends Room {
-	public static final String FIRST_ROOM = "TheFirstRoom";
-
 	private final String username;
 	private PlayerSession playerSession;
 	private AtomicInteger counter = new AtomicInteger(0);
@@ -40,7 +39,7 @@ public class FirstRoom extends Room {
 	 * @param username
 	 */
 	public FirstRoom(String username) {
-		super(FIRST_ROOM);
+		super(Constants.FIRST_ROOM);
 		this.username = username;
 	}
 
@@ -57,28 +56,32 @@ public class FirstRoom extends Room {
 
 	@Override
 	public void sendToRoom(String[] routing) {
-		System.out.println("sendToRoom: " + routing[2]);
 		// unique to first room (in the player). Take the sent message, parse it lightly,
 		// send it back to the client.
 		JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));
 		JsonObject sourceMessage = jsonReader.readObject();
 
-		String output = "Echo " + sourceMessage.getString("content");
+		String content = sourceMessage.getString(Constants.CONTENT);
+		String contentToLower = content.toLowerCase();
 		String type = "chat";
 
+		JsonObjectBuilder builder = Json.createObjectBuilder()
+				.add(Constants.BOOKMARK, counter.incrementAndGet());
 
-		JsonObject outgoingMessage = Json.createObjectBuilder()
-				.add("messageId", counter.incrementAndGet())
-				.add("username", username)
-				.add("type", type)
-				.add("content", output)
-				.build();
+		if ( contentToLower.contains("look")) {
+			builder.add(Constants.TYPE, Constants.EVENT)
+			.add(Constants.CONTENT, "event " + content);
+		} else {
+			builder.add(Constants.USERNAME, username)
+			.add(Constants.CONTENT, "echo " + content)
+			.add(Constants.TYPE, Constants.CHAT);
+		}
 
-		playerSession.route(new String[] {"player", username, outgoingMessage.toString()});
+		playerSession.route(new String[] {"player", username, builder.build().toString()});
 	}
 
 	@Override
 	public String toString() {
-		return this.getClass().getName() + "[id=" + FIRST_ROOM + ", username=" + username + "]";
+		return this.getClass().getName() + "[id=" + Constants.FIRST_ROOM + ", username=" + username + "]";
 	}
 }

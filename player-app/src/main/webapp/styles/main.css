@@ -122,53 +122,32 @@ nav.bottom>div {
 nav.bottom>div>a {
   display: inline-block;
 }
-.door {
-  position: fixed;
-  box-sizing: border-box;
-  margin: 0;
-  padding: .2rem;
-  border: 1px solid silver;
-}
-.door.north {
-  top: 3rem;
-}
-.door.south {
-  position: fixed;
-  bottom: 4rem;
-}
-.door.east {
-  position: fixed;
-  right: 1rem;
-}
-.door.west {
-  left: 1rem;
-}
-.door.up {
-  left: 1rem;
-}
-.door.down {
-  left: 1rem;
-}
 .chat:before {
   font-family: "FontAwesome";
   content: "\f0e6 ";
 }
 .chat {
   border-top: 1px solid #eee;
+  margin-top: .2rem;
   margin-bottom: .5rem;
   color: #562F72
+}
+.chat .username {
+  display: inline-block;
+  padding-left: .5rem;
+}
+.chat .content {
+  display: block;
+  padding-left: 2rem;
+}
+.event {
+  border-top: 1px solid #eee;
+  margin-top: .2rem;
+  margin-bottom: .5rem;
 }
 .trophy .date,
 .chat .date {
   float: right;
-}
-.chat .player {
-  display: inline-block;
-  padding-left: .5rem;
-}
-.chat .message {
-  display: block;
-  padding-left: 2rem;
 }
 .chat:after, .trophy:after, nav.top:after, nav.bottom:after {
   content: "";
@@ -181,17 +160,4 @@ nav.bottom>div>a {
   .header {
     margin-top: 18rem;
   }
-}
-
-.example-grid .column, .example-grid .columns {
-  background: #EEE;
-  text-align: center;
-  border-radius: 4px;
-  font-size: 1rem;
-  text-transform: uppercase;
-  height: 30px;
-  line-height: 30px;
-  margin-bottom: .75rem;
-  font-weight: 600;
-  letter-spacing: .1rem;
 }

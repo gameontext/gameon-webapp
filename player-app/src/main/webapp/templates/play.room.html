@@ -1,15 +1,13 @@
 <div class="viewport" scroll-glue>
   <div class="container">
     <div>Room description / streaming content (actions: someone enters through a door, someone exits, someone throws a beach ball)</div>
-    <div class="chat"><div class="date">time</div><div class="player">@ebullientworks</div><div class="message">A great message</div></div>
+    <div class="chat"><div class="date">time</div><div class="username">@ebullientworks</div><div class="content">A great message</div></div>
     <div>@roger moves the chair.</div>
     <div>The dastardly wizard appears, cackling, and steals @roger's cookies.</div>
     <div>
-      <div ng-repeat="data in playerService.roomEvents track by $index">
-        <div class="time">{{data.timeStamp}}</div>
-        <div class="player" data-ng-if="data.player">{{ data.player }}</div>
-        <div class="message">{{data.body}}</div>
-        {{data}}
+      <div ng-repeat="data in playerService.roomEvents track by $index" data-ng-switch="data.type">
+        <div data-ng-switch-when="chat" class="chat"><div class="username">{{data.username}}</div><div class="content">{{data.content}}</div></div>
+        <div data-ng-switch-when="event" class="event"><div class="content">{{data.content}}</div></div>
       </div>
     </div>
     

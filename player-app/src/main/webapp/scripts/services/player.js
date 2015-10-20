@@ -31,6 +31,8 @@ angular.module('playerApp')
       var websocketURL = API.WS_URL + 'wasdev';
 
       var parameters = {};
+      
+      // username should come from the id
       var username = 'anonymous';
       
       // Information about the player retrieved from the HTTP request
@@ -50,9 +52,16 @@ angular.module('playerApp')
       }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
+          // roomId must go here (last saved room)
+          // successful response
+          // fill in playerSession & username
+          // OPEN WEBSOCKET HERE.
+          
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
+        // go to the sad room.. (Can't find the player information)
+        // or back to the login/registration screen? or.. 
       });
                  
       // On open, check in with the concierge
@@ -78,11 +87,27 @@ angular.module('playerApp')
           payload = payload.slice(comma+1);
           res = parseJson(payload);
           
-          roomEvents.push({
-            username: res.username,
-            content: res.content,
-            timeStamp: event.timeStamp
-          });
+          switch (res.type) {
+            case 'chat':
+              roomEvents.push({
+                type: res.type,
+                username: res.username,
+                content: res.content,
+                timeStamp: event.timeStamp
+              });
+              break;
+            case 'event':
+              roomEvents.push({
+                type: res.type,
+                content: res.content,
+                timeStamp: event.timeStamp
+              });
+              break;
+            case 'exit':
+              break;
+            case 'location':
+              break;
+          }
         }
 
       });
