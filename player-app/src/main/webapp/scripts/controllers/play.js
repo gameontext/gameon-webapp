@@ -14,4 +14,20 @@ angular.module('playerApp')
       $log.debug('Player service created with %o', playerService);
       
       $scope.playerService = playerService;
+      $scope.userInput = '';
+      
+      $scope.input = function(e) {
+        if (e.keyCode === 13) {
+          $scope.send();
+        }
+      };
+      
+      $scope.send = function() {
+        var input = $scope.userInput;
+        $scope.userInput = '';
+        if ( input ) {
+          var message = {'username': $scope.playerService.username, 'content': input};
+          playerService.send(message);
+        }
+      };
   }]);

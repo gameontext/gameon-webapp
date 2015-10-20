@@ -27,6 +27,8 @@ module.exports = function(config) {
       'src/main/webapp/bower_components/angular-sanitize/angular-sanitize.js',
       'src/main/webapp/bower_components/angular-ui-router/release/angular-ui-router.js',
       'src/main/webapp/bower_components/angular-websocket/angular-websocket.min.js',
+      'src/main/webapp/bower_components/ngstorage/ngStorage.js',
+      'src/main/webapp/bower_components/angular-scroll-glue/src/scrollglue.js',
       'src/main/webapp/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "src/main/webapp/scripts/**/*.js",
