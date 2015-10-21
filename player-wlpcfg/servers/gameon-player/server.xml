@@ -8,18 +8,17 @@
     <feature>mongodb-2.0</feature>
     <feature>cdi-1.2</feature>
     <feature>ssl-1.0</feature>
-  	<feature>jsonp-1.0</feature>
-  	<feature>jndi-1.0</feature>
-  	<feature>concurrent-1.0</feature>
-	</featureManager>
+    <feature>jsonp-1.0</feature>
+    <feature>jndi-1.0</feature>
+    <feature>concurrent-1.0</feature>
+  </featureManager>
   
   <keyStore id="defaultKeyStore" password="testOnlyKeystore"/>
   <keyStore id="defaultTrustStore" password="truststore" location="truststore.jks"/>
   
-  <sslDefault sslRef="DefaultSSLSettings" /> 	
-  <ssl id="DefaultSSLSettings" keyStoreRef="defaultKeyStore" trustStoreRef="defaultTrustStore" /> 
+  <sslDefault sslRef="DefaultSSLSettings" />
+  <ssl id="DefaultSSLSettings" keyStoreRef="defaultKeyStore" trustStoreRef="defaultTrustStore" />
 
-  
   <library id="MongoLib">
     <file name="lib/mongo-java-driver-2.12.3.jar"/>
   </library>
@@ -32,10 +31,6 @@
   <httpEndpoint host="*" httpPort="-1" httpsPort="9443" id="defaultHttpEndpoint"/>
   
   <applicationMonitor updateTrigger="mbean"/>
-
-  <!-- Include the SSO App secrets.. we don't keep these in here, as it'll make it
-       easier not to check in the development ones by accident -->
-  <include location="SSOAppInfo.xml"/>
   
   <!-- Signed JWT keystore info -->
   <jndiEntry jndiName="jwtKeyStore" value="${server.config.dir}/resources/security/key.jks"/>
