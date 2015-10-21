@@ -9,10 +9,16 @@
     <feature>cdi-1.2</feature>
     <feature>ssl-1.0</feature>
   	<feature>jsonp-1.0</feature>
-		<feature>concurrent-1.0</feature>
+  	<feature>jndi-1.0</feature>
+  	<feature>concurrent-1.0</feature>
 	</featureManager>
   
   <keyStore id="defaultKeyStore" password="testOnlyKeystore"/>
+  <keyStore id="defaultTrustStore" password="truststore" location="truststore.jks"/>
+  
+  <sslDefault sslRef="DefaultSSLSettings" /> 	
+  <ssl id="DefaultSSLSettings" keyStoreRef="defaultKeyStore" trustStoreRef="defaultTrustStore" /> 
+
   
   <library id="MongoLib">
     <file name="lib/mongo-java-driver-2.12.3.jar"/>
@@ -27,5 +33,17 @@
   
   <applicationMonitor updateTrigger="mbean"/>
 
-    <webApplication id="player-app" location="player-app.war" name="player-app" contextRoot="/play" />
+  <!-- Include the SSO App secrets.. we don't keep these in here, as it'll make it
+       easier not to check in the development ones by accident -->
+  <include location="SSOAppInfo.xml"/>
+  
+  <!-- Signed JWT keystore info -->
+  <jndiEntry jndiName="jwtKeyStore" value="${server.config.dir}/resources/security/key.jks"/>
+  <jndiEntry jndiName="jwtKeyStorePassword" value="testOnlyKeystore"/>
+  <jndiEntry jndiName="jwtKeyStoreAlias" value="default"/>
+
+  <webApplication id="player-app" location="player-app.war" name="player-app" contextRoot="/play">
+    <classloader commonLibraryRef="MongoLib"/>
+  </webApplication> 
+  
 </server>

@@ -28,6 +28,13 @@ dependencies {
     providedCompile 'javax.inject:javax.inject:1'
     providedCompile 'javax.enterprise.concurrent:javax.enterprise.concurrent-api:1.0'  
     providedCompile 'javax.enterprise:cdi-api:1.2'  
+    
+    compile 'org.twitter4j:twitter4j-core:4.0.4'
+    
+    compile 'com.restfb:restfb:1.15.0'
+    
+    compile group:'io.jsonwebtoken', name:'jjwt', version:'0.5.1'
+    
 }
 
 // Set the Eclipse facets to use 3.1 of the Dynamic Web Module which requires Java 1.7 (at least)
