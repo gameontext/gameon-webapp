@@ -17,6 +17,7 @@ package net.wasdev.gameon.player.ws;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.websocket.CloseReason;
 import javax.websocket.CloseReason.CloseCodes;
@@ -45,14 +46,16 @@ public class ConnectionUtils {
 	 * @param session
 	 * @param payload
 	 */
-	public static void sendText(Session session, String payload) {
+	public static boolean sendText(Session session, String payload) {
 		if (session.isOpen()) {
 			try {
 				session.getBasicRemote().sendText(payload);
+				return true;
 			} catch (IOException e) {
 				ConnectionUtils.tryToClose(session, new CloseReason(CloseCodes.UNEXPECTED_CONDITION, e.toString()));
 			}
 		}
+		return false;
 	}
 
 	public static Session getNextOpenSession(Session session) {
@@ -91,5 +94,27 @@ public class ConnectionUtils {
 			} catch (IOException e1) {
 			}
 		}
+	}
+
+	/**
+	 * Strip off segments by leading comma, stop
+	 * as soon as a { is reached (beginning of JSON payload)
+	 * @param message Message to split
+	 * @return Array containing parts of original message
+	 */
+	public static final String[] splitRouting(String message) {
+		ArrayList<String> list = new ArrayList<>();
+
+		int brace = message.indexOf('{');
+		int i = 0;
+		int j = message.indexOf(',');
+		while (j > 0 && j < brace) {
+			list.add(message.substring(i, j));
+			i = j+1;
+			j = message.indexOf(',', i);
+		}
+		list.add(message.substring(i));
+
+		return list.toArray(new String[]{});
 	}
 }

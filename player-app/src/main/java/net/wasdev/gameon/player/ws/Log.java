@@ -23,6 +23,7 @@ public class Log {
 	private static final String endpoint_log_format = "%-10s: %s";
 
 	public static void log(Level level, Object source, String message, Object ... args) {
+		level = Level.WARNING;
 		if ( log.isLoggable(level)) {
 			String msg = String.format(endpoint_log_format, getHash(source), message);
 			log.log(level, msg, args);
@@ -30,6 +31,7 @@ public class Log {
 	}
 
 	public static void log(Level level, Object source, String message, Throwable thrown) {
+		level = Level.WARNING;
 		if ( log.isLoggable(level)) {
 			String msg = String.format(endpoint_log_format, getHash(source), message);
 			log.log(level, msg, thrown);

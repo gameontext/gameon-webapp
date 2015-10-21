@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'])
+angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives'])
   .run(
   [          '$rootScope', '$state', '$stateParams',
     function ($rootScope,   $state,   $stateParams) {

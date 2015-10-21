@@ -35,7 +35,7 @@
 .gameView .viewport {
   position: absolute;
   top: 3rem;
-  bottom: 4rem;
+  bottom: 8rem;
   margin: 0;
   width: 100%;
   overflow-y: scroll;
@@ -76,7 +76,7 @@ nav.bottom {
   display: block;
   bottom: 0;
   width: 100%;
-  height: 4rem;
+  height: 8rem;
   padding: 0;
   box-sizing: border-box;
 }
@@ -116,32 +116,11 @@ nav.bottom>ul>li>a {
   font-size: 1rem;
   text-align: center;
 }
-.door {
-  position: fixed;
-  box-sizing: border-box;
-  margin: 0;
-  padding: .2rem;
-  border: 1px solid silver;
+nav.bottom>div {
+  text-align: justify;
 }
-.door.north {
-  top: 3rem;
-}
-.door.south {
-  position: fixed;
-  bottom: 4rem;
-}
-.door.east {
-  position: fixed;
-  right: 1rem;
-}
-.door.west {
-  left: 1rem;
-}
-.door.up {
-  left: 1rem;
-}
-.door.down {
-  left: 1rem;
+nav.bottom>div>a {
+  display: inline-block;
 }
 .chat:before {
   font-family: "FontAwesome";
@@ -149,20 +128,26 @@ nav.bottom>ul>li>a {
 }
 .chat {
   border-top: 1px solid #eee;
+  margin-top: .2rem;
   margin-bottom: .5rem;
   color: #562F72
+}
+.chat .username {
+  display: inline-block;
+  padding-left: .5rem;
+}
+.chat .content {
+  display: block;
+  padding-left: 2rem;
+}
+.event {
+  border-top: 1px solid #eee;
+  margin-top: .2rem;
+  margin-bottom: .5rem;
 }
 .trophy .date,
 .chat .date {
   float: right;
-}
-.chat .player {
-  display: inline-block;
-  padding-left: .5rem;
-}
-.chat .message {
-  display: block;
-  padding-left: 2rem;
 }
 .chat:after, .trophy:after, nav.top:after, nav.bottom:after {
   content: "";
@@ -175,17 +160,4 @@ nav.bottom>ul>li>a {
   .header {
     margin-top: 18rem;
   }
-}
-
-.example-grid .column, .example-grid .columns {
-  background: #EEE;
-  text-align: center;
-  border-radius: 4px;
-  font-size: 1rem;
-  text-transform: uppercase;
-  height: 30px;
-  line-height: 30px;
-  margin-bottom: .75rem;
-  font-weight: 600;
-  letter-spacing: .1rem;
 }
