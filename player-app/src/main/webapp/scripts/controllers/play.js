@@ -11,7 +11,7 @@ angular.module('playerApp')
   .controller('PlayCtrl', 
   [          '$scope','$log','playerSocket','user',
     function ($scope,  $log,  playerSocket,  user) {
-      $log.debug('Starting play controller with %o and %o', user, playerSocket);
+      $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
       
       $scope.roomEvents = playerSocket.roomEvents;
       $scope.userInput = '';

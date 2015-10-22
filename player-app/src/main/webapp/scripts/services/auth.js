@@ -61,8 +61,9 @@ angular.module('playerApp')
         /**
          * Used during login to obtain id for user. 
          */
-        function introspect_token(token) {
-          $log.debug('Introspect token %o', token);
+        function introspect_token() {
+          $log.debug('Introspect token %o', _token);
+          var token = _token;
           
           _token = undefined;
           delete localStorage.token;
@@ -75,6 +76,7 @@ angular.module('playerApp')
               $log.debug('Introspect '+response.status + ' ' + response.statusText + ' ' + response.data);
               var tmp = angular.fromJson(response.data);
               
+              //since we now know token state, we can setup a promise that acts like verify had been invoked.
               _authenticated = new Promise(function(resolve,reject){
             	  resolve(tmp.valid);            	  
               });

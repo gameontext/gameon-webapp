@@ -10,14 +10,20 @@
  */
 angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives'])
   .run(
-  [          '$rootScope', '$state', '$stateParams',
-    function ($rootScope,   $state,   $stateParams) {
+  [          '$rootScope', '$state', '$stateParams', 'auth', 'user',
+    function ($rootScope,   $state,   $stateParams, auth, user) {
+	  console.log("Page init starting.");
+	  
       // make life easier
       $rootScope.$on("$stateChangeError", console.log.bind(console));
 
       // From https://github.com/angular-ui/ui-router/blob/gh-pages/sample/app/app.js
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
+      
+      //
+      
+      console.log("Page init complete");
     }
   ])
   .constant("API", {
@@ -63,25 +69,18 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           url: '^/login/callback/{token:.*}',
           
           onEnter: function($state, $stateParams,auth,user) {
+        	  //this step has to read the token from the params passed ($stateParams.token)
+        	  //and cause it to be stashed into the auth object so we can rely on it going forwards.
+        	  
         	  console.log("default.auth.onEnter");
         	  
         	  console.log("default.auth.onEnter - calling auth.validate_token");
-        	  auth.introspect_token($stateParams.token).then(function(data) {
-	        	   if(data.valid){
+        	  auth.validate_token($stateParams.token).then(function(isValid) {
+	        	   if(isValid){
 		             // Triggered by authentication callback (only). 
 		             // Verify the returned token... 
-	                 console.log("token was valid, token info object was");
-	                 console.log(data);
-	                 	              	
-		              //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
-		              user.load(data.id, data.name).then(function(userKnownToDB){
-		            	  if(userKnownToDB){
-		            	      $state.go('play.room');
-		            	  }else{
-		 	                 $state.go('default.profile',{ tokeninfo : data});  
-		            	  }
-		              });
-	                         
+	                 console.log("token callback from auth service was valid");
+	                 $state.go('default.usersetup');	              	                         
 	        	  }else{
 	        		  //TODO: goto a login failed page.. 
 	        		 $state.go('default.login');
@@ -89,11 +88,35 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         	  });        	
           }
         })
+        .state('default.usersetup', { 
+           url: '^/login/usersetup',
+           onEnter: function($state, $stateParams,auth,user) {
+        	  console.log("building user object");
+         	  auth.introspect_token().then(function(tokeninfo) {
+	        	   if(tokeninfo.valid){
+		             // Triggered by authentication callback (only). 
+		             // Verify the returned token... 
+	                 console.log("cached/recovered token was valid, token info object was");
+	                 console.log(tokeninfo);
+	                 
+		              //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
+		              user.load(tokeninfo.id, tokeninfo.name).then(function(userKnownToDB){
+		            	  if(userKnownToDB){
+		            	      $state.go('play.room');
+		            	  }else{
+		 	                 $state.go('default.profile',{ tokeninfo : data});  
+		            	  }
+		              });	                 	              	                        
+	        	  }else{
+	        		  //cached / recovered token was invalid. 
+	        		  //TODO: goto a login failed page.. 
+	        		 $state.go('default.login');
+	        	  }
+         	  });
+           }
+       	  })
         .state('default.profile', { // check profile or initial profile creation
-          url: '^/login/profile',
-          params : {
-        	  'tokeninfo' : null
-          },
+           url: '^/login/profile',
            onEnter: function($state, $stateParams,auth,user) {        	 
         	  //if we're missing our auth token info.. user may have hit refresh here.. 
         	  //since we've just lost all our context, send them back to the start..
@@ -117,13 +140,18 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           url: '/play',
           templateUrl: 'templates/play.html',
           controller: 'PlayCtrl as play',
-          onEnter: function($state, auth){
+          onEnter: function($state, auth, user){
         	console.log("AUTHING ROOM");
+
             auth.getAuthenticationState().then(function(isAuthenticated){
             	if(!isAuthenticated){
             		$state.go('default.login');           	
             	}else{
             		console.log("room is authed.");	
+                	if(typeof user.profile.id === 'undefined'){
+                		console.log("user is missing .. rebuilding");
+                		$state.go('default.usersetup');
+                	}
             	}
             });
           }
