@@ -1,1 +1,30 @@
 apply plugin: 'eclipse'
+
+buildscript {
+	repositories {
+	    mavenCentral()
+	}
+	
+	dependencies {
+		classpath 'com.bmuschko:gradle-docker-plugin:2.6'
+	}
+}
+
+
+task copyTask(type: Copy) {
+    from '../player-app/build/libs/player-app-1.0.war'
+    into 'servers/gameon-player/apps/'
+}
+
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+docker {
+    url = 'unix:///var/run/docker.sock'
+}
+
+task buildImage(type: DockerBuildImage, dependsOn: 'copyTask') {
+	inputDir = file('.')
+    tag = 'gameon-player'
+}
