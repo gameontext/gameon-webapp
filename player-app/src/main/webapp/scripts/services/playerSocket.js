@@ -21,6 +21,7 @@ angular.module('playerApp')
 	  
 	  if(typeof user.profile.id === 'undefined'){
 		  $log.debug("Unable to build socket, as user has not been built correctly");
+		  //this method is supposed to return something.. 
 	  }else{
 	      var q, ws;
 	            

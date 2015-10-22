@@ -38,13 +38,15 @@ angular.module('playerApp')
               var tmp = angular.fromJson(response.data);
               
               if ( tmp.valid === "true" ) {
-            	console.log("Token was valid");
+            	$log.debug("Token was valid");
                 // server verified good token.
                 _token = token;         
                 console.log(_token);
                 localStorage.token = angular.toJson(_token);
               } else {
-                q.reject("Token invalid");
+            	$log.debug("Token was invalid %o",tmp);
+            	//this doesn't work.
+                $q.reject("Token invalid");
               }
               
               return tmp.valid === "true"; // return value of the promise
@@ -87,6 +89,8 @@ angular.module('playerApp')
                 tmp.token = token;
                 localStorage.token = angular.toJson(_token);
               } else {
+              	$log.debug("Token was invalid %o",tmp);
+            	//this doesn't work.
                 $q.reject("Token invalid");
               }
               

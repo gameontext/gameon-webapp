@@ -59,11 +59,6 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.login', {
             url: '^/login',
-//            onEnter: function($state, auth){
-//              if(auth.isAuthenticated() ){
-//                $state.go('default.auth');
-//              }
-//            }
         })
         .state('default.auth', {
           url: '^/login/callback/{token:.*}',
@@ -104,7 +99,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
 		            	  if(userKnownToDB){
 		            	      $state.go('play.room');
 		            	  }else{
-		 	                 $state.go('default.profile',{ tokeninfo : data});  
+		 	                 $state.go('default.profile');  
 		            	  }
 		              });	                 	              	                        
 	        	  }else{
