@@ -44,7 +44,7 @@ angular.module('playerApp')
                 console.log(_token);
                 localStorage.token = angular.toJson(_token);
               } else {
-                $q.reject("Token invalid");
+                q.reject("Token invalid");
               }
               
               return tmp.valid === "true"; // return value of the promise
@@ -102,7 +102,7 @@ angular.module('playerApp')
         return {
             getAuthenticationState: function () {
                 $log.debug('isAuthenticated: %o %o', this, _authenticated);
-                if (_authenticated != null) {
+                if (_authenticated !== null) {
                     $log.debug('user already authenticated %o %o',_authenticated,_token);
                 } else {
                     $log.debug('attempting to restore session from %o',localStorage.token);

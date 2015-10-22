@@ -54,6 +54,10 @@ angular.module('playerApp')
 //	        // or back to the login/registration screen? or.. 
 //	      });
 	      
+	      var playerSession = {
+	    		  roomId : "TheFirstRoom"
+	      };
+
 	                 
 	      // On open, check in with the concierge
 	      ws.onOpen(function() {
@@ -123,7 +127,7 @@ angular.module('playerApp')
 	        }
 	        $log.debug('message: %o', res);
 	        return res;
-	      }
+	      };
 	      
 	      var send = function(message) {
 	        ws.send("room,"+playerSession.roomId+","+angular.toJson(message));

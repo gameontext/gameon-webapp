@@ -5,7 +5,7 @@
     <div>@roger moves the chair.</div>
     <div>The dastardly wizard appears, cackling, and steals @roger's cookies.</div>
     <div>
-      <div ng-repeat="data in roomEvents track by {{data.id}}" data-ng-switch="data.type">
+      <div ng-repeat="data in roomEvents track by data.timeStamp" data-ng-switch="data.type">
         <div data-ng-switch-when="chat" class="chat"><div class="username">{{data.username}}</div><div class="content">{{data.content}}</div></div>
         <div data-ng-switch-when="event" class="event"><div class="content">{{data.content}}</div></div>
       </div>

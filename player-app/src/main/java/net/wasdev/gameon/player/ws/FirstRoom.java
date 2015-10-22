@@ -79,14 +79,11 @@ public class FirstRoom extends Room {
 		String content = sourceMessage.getString(Constants.CONTENT);
 		String contentToLower = content.toLowerCase();
 
-
-
-
 		if ( contentToLower.contains("look")) {
 			responseBuilder.add(Constants.TYPE, Constants.EVENT)
 			.add(Constants.CONTENT, "event " + content);
 		} else {
-			responseBuilder.add(Constants.USERNAME, responseBuilder)
+			responseBuilder.add(Constants.USERNAME, "user:"+username)
 			.add(Constants.CONTENT, "echo " + content)
 			.add(Constants.TYPE, Constants.CHAT);
 		}
