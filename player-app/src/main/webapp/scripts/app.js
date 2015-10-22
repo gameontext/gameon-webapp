@@ -10,8 +10,8 @@
  */
 angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives'])
   .run(
-  [          '$rootScope', '$state', '$stateParams', 'auth', 'user',
-    function ($rootScope,   $state,   $stateParams, auth, user) {
+  [          '$rootScope', '$state', '$stateParams', 
+    function ($rootScope,   $state,   $stateParams) {
 	  console.log("Page init starting.");
 	  
       // make life easier
@@ -37,13 +37,13 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
   })
   .config(
   [          '$stateProvider','$urlRouterProvider', 
-    function ($stateProvider,  $urlRouterProvider, auth, user) {
+    function ($stateProvider,  $urlRouterProvider) {
     
       // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
       // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
       $urlRouterProvider
         .otherwise('/');
-
+          
       //////////////////////////
       // State Configurations 
 
@@ -51,11 +51,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default', {
           url: '/',
           templateUrl: 'templates/default.html',
-          controller: 'DefaultCtrl as default',
-          params : {
-        	  'auth' : auth,
-        	  'user' : user
-          },
+          controller: 'DefaultCtrl as default'
         })
         .state('default.login', {
             url: '^/login',
