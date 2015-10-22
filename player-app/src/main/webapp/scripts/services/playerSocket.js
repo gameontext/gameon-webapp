@@ -1,68 +1,50 @@
 'use strict';
 
 /**
- * This is the PlayerService -- it wraps interaction between this
- * (effectively the PlayerClient) and the server side. The Player service
- * is the Player's view of the world, and the websocket between the client
- * and this player-focused hub service should encapsulate much of the back
- * and forth required for interacting with rooms (room/chat, inventory), 
- * and the leaderboard (storing/retrieving earned trophies and badges). 
- * 
- * The Player Client & Service track where the player is (what room), 
- * and other player-centric information (username/handle, linked social ids, etc.).
+ * This wraps interaction between the client device and the server-side Player
+ * service. The Player service is the Player's view of the world, and the 
+ * websocket between the client and this player-focused hub service should 
+ * contain most of the back and forth required for interacting with the 
+ * game (room/chat, inventory), and the leaderboard (storing/retrieving 
+ * earned trophies and badges). 
  * 
  * @ngdoc service
- * @name playerApp.playerService
+ * @name playerApp.playerSocket
  * @description
- * # playerService
+ * # playerSocket
  * Factory in the playerApp.
  */
 angular.module('playerApp')
-  .factory('playerService',
-  [          '$websocket','$log','$http','auth','API',
-    function ($websocket,  $log,  $http,  auth,  API) {
+  .factory('playerSocket',
+  [          '$websocket','$log','user','API',
+    function ($websocket,  $log,  user,  API) {
       var q, ws;
 
-      // Create a collection for holding data
+      // Collection for holding data: play.room.html displays
+      // this scrolling collection.
       var roomEvents = [];
       
-      // TODO: need username to query... 
-      var playerURL = API.PROFILE_URL + 'wasdev';
-      var websocketURL = API.WS_URL + 'wasdev';
-
-      var parameters = {};
-      
-      // username should come from the id
-      var username = 'anonymous';
-      
-      // Information about the player retrieved from the HTTP request
-      var playerSession = {};
 
       // Create a v1 websocket
       $log.debug('websocket %o', websocketURL);
-      ws = $websocket(websocketURL);
+      ws = $websocket(websocketURL, { useApplyAsync: true } );
       
-      // Fetch data about the user
-      $log.debug('fetch data from %o', playerURL);
-      q = $http({
-          method : 'GET',
-          url : playerURL,
-          cache : false,
-          params : parameters
-      }).then(function(response) {
-          $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
+      q = user.load().then(function(response) {
+        $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
-          // roomId must go here (last saved room)
-          // successful response
-          // fill in playerSession & username
-          // OPEN WEBSOCKET HERE.
-          
+        // roomId must go here (last saved room)
+        // successful response
+        // fill in playerSession & username
+        
+        // OPEN WEBSOCKET HERE.
+        
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
         // go to the sad room.. (Can't find the player information)
         // or back to the login/registration screen? or.. 
       });
+      
                  
       // On open, check in with the concierge
       ws.onOpen(function() {
@@ -78,7 +60,7 @@ angular.module('playerApp')
         var payload = event.data.slice(comma+1);
         var res;
         
-        if ( "ack" == command ) {
+        if ( "ack" === command ) {
           res = parseJson(payload);
           playerSession.mediatorId = res.mediatorId;
           playerSession.roomId = res.roomId;
@@ -128,7 +110,7 @@ angular.module('playerApp')
         try {
           res = JSON.parse(message);
         } catch(e) {
-          res = {'username': username, 'message': payload};
+          res = {'username': user.username, 'message': payload};
         }
         $log.debug('message: %o', res);
         return res;
@@ -138,8 +120,8 @@ angular.module('playerApp')
         ws.send("room,"+playerSession.roomId+","+angular.toJson(message));
       };
       
+      // Available methods and structures
       var sharedApi = {
-        username: username,
         roomEvents: roomEvents,
         send: send
       };

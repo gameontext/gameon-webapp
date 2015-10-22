@@ -9,4 +9,4 @@
 /servers/.pid
 /build/
 /servers/.classCache
-/servers/gameon-player/configDropins/SSOAppInfo.xml
+/servers/gameon-player/configDropins/overrides

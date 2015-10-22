@@ -181,7 +181,7 @@ public class PlayerSession {
 	 * @param routing
 	 */
 	public void route(String[] routing) {
-		// We expect room,id,{...}
+		// We expect room,id,{...} or player,username,{...}
 		if ( routing.length > 2 ) {
 			switch(routing[0]) {
 				case Constants.ROOM :
@@ -190,7 +190,8 @@ public class PlayerSession {
 					}
 					break;
 				case Constants.PLAYER:
-					if ( username.equals(routing[1]) ) {
+					if ( username.equals(routing[1])  || "*".equals(routing[1]) ) {
+						// put the message on the queue to be sent to the client
 						toClient.offer(String.join(",", routing));
 					}
 					break;
