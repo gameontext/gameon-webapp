@@ -9,16 +9,18 @@
  */
 angular.module('playerApp')
   .controller('DefaultCtrl', 
-  [            '$scope','$state','$log','auth', 
-    function (  $scope,  $state,  $log,  auth ) {
-      $log.debug('Loading default controller %o', $state);
+  [            '$scope','$state','$log','auth','API','user', 
+    function (  $scope,  $state,  $log,  auth,  API,  user ) {
+      
+      // Login links
+      $scope.api = API;
 
-      $scope.authenticate = function(provider) {
-          if ( auth.oauth_authenticate(provider) ) {
-            $state.go('play.room');
-          }
-          
-          // TODO -- we need a sad state/page. :(
+      // Display/retrieve user information (link to user service)
+      $scope.user = user;
+      
+      $scope.authenticate = function(auth) {
+        $log.debug("THIS IS FAKE AUTH!!! You may pass");
+        $state.go('play.room');
       };
       
     }

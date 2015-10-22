@@ -9,11 +9,11 @@
  */
 angular.module('playerApp')
   .controller('PlayCtrl', 
-  [          '$scope','$log','playerService',
-    function ($scope,  $log,  playerService) {
-      $log.debug('Player service created with %o', playerService);
+  [          '$scope','$log','playerSocket','user',
+    function ($scope,  $log,  playerSocket,  user) {
+      $log.debug('Starting play controller with %o and %o', user, playerSocket);
       
-      $scope.playerService = playerService;
+      $scope.roomEvents = playerSocket.roomEvents;
       $scope.userInput = '';
       
       $scope.input = function(e) {
@@ -26,8 +26,8 @@ angular.module('playerApp')
         var input = $scope.userInput;
         $scope.userInput = '';
         if ( input ) {
-          var message = {'username': $scope.playerService.username, 'content': input};
-          playerService.send(message);
+          var message = {'username': user.username, 'content': input};
+          playerSocket.send(message);
         }
       };
   }]);

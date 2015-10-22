@@ -4,41 +4,79 @@
     <span class="lead">A throwback adventure</span>
     </h1>
   </div>
-  <div data-ng-switch-default>
+  <div class="section" data-ng-switch-when="default">
     <div class="center">
       <div>You are in a maze of little interconnected rooms, none alike.</div>
       <div>And you aren't alone.</div>
       <div><a class="button" ui-sref="default.login">Login</a></div>
     </div>
-    <div class="section">
-      <h2>How to play</h2>
-      <div>Stuff</div>
-    </div>
-    <div class="section">
-      <h2>How it works</h2>
-      <div>Stuff</div>
-    </div>
-    <div class="section">
-      <h2>How to grow</h2>
-      <div>Stuff</div>
-    </div>
   </div>
   <div class="section" data-ng-switch-when="default.login">
     <div class="row">
       <div class="one-half column">
-        <button class="button u-full-width" data-ng-click="authenticate('twitter')">Sign in with Twitter</button>
+        <a class="button u-full-width" ng-href="{{api.TWITTER}}">Sign in with Twitter</a>
       </div>
       <div class="one-half column">
-        <button class="button u-full-width" data-ng-click="authenticate('google')">Sign in with Google</button>
+        <a class="button u-full-width" data-ng-click="authenticate('google')">Sign in with Google</a>
       </div>
     </div>
     <div class="row">
       <div class="one-half column">
-        <button class="button u-full-width" data-ng-click="authenticate('facebook')">Sign in with Facebook</button>
+        <a class="button u-full-width" ng-href="{{api.FACEBOOK}}">Sign in with Facebook</a>
       </div>
       <div class="one-half column">
-        <button class="button u-full-width" data-ng-click="authenticate('linkedin')">Sign in with LinkedIn</button>
+        <a class="button u-full-width" data-ng-click="authenticate('linkedin')">Sign in with LinkedIn</a>
       </div>
+    </div>
+  </div>
+  <div class="section" data-ng-switch-when="default.auth">
+    <div>Authenticating ... <i class="fa fa-cog fa-spin"></i></div>
+  </div>
+  <div class="section" data-ng-switch-when="default.profile">
+    <form name="createProfileForm">
+      <p>Just a bit more... </p>
+      <div class="row">
+        <div class="one-half column">
+          <label for="username">Username</label> 
+          <input class="u-full-width" type="text" name="username" data-ng-model="user.profile.username" 
+                 required title="{{user.rules.nameRule}}" data-ng-pattern="user.rules.namePattern" /> 
+          <a class="button u-full-width" data-ng-click="generateUsername()">Generate a username</a>
+        </div>
+        <div class="one-half column">
+          <label for="favColor">Favorite color</label> 
+          <input class="u-full-width" type="text" name="favoriteColor" data-ng-model="user.profile.favoriteColor" 
+                 required title="{{user.rules.colorRule}}" data-ng-pattern="user.rules.colorPattern"> 
+          <a class="button u-full-width" data-ng-click="generateColor()">Generate a color</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="one-half column">
+          <div ng-show="createProfileForm.username.$error.required">&lt;?&gt; moves the chair.</div> 
+          <div ng-hide="createProfileForm.username.$error.required">{{ createProfileForm.username.$viewValue }} moves the chair.</div>
+        </div>
+        <div class="one-half column">
+          <div ng-show="createProfileForm.favoriteColor.$error.required">{{ createProfileForm.username.$viewValue }} loves the color &lt;?&gt;</div> 
+          <div ng-hide="createProfileForm.favoriteColor.$error.required">{{ createProfileForm.username.$viewValue }} loves the color {{ createProfileForm.favoriteColor.$viewValue }}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="one-half column">
+          <div ng-show="createProfileForm.username.$error.pattern">{{ user.rules.nameRule }}</div>&nbsp; 
+        </div>
+        <div class="one-half column">
+          <div ng-show="createProfileForm.favoriteColor.$error.pattern">{{ user.rules.colorRule }}</div>&nbsp; 
+        </div>
+      </div>
+      <div class="section center">
+        <div data-ng-hide="createProfileForm.$invalid">
+          <button class="button" data-ng-click="user.save()">Done!</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="section" data-ng-switch-default>
+    <div class="section">
+        <div>Something went wrong...</div>
     </div>
   </div>
 </div>

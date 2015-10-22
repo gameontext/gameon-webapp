@@ -61,27 +61,34 @@ public class FirstRoom extends Room {
 		JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));
 		JsonObject sourceMessage = jsonReader.readObject();
 
-		String content = sourceMessage.getString(Constants.CONTENT);
-		String contentToLower = content.toLowerCase();
-		String type = "chat";
+		JsonObjectBuilder builder = Json.createObjectBuilder();
 
-		JsonObjectBuilder builder = Json.createObjectBuilder()
-				.add(Constants.BOOKMARK, counter.incrementAndGet());
+		parseCommand(sourceMessage, builder);
+		builder.add(Constants.BOOKMARK, counter.incrementAndGet());
 
-		if ( contentToLower.contains("look")) {
-			builder.add(Constants.TYPE, Constants.EVENT)
-			.add(Constants.CONTENT, "event " + content);
-		} else {
-			builder.add(Constants.USERNAME, username)
-			.add(Constants.CONTENT, "echo " + content)
-			.add(Constants.TYPE, Constants.CHAT);
-		}
-
+		// The First Room is always a private conversation with the player.
 		playerSession.route(new String[] {"player", username, builder.build().toString()});
 	}
 
 	@Override
 	public String toString() {
 		return this.getClass().getName() + "[id=" + Constants.FIRST_ROOM + ", username=" + username + "]";
+	}
+
+	protected void parseCommand(JsonObject sourceMessage, JsonObjectBuilder responseBuilder) {
+		String content = sourceMessage.getString(Constants.CONTENT);
+		String contentToLower = content.toLowerCase();
+
+
+
+
+		if ( contentToLower.contains("look")) {
+			responseBuilder.add(Constants.TYPE, Constants.EVENT)
+			.add(Constants.CONTENT, "event " + content);
+		} else {
+			responseBuilder.add(Constants.USERNAME, responseBuilder)
+			.add(Constants.CONTENT, "echo " + content)
+			.add(Constants.TYPE, Constants.CHAT);
+		}
 	}
 }
