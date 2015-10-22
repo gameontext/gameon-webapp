@@ -16,15 +16,16 @@
  */
 angular.module('playerApp')
   .factory('playerSocket',
-  [          '$websocket','$log','user','API',
-    function ($websocket,  $log,  user,  API) {
+  [          '$websocket','$log','user', 'auth', 'API',
+    function ($websocket,  $log,  user,  auth, API) {
       var q, ws;
 
+      $log.debug("Opening player socket for %o",user.profile);
+     
       // Collection for holding data: play.room.html displays
       // this scrolling collection.
       var roomEvents = [];
       
-
       // Create a v1 websocket
       $log.debug('websocket %o', websocketURL);
       ws = $websocket(websocketURL, { useApplyAsync: true } );

@@ -68,14 +68,16 @@ public class AllPlayersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createPlayer(Player player) throws IOException{
 		DBCollection players = playerDB.getCollection("players");
-		DBObject query = new BasicDBObject("name",player.getName());
+		DBObject query = new BasicDBObject("id",player.getId());
 		DBCursor cursor = players.find(query);
 
 		if(cursor.hasNext()){
 			return Response.status(409).entity("Error player : "+player.getName()+" already exists").build();
-		}
+		}				
 
-		DBObject playerToStore = player.toDBObject();
+		System.out.println("player "+player.toString());
+		
+		DBObject playerToStore = player.toDBObject(ps);
 		players.insert(playerToStore);
 
 		return Response.status(201).build();

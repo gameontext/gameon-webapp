@@ -24,12 +24,14 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "PROFILE_URL": "https://"+window.location.host+"/play/players/",
     "WS_URL": "wss://"+window.location.host+"/play/ws1/",
     "VERIFY_URL": "https://"+window.location.host+"/play/auth/verify/",
+    "INTROSPECT_URL": "https://"+window.location.host+"/play/auth/introspect/",
+    "JWT_URL": "https://"+window.location.host+"/play/auth/jwt/",
     "TWITTER": "https://"+window.location.host+"/play/TwitterAuth",
     "FACEBOOK": "https://"+window.location.host+"/play/FacebookAuth",
   })
   .config(
-  [          '$stateProvider','$urlRouterProvider',
-    function ($stateProvider,  $urlRouterProvider) {
+  [          '$stateProvider','$urlRouterProvider', 
+    function ($stateProvider,  $urlRouterProvider, auth, user) {
     
       // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
       // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
@@ -43,7 +45,11 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default', {
           url: '/',
           templateUrl: 'templates/default.html',
-          controller: 'DefaultCtrl as default'
+          controller: 'DefaultCtrl as default',
+          params : {
+        	  'auth' : auth,
+        	  'user' : user
+          },
         })
         .state('default.login', {
             url: '^/login',
@@ -55,21 +61,51 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.auth', {
           url: '^/login/callback/{token:.*}',
-          onEnter: function($stateParams, $state, auth) {
-            // Triggered by authentication callback (only). 
-            // Verify the returned token... 
-            if ( auth.validate_token($stateParams.token) ) {
-              $state.go('default.profile');
-            } else {
-              
-            }
+          
+          onEnter: function($state, $stateParams,auth,user) {
+        	  console.log("default.auth.onEnter");
+        	  
+        	  console.log("default.auth.onEnter - calling auth.validate_token");
+        	  auth.introspect_token($stateParams.token).then(function(data) {
+	        	   if(data.valid){
+		             // Triggered by authentication callback (only). 
+		             // Verify the returned token... 
+	                 console.log("token was valid, token info object was");
+	                 console.log(data);
+	                 	              	
+		              //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
+		              user.load(data.id, data.name).then(function(userKnownToDB){
+		            	  if(userKnownToDB){
+		            	      $state.go('play.room');
+		            	  }else{
+		 	                 $state.go('default.profile',{ tokeninfo : data});  
+		            	  }
+		              });
+	                         
+	        	  }else{
+	        		  //TODO: goto a login failed page.. 
+	        		 $state.go('default.login');
+	        	  }
+        	  });        	
           }
         })
         .state('default.profile', { // check profile or initial profile creation
           url: '^/login/profile',
-          onEnter: function($state, auth) {
-            // Check for a created user profile that exists and stuff.
-          }
+          params : {
+        	  'tokeninfo' : null
+          },
+           onEnter: function($state, $stateParams,auth,user) {        	 
+        	  //if we're missing our auth token info.. user may have hit refresh here.. 
+        	  //since we've just lost all our context, send them back to the start..
+        	  //mebbe can make this nicer ;p
+        	  if($stateParams.tokeninfo === null){
+        		  console.log("Missing auth info.. redirecting.. ")
+        		  $state.go('default.login');
+        	  }else{        		  
+	              console.log("default.profile.onEnter has this ");
+	              console.log($stateParams.tokeninfo);	             
+        	  }
+           }
         })
         .state('default.yuk', {
           url: '^/yuk',
@@ -82,9 +118,14 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           templateUrl: 'templates/play.html',
           controller: 'PlayCtrl as play',
           onEnter: function($state, auth){
-            if(!auth.isAuthenticated() ){
-              $state.go('default.login');
-            }
+        	console.log("AUTHING ROOM");
+            auth.getAuthenticationState().then(function(isAuthenticated){
+            	if(!isAuthenticated){
+            		$state.go('default.login');           	
+            	}else{
+            		console.log("room is authed.");	
+            	}
+            });
           }
         })
         .state('play.room', {
@@ -109,3 +150,4 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         });
     }
   ]);
+

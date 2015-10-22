@@ -40,7 +40,7 @@ import com.mongodb.DBObject;
  * in their pockets.
  *
  */
-@Path("/{username}")
+@Path("/{id}")
 public class PlayerResource {
 	@Context Providers ps;
 	
@@ -49,13 +49,13 @@ public class PlayerResource {
 		
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Player getPlayerInformation(@PathParam("username") String username) throws IOException { 	
+    public Player getPlayerInformation(@PathParam("id") String id) throws IOException { 	
 		DBCollection players = playerDB.getCollection("players");
-    	DBObject query = new BasicDBObject("name",username);
+    	DBObject query = new BasicDBObject("id",id);
     	DBCursor cursor = players.find(query);
     	if(!cursor.hasNext()){
     		//will be mapped to 404 by the PlayerExceptionMapper
-    		throw new PlayerNotFoundException("username not found : "+username);
+    		throw new PlayerNotFoundException("user id not found : "+id);
     	}       	
     	DBObject player = cursor.one();  
     	Player p = Player.fromDBObject(ps, player);   	
@@ -63,29 +63,29 @@ public class PlayerResource {
     }
     
     @PUT
-    public Response updatePlayer(@PathParam("username") String username, Player newPlayer) throws IOException { 	
+    public Response updatePlayer(@PathParam("id") String id, Player newPlayer) throws IOException { 	
 		DBCollection players = playerDB.getCollection("players");
-    	DBObject query = new BasicDBObject("name",username);
+    	DBObject query = new BasicDBObject("id",id);
     	DBCursor cursor = players.find(query);
     	if(!cursor.hasNext()){
     		//will be mapped to 404 by the PlayerExceptionMapper
-    		throw new PlayerNotFoundException("username not found : "+username);
+    		throw new PlayerNotFoundException("user id not found : "+id);
     	}        	
     	DBObject player = cursor.one(); 
-    	DBObject nPlayer = newPlayer.toDBObject();
+    	DBObject nPlayer = newPlayer.toDBObject(ps);
     	   	
     	players.update(player, nPlayer);
     	return Response.status(204).build();
     }
     
     @DELETE
-    public Response removePlayer(@PathParam("username") String username) { 	
+    public Response removePlayer(@PathParam("id") String id) { 	
 		DBCollection players = playerDB.getCollection("players");
-    	DBObject query = new BasicDBObject("name",username);
+    	DBObject query = new BasicDBObject("id",id);
     	DBCursor cursor = players.find(query);
     	if(!cursor.hasNext()){
     		//will be mapped to 404 by the PlayerExceptionMapper
-    		throw new PlayerNotFoundException("username not found : "+username);
+    		throw new PlayerNotFoundException("user id not found : "+id);
     	}        	
     	DBObject player = cursor.one();  
     	players.remove(player);

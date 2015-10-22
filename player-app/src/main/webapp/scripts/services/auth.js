@@ -13,8 +13,10 @@ angular.module('playerApp')
   .factory('auth', 
   [          '$log','API','$http',
     function ($log,  API,  $http) {
+	    console.log("Loading AUTH");
+	  
         var _token,
-            _authenticated = false; 
+            _authenticated = null; 
 
         /**
          * Triggered by OAuth-style login: we need to validate the returned
@@ -23,7 +25,7 @@ angular.module('playerApp')
         function validate_token(token) {
           $log.debug('Validating token %o', token);
           
-          _authenticated = false;
+          _authenticated = null;
           _token = undefined;
           delete localStorage.token;
 
@@ -32,13 +34,14 @@ angular.module('playerApp')
               url : API.VERIFY_URL + token,
               cache : false
           }).then(function(response) {
-              $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+              $log.debug('Verify '+response.status + ' ' + response.statusText + ' ' + response.data);
               var tmp = angular.fromJson(response.data);
               
               if ( tmp.valid === "true" ) {
+            	console.log("Token was valid");
                 // server verified good token.
-                _token = token;
-                _authenticated = true;
+                _token = token;         
+                console.log(_token);
                 localStorage.token = angular.toJson(_token);
               } else {
                 $q.reject("Token invalid");
@@ -46,7 +49,48 @@ angular.module('playerApp')
               
               return tmp.valid === "true"; // return value of the promise
           }, function(response) {
-            $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+            $log.debug('verify(outer) '+response.status + ' ' + response.statusText + ' ' + response.data);
+          });
+          
+          _authenticated = q;
+
+          // RETURNING A PROMISE
+          return q;
+        }
+        
+        /**
+         * Used during login to obtain id for user. 
+         */
+        function introspect_token(token) {
+          $log.debug('Introspect token %o', token);
+          
+          _token = undefined;
+          delete localStorage.token;
+
+          var q = $http({
+              method : 'GET',
+              url : API.INTROSPECT_URL + token,
+              cache : false
+          }).then(function(response) {
+              $log.debug('Introspect '+response.status + ' ' + response.statusText + ' ' + response.data);
+              var tmp = angular.fromJson(response.data);
+              
+              _authenticated = new Promise(function(resolve,reject){
+            	  resolve(tmp.valid);            	  
+              });
+              
+              if ( tmp.valid === "true" ) {
+                // server verified good token.
+                _token = token;
+                tmp.token = token;
+                localStorage.token = angular.toJson(_token);
+              } else {
+                $q.reject("Token invalid");
+              }
+              
+              return tmp; // return value of the promise
+          }, function(response) {
+            $log.debug('introspect(outer) '+response.status + ' ' + response.statusText + ' ' + response.data);
           });
 
           // RETURNING A PROMISE
@@ -54,25 +98,23 @@ angular.module('playerApp')
         }
 
         return {
-            isAuthenticated: function () {
-                $log.debug('isAuthenticated: %o', this);
-                if (_authenticated) {
-                    $log.debug('user already authenticated');
-                    return _authenticated;
+            getAuthenticationState: function () {
+                $log.debug('isAuthenticated: %o %o', this, _authenticated);
+                if (_authenticated != null) {
+                    $log.debug('user already authenticated %o %o',_authenticated,_token);
                 } else {
-                    $log.debug('attempting to restore session');
+                    $log.debug('attempting to restore session from %o',localStorage.token);
                     var tmp = angular.fromJson(localStorage.token);
-                    if (tmp !== undefined) {
-                      $log.debug('session restored');
-                      return this.validate_token(tmp);
-                    } else {
-                      return false;
-                    }
+                    $log.debug('session restored : %o ',tmp);
+                    _authenticated = this.validate_token(tmp);
                 }
+                return _authenticated;
             },
             validate_token: validate_token,
-            token: function () {
-                return _token;
+            introspect_token: introspect_token,
+            token: function (){
+            	$log.debug("AUTH.TOKEN returning %o ",this._token);
+            	return this._token;
             }
         };
     }]);

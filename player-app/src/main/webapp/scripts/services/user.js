@@ -25,10 +25,16 @@ angular.module('playerApp')
     user.rules.colorRule = "At least 3 characters, no spaces.";
     user.rules.colorPattern = /^\w{3,}$/;
     
-    user.load = function() {
+    user.load = function(id,name) {
+    	
+      $log.debug('quering token %o',localStorage.token);	
+    	
+	  //we're using the id from the token introspect as our player db id.
+	  user.profile.id = id;
+	
       // Load the user's information from the DB and/or session
       // Load needs to come from the Auth token
-      var playerURL = API.PROFILE_URL + 'wasdev';
+      var playerURL = API.PROFILE_URL + user.profile.id;
       var parameters = {};
       var q;
 
@@ -42,20 +48,28 @@ angular.module('playerApp')
       }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
+          return true;
           
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
         // go to the sad room.. (Can't find the player information)
         // or back to the login/registration screen? or.. 
+        user.profile.name = name;
+        return false;
       });
+      
+      return q;
     };
     
     user.save = function() {
       $log.debug("Saving user data: %o", user.profile);
       // SAVE GOES HERE -- save needs to test for ID uniqueness.. so only go on to 
       // the next room if all data could validate properly.
-      var playerURL = API.PROFILE_URL + 'wasdev';
+      
+      //save is a request to create, 
+      
+      var playerURL = API.PROFILE_URL; 
       
       var q = $http({
         method : 'POST',

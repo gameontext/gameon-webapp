@@ -10,7 +10,7 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("/players/*")
 public class PlayerApplication extends Application {
 	
-	public final static Set<Class<?>> playerJaxRSClasses = new HashSet<Class<?>>(Arrays.asList(new Class<?>[]{AllPlayersResource.class,PlayerResource.class}));
+	public final static Set<Class<?>> playerJaxRSClasses = new HashSet<Class<?>>(Arrays.asList(new Class<?>[]{AllPlayersResource.class,PlayerResource.class,Player.class,PlayerExceptionMapper.class}));
 	
 	@Override
 	public Set<Class<?>> getClasses() {
