@@ -52,6 +52,11 @@ angular.module('playerApp')
           user.profile.name = tmp.name;
           user.profile.favoriteColor = tmp.favoriteColor;
           
+          //for all the profiles that don't have a location yet.. 
+          if(typeof tmp.location === 'undefined'){
+        	  user.profile.location = "TheFirstRoom";
+          }
+          
           return true;          
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
@@ -59,6 +64,9 @@ angular.module('playerApp')
         // go to the sad room.. (Can't find the player information)
         // or back to the login/registration screen? or.. 
         user.profile.name = name.replace(/ /g , '_');
+        
+        // temp for now.. 
+        user.profile.location = "TheFirstRoom";
         return false;
       });
       

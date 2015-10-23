@@ -34,7 +34,7 @@ angular.module('playerApp')
       ws = $websocket(websocketURL, { useApplyAsync: true } );
       
       var playerSession = {
-    		  roomId : "TheFirstRoom"
+    		  roomId : user.profile.location
       };
                 
       // On open, check in with the concierge
