@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Providers;
 
@@ -19,9 +18,9 @@ public class Player {
 	private String authBy;
 	private String location;
 	private String favoriteColor;
-	
+
 	//default constructor, required for jax-rs to use when creating instances of pojo
-	public Player(){	
+	public Player(){
 	}
 
 	public Player(String id, String name, String authBy, String location, String favoriteColor) {
@@ -31,11 +30,11 @@ public class Player {
 		this.location = location;
 		this.favoriteColor = favoriteColor;
 	}
-	
+
 	public String getId() {
 		return id;
-	}	
-	
+	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -73,7 +72,7 @@ public class Player {
 	}
 
 	//TODO: use id as _id
-	
+
 	@Override
 	public String toString() {
 		return "Player [id=" + id + ", name=" + name + ", authBy=" + authBy + ", location=" + location

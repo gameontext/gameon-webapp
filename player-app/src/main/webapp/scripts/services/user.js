@@ -16,22 +16,22 @@ angular.module('playerApp')
     function ($log,  $state,  API,  $http) {
 
     var user = {};
-    
+
     user.profile = {};
-    
-    user.rules = {}
+
+    user.rules = {};
     user.rules.nameRule = "At least 3 characters, no spaces.";
     user.rules.namePattern = /^\w{3,}$/;
     user.rules.colorRule = "At least 3 characters, no spaces.";
     user.rules.colorPattern = /^\w{3,}$/;
-    
+
     user.load = function(id,name) {
-    	
+
       $log.debug('quering token %o',localStorage.token);	
-    	
-	  //we're using the id from the token introspect as our player db id.
-	  user.profile.id = id;
-	
+
+      //we're using the id from the token introspect as our player db id.
+      user.profile.id = id;
+
       // Load the user's information from the DB and/or session
       // Load needs to come from the Auth token
       var playerURL = API.PROFILE_URL + user.profile.id;
@@ -41,48 +41,39 @@ angular.module('playerApp')
       // Fetch data about the user
       $log.debug('fetch data from %o', playerURL);
       q = $http({
-          method : 'GET',
-          url : playerURL,
-          cache : false,
-          params : parameters
+        method : 'GET',
+        url : playerURL,
+        cache : false,
+        params : parameters
       }).then(function(response) {
-          $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
+        $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
-          var tmp = angular.fromJson(response.data);
-          user.profile.name = tmp.name;
-          user.profile.favoriteColor = tmp.favoriteColor;
-          
-          //for all the profiles that don't have a location yet.. 
-          if(typeof tmp.location === 'undefined'){
-        	  user.profile.location = "TheFirstRoom";
-          }
-          
-          return true;          
+        var tmp = angular.fromJson(response.data);
+        user.profile.name = tmp.name;
+        user.profile.favoriteColor = tmp.favoriteColor;
+        user.profile.location = tmp.location;
+
+        return true;          
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
-        // go to the sad room.. (Can't find the player information)
-        // or back to the login/registration screen? or.. 
+        // User can't be found, which is fine, we can go build one!
         user.profile.name = name.replace(/ /g , '_');
-        
-        // temp for now.. 
-        user.profile.location = "TheFirstRoom";
+
         return false;
       });
-      
+
       return q;
     };
     
-    user.save = function() {
+    user.create = function() {
       $log.debug("Saving user data: %o", user.profile);
-      // SAVE GOES HERE -- save needs to test for ID uniqueness.. so only go on to 
-      // the next room if all data could validate properly.
-      
-      //save is a request to create, 
-      
+      // CREATE -- needs to test for ID uniqueness.. so only go on to 
+      // the next state if all data could validate properly.
+
       var playerURL = API.PROFILE_URL; 
       
-      var q = $http({
+      $http({
         method : 'POST',
         url : playerURL,
         cache : false,
@@ -94,8 +85,8 @@ angular.module('playerApp')
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
-        // go to the sad room.. (Can't find the player information)
-        // or back to the login/registration screen? or.. 
+        // go to the sad state.. (Can't find the player information, and can't save it either)
+        $state.go('default.yuk');
       });
       
     };

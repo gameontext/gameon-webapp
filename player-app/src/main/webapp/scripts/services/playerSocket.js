@@ -16,13 +16,10 @@
  */
 angular.module('playerApp')
   .factory('playerSocket',
-  [          '$websocket','$log','user', 'auth', 'API',
-    function ($websocket,  $log,  user,  auth, API) {
-	  
-      var q, ws;
-            
-      $log.debug("Opening player socket for %o",user.profile);
-      
+  [          '$websocket','$log','user','auth','API',
+    function ($websocket,  $log,  user,  auth,  API) {
+    
+      var ws;
       var websocketURL = API.WS_URL + user.profile.id;
      
       // Collection for holding data: play.room.html displays
@@ -30,13 +27,21 @@ angular.module('playerApp')
       var roomEvents = [];
       
       // Create a v1 websocket
-      $log.debug('websocket %o', websocketURL);
-      ws = $websocket(websocketURL, { useApplyAsync: true } );
+      $log.debug("Opening player socket %o for %o",websocketURL, user.profile);
+      ws = $websocket(websocketURL, { 
+             useApplyAsync: true,
+             reconnectIfNotNormalClose: true
+           });
       
-      var playerSession = {
-    		  roomId : user.profile.location
-      };
-                
+      // Restore some information from the session, like the bookmark (last seen message)
+      var playerSession = angular.extend({}, angular.fromJson(localStorage.playerSession));
+
+      // Clear the bookmark if the DB says we're in a different room than the local session does.
+      if ( user.profile.location !== playerSession.roomId ) {
+        delete playerSession.bookmark;
+        playerSession.roomId = user.profile.location;
+      }
+
       // On open, check in with the concierge
       ws.onOpen(function() {
         console.log('connection open');
@@ -49,7 +54,7 @@ angular.module('playerApp')
         var comma = event.data.indexOf(',');
         var command = event.data.slice(0,comma);
         var payload = event.data.slice(comma+1);
-        var res;
+        var target, res;
         
         if ( "ack" === command ) {
           res = parseJson(payload);
@@ -57,6 +62,7 @@ angular.module('playerApp')
           playerSession.roomId = res.roomId;
         } else {
           comma = payload.indexOf(',');
+          target = payload.slice(0,comma);
           payload = payload.slice(comma+1);
           res = parseJson(payload);
           
@@ -94,6 +100,7 @@ angular.module('playerApp')
       // On close, close gracefully
       ws.onClose(function(event) {
         $log.debug('connection closed', event);
+        localStorage.playerSession = angular.toJson(playerSession);
       });
       
       var parseJson = function(message) {
@@ -101,14 +108,19 @@ angular.module('playerApp')
         try {
           res = JSON.parse(message);
         } catch(e) {
-          res = {'username': user.username, 'message': payload};
+          res = {username: user.username, content: message};
         }
         $log.debug('message: %o', res);
         return res;
       };
       
       var send = function(message) {
-        ws.send("room,"+playerSession.roomId+","+angular.toJson(message));
+        var input = {
+            username: user.profile.name, 
+            content: input
+        };
+        
+        ws.send("room,"+playerSession.roomId+","+input);
       };
       
       // Available methods and structures
