@@ -58,7 +58,7 @@ angular.module('playerApp')
 
         // go to the sad room.. (Can't find the player information)
         // or back to the login/registration screen? or.. 
-        user.profile.name = name;
+        user.profile.name = name.replace(/ /g , '_');
         return false;
       });
       
