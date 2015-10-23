@@ -41,6 +41,7 @@ angular.module('playerApp')
         delete playerSession.bookmark;
         playerSession.roomId = user.profile.location;
       }
+      playerSession.username = user.profile.name;
 
       // On open, check in with the concierge
       ws.onOpen(function() {

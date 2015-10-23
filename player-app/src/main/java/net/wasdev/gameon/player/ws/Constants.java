@@ -22,6 +22,9 @@ package net.wasdev.gameon.player.ws;
 public interface Constants {
 
 	String ROOM = "room";
+	String ROOM_HELLO = "roomHello";
+	String ROOM_GOODBYE = "roomGoodbye";
+
 	String PLAYER = "player";
 	String PLAYER_LOCATION = "playerLocation";
 	String SOS = "sos";

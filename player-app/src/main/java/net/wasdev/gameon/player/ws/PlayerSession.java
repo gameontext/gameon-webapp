@@ -37,6 +37,7 @@ import javax.websocket.Session;
 public class PlayerSession implements Runnable {
 
 	private final String userId;
+	private final String username;
 	private final String id = UUID.randomUUID().toString();
 	private final ThreadFactory threadFactory;
 	private final Concierge concierge;
@@ -56,8 +57,9 @@ public class PlayerSession implements Runnable {
 	 * @param userId Name of user for this session
 	 * @param threadFactory
 	 */
-	public PlayerSession(String userId, ManagedThreadFactory threadFactory, Concierge concierge) {
+	public PlayerSession(String userId, String username, ManagedThreadFactory threadFactory, Concierge concierge) {
 		this.userId = userId;
+		this.username = username;
 		this.threadFactory = threadFactory;
 		this.concierge = concierge;
 	}
@@ -67,34 +69,6 @@ public class PlayerSession implements Runnable {
 	 */
 	public String getId() {
 		return id;
-	}
-
-	/**
-	 *
-	 * @param clientSession
-	 * @param roomId2
-	 * @param lastmessage
-	 */
-	public boolean connectToRoom(Session clientSession, String roomId, long lastmessage) {
-		this.clientSession = clientSession;
-
-		currentRoom = concierge.checkin(null, currentRoom, roomId == null ? Constants.FIRST_ROOM : roomId);
-
-		// Get connection to the roo
-		if ( currentRoom.subscribe(this, lastmessage) ) {
-			this.roomId = currentRoom.getId();
-
-			sendClientAck();
-
-			// set up delivery thread
-			clientThread = threadFactory.newThread(this);
-			clientThread.start();
-
-			return true;
-		}
-
-		// turn on the spigot
-		return false;
 	}
 
 	/**
@@ -176,19 +150,43 @@ public class PlayerSession implements Runnable {
 		}
 	}
 
-	private boolean switchRooms(String[] routing) {
-		Set<String> visitedRooms = new HashSet<String>();
-		visitedRooms.add(currentRoom.getId());
+	/**
+	 *
+	 * @param clientSession
+	 * @param roomId2
+	 * @param lastmessage
+	 */
+	public boolean initializeConnection(Session clientSession, String roomId, long lastmessage) {
+		this.clientSession = clientSession;
 
-		// Disconnect from the current room
-		currentRoom.unsubscribe(this);
+		Room newRoom = concierge.checkin(null, currentRoom, roomId == null ? Constants.FIRST_ROOM : roomId);
 
-		// Transitional place. They might sit here awhile waiting for connection to new room
+		// Get connection to the room (resets vars, does good things)
+		if ( connectToRoom(newRoom) ) {
+			// set up delivery thread
+			clientThread = threadFactory.newThread(this);
+			clientThread.start();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private void switchRooms(String[] routing) {
+		Room newRoom;
+		Room oldRoom = currentRoom;
+
+		// Disconnect from the current room: stop receiving additional messages
+		oldRoom.unsubscribe(this);
+
+		// Send the client to a transitional place. They might sit here awhile waiting for connection to new room
 		toClient.offer(String.format(Constants.NETHER_REGION, userId));
 
-		if ( Constants.SOS.equals(routing[0])) {
-			// For an SOS, we don't care about the current room's exits.
-			currentRoom = concierge.changeRooms(currentRoom, null);
+		if ( Constants.SOS.equals(routing[0]) || Constants.FIRST_ROOM.equals(oldRoom.getId())) {
+			// For an SOS or for First room, we don't care about the current room's exits,
+			// we need to find a brand new starter room
+			newRoom = concierge.changeRooms(oldRoom, null);
 		} else {
 			// If we are properly exiting a room, we have the new room in the payload
 			// of the message from the old room.
@@ -196,20 +194,44 @@ public class PlayerSession implements Runnable {
 			JsonObject exitData = jsonReader.readObject();
 			String exitId = exitData.getString("exitId");
 
-			currentRoom = concierge.changeRooms(currentRoom, exitId);
+			newRoom = concierge.changeRooms(oldRoom, exitId);
 		}
 
-		// attempt to connect to the new room
-		while ( !currentRoom.subscribe(this, 0) ) {
-			if ( !visitedRooms.add(currentRoom.getId()) ) {
+		if ( connectToRoom(newRoom) ) {
+			// We connected to the new room! Say goodbye to the old room
+			sendToRoom(new String[] {Constants.ROOM_GOODBYE, oldRoom.getId(),
+					Json.createObjectBuilder()
+					.add(Constants.USERNAME, username)
+					.add(Constants.USER_ID, userId).build().toString() });
+
+		} else {
+			// recover: back into the old room
+			connectToRoom(oldRoom);
+		}
+	}
+
+	private boolean connectToRoom(Room room) {
+		Set<String> visitedRooms = new HashSet<String>();
+		visitedRooms.add(room.getId());
+
+		// SUBSCRIBE: Open the connection to receive notifications from the room
+		while ( !room.subscribe(this, 0) ) {
+			if ( !visitedRooms.add(room.getId()) ) {
 				return false; // repeat! no connection :(
 			}
-			currentRoom = concierge.changeRooms(currentRoom, null);
+			room = concierge.changeRooms(room, null);
 		}
 
-		this.roomId = currentRoom.getId();
-		sendClientAck();
-		return true;
+		this.currentRoom = room;
+		this.roomId = room.getId();
+
+		sendToRoom(new String[] {Constants.ROOM_HELLO, room.getId(),
+				Json.createObjectBuilder()
+				.add(Constants.USERNAME, username)
+				.add(Constants.USER_ID, userId).build().toString() });
+
+		sendClientAck(); // update client room
+		return true; // connected
 	}
 
 	/**

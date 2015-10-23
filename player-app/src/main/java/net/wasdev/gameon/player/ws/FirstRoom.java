@@ -17,6 +17,7 @@ package net.wasdev.gameon.player.ws;
 
 import java.io.StringReader;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -36,15 +37,22 @@ public class FirstRoom implements Room {
 
 	@Override
 	public void route(String[] routing) {
-		JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));
-		JsonObject sourceMessage = jsonReader.readObject();
+		switch(routing[0]) {
+			case Constants.ROOM_HELLO :
+			case Constants.ROOM_GOODBYE :
+				Log.log(Level.FINER, this, "{0} {1}", routing[0], routing[2]);
+				break;
+			default :
+				JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));
+				JsonObject sourceMessage = jsonReader.readObject();
 
-		JsonObjectBuilder builder = Json.createObjectBuilder();
+				JsonObjectBuilder builder = Json.createObjectBuilder();
 
-		parseCommand(sourceMessage, builder);
-		builder.add(Constants.BOOKMARK, counter.incrementAndGet());
+				parseCommand(sourceMessage, builder);
+				builder.add(Constants.BOOKMARK, counter.incrementAndGet());
 
-		session.sendToClient(new String[] {"player", sourceMessage.getString(Constants.USER_ID), builder.build().toString()});
+				session.sendToClient(new String[] {"player", sourceMessage.getString(Constants.USER_ID), builder.build().toString()});
+		}
 	}
 
 	protected void parseCommand(JsonObject sourceMessage, JsonObjectBuilder responseBuilder) {
