@@ -12,16 +12,14 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
   .run(
   [          '$rootScope', '$state', '$stateParams', 
     function ($rootScope,   $state,   $stateParams) {
-	  console.log("Page init starting.");
-	  
+      console.log("Page init starting.");
+
       // make life easier
       $rootScope.$on("$stateChangeError", console.log.bind(console));
 
       // From https://github.com/angular-ui/ui-router/blob/gh-pages/sample/app/app.js
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
-      
-      //
       
       console.log("Page init complete");
     }
@@ -58,68 +56,66 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.auth', {
           url: '^/login/callback/{token:.*}',
-          
-          onEnter: function($state, $stateParams,auth,user) {
-        	  //this step has to read the token from the params passed ($stateParams.token)
-        	  //and cause it to be stashed into the auth object so we can rely on it going forwards.
-        	  
-        	  console.log("default.auth.onEnter");
-        	  
-        	  console.log("default.auth.onEnter - calling auth.validate_token");
-        	  auth.validate_token($stateParams.token).then(function(isValid) {
-	        	   if(isValid){
-		             // Triggered by authentication callback (only). 
-		             // Verify the returned token... 
-	                 console.log("token callback from auth service was valid");
-	                 $state.go('default.usersetup');	              	                         
-	        	  }else{
-	        		  //TODO: goto a login failed page.. 
-	        		 $state.go('default.login');
-	        	  }
-        	  });        	
+
+          // State triggered by authentication callback (only). 
+          onEnter: function($state, $stateParams, auth, user) {
+            // this step has to read the token from the params passed ($stateParams.token)
+            // and cause it to be stashed into the auth object so we can rely on it going forwards.
+
+            console.log("default.auth.onEnter - calling auth.validate_token");
+            auth.validate_token($stateParams.token).then(function(isValid) {
+              // Verify the returned token... 
+              if(isValid){
+                console.log("token callback from auth service was valid");
+                $state.go('default.usersetup');
+              }else{
+                //TODO: goto a login failed page.. 
+                $state.go('default.login');
+              }
+            });        	
           }
         })
         .state('default.usersetup', { 
-           url: '^/login/usersetup',
-           onEnter: function($state, $stateParams,auth,user) {
-        	  console.log("building user object");
-         	  auth.introspect_token().then(function(tokeninfo) {
-	        	   if(tokeninfo.valid){
-		             // Triggered by authentication callback (only). 
-		             // Verify the returned token... 
-	                 console.log("cached/recovered token was valid, token info object was");
-	                 console.log(tokeninfo);
-	                 
-		              //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
-		              user.load(tokeninfo.id, tokeninfo.name).then(function(userKnownToDB){
-		            	  if(userKnownToDB){
-		            	      $state.go('play.room');
-		            	  }else{
-		 	                 $state.go('default.profile');  
-		            	  }
-		              });	                 	              	                        
-	        	  }else{
-	        		  //cached / recovered token was invalid. 
-	        		  //TODO: goto a login failed page.. 
-	        		 $state.go('default.login');
-	        	  }
-         	  });
-           }
-       	  })
-        .state('default.profile', { // check profile or initial profile creation
-           url: '^/login/profile',
-           onEnter: function($state, $stateParams,auth,user) {        	 
-        	  //if we're missing our auth token info.. user may have hit refresh here.. 
-        	  //since we've just lost all our context, send them back to the start..
-        	  //mebbe can make this nicer ;p
-        	  if($stateParams.tokeninfo === null){
-        		  console.log("Missing auth info.. redirecting.. ")
-        		  $state.go('default.login');
-        	  }else{        		  
-	              console.log("default.profile.onEnter has this ");
-	              console.log($stateParams.tokeninfo);	             
-        	  }
-           }
+          url: '^/login/usersetup',
+          // Triggered by default.auth state. 
+          onEnter: function($state, $stateParams,auth,user) {
+            console.log("building user object");
+            auth.introspect_token().then(function(tokeninfo) {
+              if(tokeninfo.valid){
+                // Verify the returned token... 
+                console.log("cached/recovered token was valid, token info object was");
+                console.log(tokeninfo);
+
+                //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
+                user.load(tokeninfo.id, tokeninfo.name).then(function(userKnownToDB){
+                  if(userKnownToDB){
+                    $state.go('play.room');
+                  }else{
+                    $state.go('default.profile');  
+                  }
+                });
+              }else{
+                //cached / recovered token was invalid. 
+                //TODO: goto a login failed page.. 
+                $state.go('default.login');
+              }
+            });
+          }
+        })
+        .state('default.profile', { // initial profile creation
+          url: '^/login/profile',
+          onEnter: function($state, $stateParams,auth,user) {
+            //if we're missing our auth token info.. user may have hit refresh here.. 
+            //since we've just lost all our context, send them back to the start..
+            //mebbe can make this nicer ;p
+            if($stateParams.tokeninfo === null){
+              console.log("Missing auth info.. redirecting.. ");
+              $state.go('default.login');
+            }else{
+              console.log("default.profile.onEnter has this ");
+              console.log($stateParams.tokeninfo);
+            }
+          }
         })
         .state('default.yuk', {
           url: '^/yuk',
@@ -132,23 +128,23 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           templateUrl: 'templates/play.html',
           controller: 'PlayCtrl as play',
           resolve: {   	
-        	  //a fictional var that we'll have injected to onEntry and into the PlayCtrl
-        	  //resolve will make sure we don't create PlayCtrl or enter onEntry until 
-        	  //the promises below are all complete. 
-        	  "userAndAuth" : function(auth,user,$state) {
-    			  return auth.getAuthenticationState().then(function(isAuthenticated){
-				    	if(!isAuthenticated){
-				    		$state.go('default.login');  				    		
-				    	}else{
-				        	if(typeof user.profile.id === 'undefined'){
-				        		$state.go('default.usersetup');
-				        	}
-				    	}
-    			  });        			
-    		  }      
+            // a fictional var that we'll have injected to onEntry and into the PlayCtrl.
+            // resolve will make sure we don't create PlayCtrl or enter onEntry until 
+            // the promises below are all complete. 
+            "userAndAuth" : function(auth,user,$state) {
+              return auth.getAuthenticationState().then(function(isAuthenticated){
+                if(!isAuthenticated){
+                  $state.go('default.login');
+                }else{
+                  if(typeof user.profile.id === 'undefined'){
+                    $state.go('default.usersetup');
+                  }
+                }
+              });
+            }
           },
           onEnter: function($state, auth, user, userAndAuth){
-        	  console.log("In play state");
+            console.log("In play state");
           }
         })
         .state('play.room', {

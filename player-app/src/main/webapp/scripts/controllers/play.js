@@ -26,8 +26,7 @@ angular.module('playerApp')
         var input = $scope.userInput;
         $scope.userInput = '';
         if ( input ) {
-          var message = {'username': user.username, 'content': input};
-          playerSocket.send(message);
+          playerSocket.send(input);
         }
       };
   }]);
