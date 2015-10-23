@@ -22,6 +22,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.enterprise.context.ApplicationScoped;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -37,7 +39,6 @@ public class Concierge {
 	@Resource
 	protected ManagedThreadFactory threadFactory;
 
-	@Resource(name = "conciergeUrl")
 	private String conciergeLocation;
 
 	Client client;
@@ -45,16 +46,36 @@ public class Concierge {
 
 	@PostConstruct
 	public void initClient() {
+		try {
+			this.conciergeLocation = (String) new InitialContext().lookup("conciergeUrl");
+		} catch (NamingException e) {
+		}
 		this.client = ClientBuilder.newClient();
 		this.root = this.client.target(conciergeLocation);
+
+		Log.log(Level.FINER, this, "Concierge initialized with {0}", conciergeLocation);
 	}
 
-	public Room checkin(String roomId, Room currentRoom) {
-		if ( currentRoom != null && currentRoom.getId().equals(roomId))
-			return currentRoom;
+	public Room checkin(PlayerSession playerSession, Room currentRoom, String roomId) {
+		if ( roomId == null || roomId.isEmpty() || Constants.FIRST_ROOM.equals(roomId) ) {
+			// NEWBIE!!
+			return new FirstRoom();
+		}
 
-		RoomEndpointList endpoints = getRoomEndpoints(roomId);
-		RemoteRoom room = new RemoteRoom(roomId, endpoints.getEndpoints(), threadFactory);
+		if ( currentRoom != null ) {
+			if ( currentRoom.getId().equals(roomId)) {
+				// SESSION RESUME!! WOO!!
+				return currentRoom;
+			} else {
+				// The player moved rooms somewhere along the way
+				// we need to make sure we detach the old session
+				currentRoom.unsubscribe(playerSession);
+			}
+		}
+
+		// Make a new room;
+		RoomEndpointList endpointList = getRoomEndpoints(roomId);
+		RemoteRoom room = new RemoteRoom(roomId, endpointList.getEndpoints(), threadFactory);
 
 		// Create a new room
 		return room;

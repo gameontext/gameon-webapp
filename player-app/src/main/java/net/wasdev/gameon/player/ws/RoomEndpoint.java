@@ -38,6 +38,10 @@ public class RoomEndpoint {
 
 	@OnClose
 	public void onClose(Session session, CloseReason reason) {
+		Room room = Room.getRoom(session);
+		Log.log(Level.FINEST, session, "connection to room {0} closed", room.getId());
+		Room.setRoom(session, null);
+		room.disconnect(reason);
 	}
 
 	@OnMessage
@@ -45,7 +49,8 @@ public class RoomEndpoint {
 		Room room = Room.getRoom(session);
 		Log.log(Level.FINEST, session, "received from room {0}: {1}", room.getId(), message);
 		String[] routing = ConnectionUtils.splitRouting(message);
-		room.push(routing);
+
+		room.route(routing);
 	}
 
 	@OnError

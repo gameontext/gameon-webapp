@@ -19,10 +19,12 @@ import java.io.StringReader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -44,8 +46,14 @@ public class PlayerSessionManager {
 	@Resource
 	protected ManagedThreadFactory threadFactory;
 
-	@Resource
+	@Inject
 	protected Concierge concierge;
+
+	@PostConstruct
+	public void init() {
+		System.out.println(concierge);
+	}
+
 
 	/**
 	 * Set the PlayerSession into the websocket session user properties.
@@ -90,6 +98,7 @@ public class PlayerSessionManager {
 			playerSession = new PlayerSession(userName, threadFactory, concierge);
 		}
 
+		playerSession.connectToRoom(clientSession, roomId, lastmessage);
 		return playerSession;
 	}
 

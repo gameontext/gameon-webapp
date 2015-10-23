@@ -15,6 +15,7 @@
  *******************************************************************************/
 package net.wasdev.gameon.player.ws;
 
+import javax.websocket.CloseReason;
 import javax.websocket.Session;
 
 /**
@@ -26,7 +27,7 @@ public interface Room {
 	 * Route to room or to player depending on routing.
 	 * @param routing Array of 3 elements: (room|player):(roomId|playerId):content
 	 */
-	void push(String[] routing);
+	void route(String[] routing);
 
 	/**
 	 * @param playerSession
@@ -43,6 +44,12 @@ public interface Room {
 	 * @return
 	 */
 	String getId();
+
+	/**
+	 * Called when the room-side of the connection is closed.
+	 * @param reason Why the connection was closed.
+	 */
+	void disconnect(CloseReason reason);
 
 	/**
 	 * @param session

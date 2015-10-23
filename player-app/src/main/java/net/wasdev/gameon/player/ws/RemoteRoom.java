@@ -22,6 +22,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 
+import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.Session;
@@ -57,11 +58,11 @@ public class RemoteRoom implements Runnable, Room {
 	}
 
 	/**
-	 * Add item to the queue for writing to the room
+	 * Route data to/from the room's websocket session
 	 * @param routing
 	 */
 	@Override
-	public void push(String[] routing) {
+	public void route(String[] routing) {
 		switch(routing[0]) {
 			case Constants.ROOM :
 				toRoom.offer(String.join(",", routing));
@@ -86,6 +87,7 @@ public class RemoteRoom implements Runnable, Room {
 				if ( !ConnectionUtils.sendText(roomSession, message) ) {
 					// If the send failed, tuck the message back in the head of the queue.
 					toRoom.offerFirst(message);
+					keepGoing = false;
 				}
 			} catch (InterruptedException ex) {
 				if ( keepGoing ) {
@@ -122,9 +124,11 @@ public class RemoteRoom implements Runnable, Room {
 	public void unsubscribe(PlayerSession playerSession) {
 		this.playerSession = null;
 
-		disconnect();
+		// Clean up the room session
+		// (player leaving the room or client connection destroyed)
 		roomThread.interrupt();
 		toRoom.clear();
+		ConnectionUtils.tryToClose(roomSession);
 	}
 
 	/**
@@ -146,7 +150,7 @@ public class RemoteRoom implements Runnable, Room {
 			} catch (DeploymentException e) {
 				Log.log(Level.FINER, this, "Deployment exception creating connection to room " + roomId, e);
 			} catch (IOException e) {
-				Log.log(Level.FINER, this, "Deployment exception creating connection to room " + roomId, e);
+				Log.log(Level.FINER, this, "I/O exception creating connection to room " + roomId, e);
 			}
 		}
 
@@ -156,9 +160,11 @@ public class RemoteRoom implements Runnable, Room {
 	/**
 	 *
 	 */
-	private void disconnect() {
-		// TODO Auto-generated method stub
-
+	@Override
+	public void disconnect(CloseReason reason) {
+		// This is driven by disconnect: if the connection is disconnected for
+		// a not-normal reason, do we reconnect? Respawn the whole room?
+		Log.log(Level.FINER, this, "Disconnect {0}: {1}", roomId, reason);
 	}
 
 	@Override

@@ -38,6 +38,7 @@ public interface Constants {
 	String BOOKMARK = "bookmark";
 
 	String USERNAME = "username";
+	String USER_ID = "userId";
 	String CONTENT = "content";
 
 	String NETHER_REGION = null;

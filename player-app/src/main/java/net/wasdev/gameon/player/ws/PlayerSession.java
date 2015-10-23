@@ -16,6 +16,7 @@
 package net.wasdev.gameon.player.ws;
 
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -75,20 +76,25 @@ public class PlayerSession implements Runnable {
 	 * @param lastmessage
 	 */
 	public boolean connectToRoom(Session clientSession, String roomId, long lastmessage) {
-		this.roomId = roomId == null ? Constants.FIRST_ROOM : roomId;
 		this.clientSession = clientSession;
 
-		currentRoom = concierge.checkin(roomId, currentRoom);
+		currentRoom = concierge.checkin(null, currentRoom, roomId == null ? Constants.FIRST_ROOM : roomId);
 
-		// set up delivery thread
-		clientThread = threadFactory.newThread(this);
-		clientThread.start();
+		// Get connection to the roo
+		if ( currentRoom.subscribe(this, lastmessage) ) {
+			this.roomId = currentRoom.getId();
 
-		// Send ack, have client room, have session
-		sendClientAck();
+			sendClientAck();
+
+			// set up delivery thread
+			clientThread = threadFactory.newThread(this);
+			clientThread.start();
+
+			return true;
+		}
 
 		// turn on the spigot
-		return currentRoom.subscribe(this, lastmessage);
+		return false;
 	}
 
 	/**
@@ -101,8 +107,11 @@ public class PlayerSession implements Runnable {
 	public void sendToRoom(String[] routing) {
 		if ( Constants.SOS.equals(routing[0])) {
 			switchRooms(routing);
+		} else if ( currentRoom.getId().equals(routing[1]) ){
+			// send messages for the current room on to the room (others fall on the floor)
+			currentRoom.route(routing);
 		} else {
-			currentRoom.push(routing);
+			Log.log(Level.FINEST, this, "sendToRoom -- Dropping message {0}", Arrays.asList(routing));
 		}
 	}
 
@@ -124,6 +133,7 @@ public class PlayerSession implements Runnable {
 			} catch (InterruptedException ex) {
 				if ( keepGoing ) {
 					Thread.interrupted();
+					keepGoing = false;
 				} else {
 					System.out.println("Interrupted -- stopping now");
 				}
@@ -161,6 +171,8 @@ public class PlayerSession implements Runnable {
 			if ( Constants.PLAYER_LOCATION.equals(routing[0])) {
 				switchRooms(routing);
 			}
+		} else {
+			Log.log(Level.FINEST, this, "sendToClient -- Dropping message {0}", Arrays.asList(routing));
 		}
 	}
 
@@ -195,6 +207,8 @@ public class PlayerSession implements Runnable {
 			currentRoom = concierge.changeRooms(currentRoom, null);
 		}
 
+		this.roomId = currentRoom.getId();
+		sendClientAck();
 		return true;
 	}
 
@@ -205,7 +219,8 @@ public class PlayerSession implements Runnable {
 	 */
 	public void disconnect() {
 		keepGoing = false;
-		clientThread.interrupt();
+		if ( clientThread != null)
+			clientThread.interrupt();
 	}
 
 	/**
