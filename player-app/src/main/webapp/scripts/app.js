@@ -104,16 +104,16 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.profile', { // initial profile creation
           url: '^/login/profile',
-          onEnter: function($state, $stateParams,auth,user) {
+          onEnter: function($state, $stateParams, user, auth) {        	  
             //if we're missing our auth token info.. user may have hit refresh here.. 
             //since we've just lost all our context, send them back to the start..
             //mebbe can make this nicer ;p
-            if($stateParams.tokeninfo === null){
+            if(typeof user.profile.name === 'undefined'){
               console.log("Missing auth info.. redirecting.. ");
               $state.go('default.login');
             }else{
               console.log("default.profile.onEnter has this ");
-              console.log($stateParams.tokeninfo);
+              console.log(user.profile.name);
             }
           }
         })
