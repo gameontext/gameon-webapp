@@ -36,6 +36,8 @@
   <jndiEntry jndiName="jwtKeyStore" value="${server.config.dir}/resources/security/key.jks"/>
   <jndiEntry jndiName="jwtKeyStorePassword" value="testOnlyKeystore"/>
   <jndiEntry jndiName="jwtKeyStoreAlias" value="default"/>
+  
+  <jndiEntry jndiName="conciergeUrl" value="${env.CONCIERGE_URL}"/>
 
   <webApplication id="player-app" location="player-app.war" name="player-app" contextRoot="/play">
     <classloader commonLibraryRef="MongoLib"/>

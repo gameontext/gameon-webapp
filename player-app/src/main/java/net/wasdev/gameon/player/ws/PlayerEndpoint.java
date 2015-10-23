@@ -37,7 +37,7 @@ import javax.websocket.server.ServerEndpoint;
  * player's devices if connected to more than one.
  *
  */
-@ServerEndpoint(value = "/ws1/{username}", configurator = EndpointConfigurator.class)
+@ServerEndpoint(value = "/ws1/{userId}")
 public class PlayerEndpoint {
 
 	@Inject
@@ -50,8 +50,8 @@ public class PlayerEndpoint {
 	 * @param ec
 	 */
 	@OnOpen
-	public void onOpen(@PathParam("username") String username, Session session, EndpointConfig ec) {
-		Log.log(Level.FINER, session, "client open - {0}", username);
+	public void onOpen(@PathParam("userId") String userId, Session session, EndpointConfig ec) {
+		Log.log(Level.FINER, session, "client open - {0}", userId);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class PlayerEndpoint {
 	 * @param reason
 	 */
 	@OnClose
-	public void onClose(@PathParam("username") String username, Session session, CloseReason reason) {
-		Log.log(Level.FINER, session, "client closed - {0}", username);
+	public void onClose(@PathParam("userId") String userId, Session session, CloseReason reason) {
+		Log.log(Level.FINER, session, "client closed - {0}", userId);
 
 		PlayerSession ps = playerSessionManager.getPlayerSession(session);
 		playerSessionManager.suspendSession(ps);
@@ -76,32 +76,30 @@ public class PlayerEndpoint {
 	 * @throws IOException
 	 */
 	@OnMessage
-	public void onMessage(@PathParam("username") String username, String message, Session session) throws IOException {
-		Log.log(Level.FINER, session, "received from client {0}: {1}", username, message);
+	public void onMessage(@PathParam("userId") String userId, String message, Session session) throws IOException {
+		Log.log(Level.FINEST, session, "received from client {0}: {1}", userId, message);
 
 		String[] routing = ConnectionUtils.splitRouting(message);
 		switch(routing[0]) {
 			case "ready" : {
 				// create a new or resume an existing player session
-				// This will send an acknowledgement and (potentially) turn on the faucet
-				String payload = routing.length > 1 ? routing[1] : "";
-				PlayerSession ps = playerSessionManager.startSession(session, username, payload);
+				String savedSession = routing.length > 1 ? routing[1] : "";
+				PlayerSession ps = playerSessionManager.startSession(session, userId, savedSession);
 				playerSessionManager.setPlayerSession(session, ps);
 				break;
 			}
 			default : {
 				PlayerSession ps = playerSessionManager.getPlayerSession(session);
-				ps.route(routing);
+				ps.sendToRoom(routing);
 				break;
 			}
 		}
-
 	}
 
 	@OnError
-	public void onError(@PathParam("username") String username, Session session, Throwable t) {
-		Log.log(Level.FINER, session, "oops for client "+username+" connection", t);
-
+	public void onError(@PathParam("userId") String userId, Session session, Throwable t) {
+		Log.log(Level.FINER, session, "oops for client "+userId+" connection", t);
+		t.printStackTrace();
 		ConnectionUtils.tryToClose(session,
 				new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, t.getClass().getName()));
 	}

@@ -15,82 +15,121 @@
  *******************************************************************************/
 package net.wasdev.gameon.player.ws;
 
+import java.io.StringReader;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 
+import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.websocket.Session;
 
 /**
  * A session that buffers content destined for the client devices across
  * connect/disconnects.
  */
-public class PlayerSession {
-	public static final String MEDIATOR_ID = "mediatorId";
-	public static final String ROOM_ID = "roomId";
-	public static final String LAST_SEEN = "lastSeen";
+public class PlayerSession implements Runnable {
 
-	private final String username;
-	private final String mediatorId;
+	private final String userId;
+	private final String id = UUID.randomUUID().toString();
+	private final ThreadFactory threadFactory;
+	private final Concierge concierge;
 
-	private String roomId = Constants.FIRST_ROOM;
+	private Session clientSession = null;
+	private Thread clientThread = null;
+	private volatile boolean keepGoing = true;
+
+	private String roomId = null;
 	private Room currentRoom = null;
-	private int suspendCount = 0;
 
 	/** Queue of messages destined for the client device */
-	private final BlockingQueue<String> toClient = new LinkedBlockingQueue<String>();
-	private String failedSend = null;
-
-	/**
-	 * This will be false whenever the client endpoint has disconnected
-	 * (hopefully momentarily). When the client has disconnected, we'll stop
-	 * trying to send messages down the pipe, and will just wait a moment
-	 * for them to come back.
-	 */
-	private volatile boolean clientConnected = false;
+	private final LinkedBlockingDeque<String> toClient = new LinkedBlockingDeque<String>();
 
 	/**
 	 * Create a new PlayerSession for the user.
-	 * @param username Name of user for this session
-	 * @param roomId
+	 * @param userId Name of user for this session
+	 * @param threadFactory
 	 */
-	public PlayerSession(String username, String roomId) {
-		this.mediatorId = UUID.randomUUID().toString();
-		this.username = username;
-
-		// If we have a non-null, not-empty roomId, use that
-		// to create the new session.
-		if ( roomId != null && !roomId.isEmpty()) {
-			this.roomId = roomId;
-		}
+	public PlayerSession(String userId, ManagedThreadFactory threadFactory, Concierge concierge) {
+		this.userId = userId;
+		this.threadFactory = threadFactory;
+		this.concierge = concierge;
 	}
 
 	/**
-	 * Get the mediator id for lookup later
-	 * @return mediator id (a stringified uuid)
+	 * @return ID of this session
 	 */
-	public String getMediatorId() {
-		return mediatorId;
+	public String getId() {
+		return id;
 	}
 
 	/**
 	 *
-	 * @param clientRoomId Room id remembered by the client (this value wins,
-	 * if it is set).
-	 * @return
+	 * @param clientSession
+	 * @param roomId2
+	 * @param lastmessage
 	 */
-	public PlayerSession validate(String clientRoomId) {
-		// The client room id is the fresher value (fresh retrieval from the DB)
-		if ( roomId.equals(clientRoomId) ) {
-			return this; // all is well, we have a match
-		}
+	public boolean connectToRoom(Session clientSession, String roomId, long lastmessage) {
+		this.roomId = roomId == null ? Constants.FIRST_ROOM : roomId;
+		this.clientSession = clientSession;
 
-		// A new PlayerSession will be created for the new room
-		return null;
+		currentRoom = concierge.checkin(roomId, currentRoom);
+
+		// set up delivery thread
+		clientThread = threadFactory.newThread(this);
+		clientThread.start();
+
+		// Send ack, have client room, have session
+		sendClientAck();
+
+		// turn on the spigot
+		return currentRoom.subscribe(this, lastmessage);
+	}
+
+	/**
+	 * Given room,&lt;roomId&gt;,{...}, make sure the specified room id
+	 * matches the target room.
+	 *
+	 * @param routing
+	 *
+	 */
+	public void sendToRoom(String[] routing) {
+		if ( Constants.SOS.equals(routing[0])) {
+			switchRooms(routing);
+		} else {
+			currentRoom.push(routing);
+		}
+	}
+
+	/**
+	 * Dedicated thread writing to the client connection
+	 */
+	@Override
+	public void run() {
+		// Dedicated thread sending messages back to the client as fast
+		// as it can take them: maybe we batch these someday.
+		while( keepGoing ) {
+			try {
+				String message = toClient.take();
+
+				if ( !ConnectionUtils.sendText(clientSession, message) ) {
+					// If the send failed, tuck the message back in the head of the queue.
+					toClient.offerFirst(message);
+				}
+			} catch (InterruptedException ex) {
+				if ( keepGoing ) {
+					Thread.interrupted();
+				} else {
+					System.out.println("Interrupted -- stopping now");
+				}
+			}
+		}
+		Log.log(Level.FINER, this, "Exit client writer thread {0}", this);
 	}
 
 	/**
@@ -99,122 +138,89 @@ public class PlayerSession {
 	 *
 	 * @return ack message with mediator id
 	 */
-	public String ack() {
+	public void sendClientAck() {
 		JsonObject ack = Json.createObjectBuilder()
-				.add(MEDIATOR_ID, mediatorId)
-				.add(ROOM_ID, roomId)
+				.add(Constants.MEDIATOR_ID, id)
+				.add(Constants.ROOM_ID, roomId)
 				.build();
-		return "ack," + ack.toString();
-	}
 
-
-	/**
-	 * Catch up a resumed session or re-fetch the history since the last seen
-	 * message from the room.
-	 *
-	 * @param lastmessage Last message id the client saw
-	 * @return
-	 */
-	public Runnable connect(long lastseen, Session clientSession) {
-		Log.log(Level.FINE, this, "client session {0} connected: {1}", username, clientSession);
-		clientConnected = true;
-		suspendCount = 0; // clear suspended ticks.
-
-		if ( currentRoom == null ) {
-			// First room is per-player -- no chat or anything
-			currentRoom = new FirstRoom(username);
-		}
-
-		// If we had a leftover message that failed to send, try again
-		if( failedSend != null ) {
-			if ( ConnectionUtils.sendText(clientSession, failedSend) ) {
-				failedSend = null;
-			} else {
-				// the IOException on sendText will also close the connection.
-				// return an empty runnable.
-				return () -> {};
-			}
-		}
-
-		// catch up on other missed messages
-		toClient.addAll(currentRoom.catchUp(lastseen));
-
-		// connect this session to the room
-		currentRoom.connect(this);
-
-		return () -> {
-			while ( clientConnected ) {
-				try {
-					// We're writing one message at a time to drain the queue.
-					// This is on its own thread to allow us to continue handling
-					// new events while letting the client pull them down as it
-					// can. Note this could introduce some lag.. not much we can
-					// do in that case.
-					String message = toClient.poll(3, TimeUnit.SECONDS);
-					if ( message != null ) {
-						if ( !ConnectionUtils.sendText(clientSession, message) ) {
-							// if the send failed, store the message, and stop looping.
-							// the IOException on sendText will also close the connection.
-							failedSend = message;
-							clientConnected = false;
-						}
-					}
-				} catch (InterruptedException e) {
-					//carry on with the next loop: after checking the exit flag
-				}
-			}
-		};
+		toClient.add("ack," + ack.toString());
 	}
 
 	/**
-	 * Turn off the spigot, the client has disconnected.
-	 */
-	public void disconnect() {
-		Log.log(Level.FINE, this, "client session {0} disconnected", username);
-		clientConnected = false;
-	}
-
-	/**
-	 * Forward messages from the client on to the active room (provided
-	 * the id's match).
-	 *
+	 * Add message to queue to return to client
 	 * @param routing
 	 */
-	public void route(String[] routing) {
-		// We expect room,id,{...} or player,username,{...}
-		if ( routing.length > 2 ) {
-			switch(routing[0]) {
-				case Constants.ROOM :
-					if ( roomId.equals(routing[1]) ) {
-						currentRoom.sendToRoom(routing);
-					}
-					break;
-				case Constants.PLAYER:
-					if ( username.equals(routing[1])  || "*".equals(routing[1]) ) {
-						// put the message on the queue to be sent to the client
-						toClient.offer(String.join(",", routing));
-					}
-					break;
-				default :
-					// toss it.
-					break;
+	public void sendToClient(String[] routing) {
+		// make sure we're only dealing with messages for everyone,
+		// or messages for this user (ignore all others)
+		if ( "*".equals(routing[1]) || userId.equals(routing[1])){
+			// TODO: Capacity?
+			toClient.offer(String.join(",", routing));
+
+			if ( Constants.PLAYER_LOCATION.equals(routing[0])) {
+				switchRooms(routing);
 			}
 		}
+	}
+
+	private boolean switchRooms(String[] routing) {
+		Set<String> visitedRooms = new HashSet<String>();
+		visitedRooms.add(currentRoom.getId());
+
+		// Disconnect from the current room
+		currentRoom.unsubscribe(this);
+
+		// Transitional place. They might sit here awhile waiting for connection to new room
+		toClient.offer(String.format(Constants.NETHER_REGION, userId));
+
+		if ( Constants.SOS.equals(routing[0])) {
+			// For an SOS, we don't care about the current room's exits.
+			currentRoom = concierge.changeRooms(currentRoom, null);
+		} else {
+			// If we are properly exiting a room, we have the new room in the payload
+			// of the message from the old room.
+			JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));
+			JsonObject exitData = jsonReader.readObject();
+			String exitId = exitData.getString("exitId");
+
+			currentRoom = concierge.changeRooms(currentRoom, exitId);
+		}
+
+		// attempt to connect to the new room
+		while ( !currentRoom.subscribe(this, 0) ) {
+			if ( !visitedRooms.add(currentRoom.getId()) ) {
+				return false; // repeat! no connection :(
+			}
+			currentRoom = concierge.changeRooms(currentRoom, null);
+		}
+
+		return true;
+	}
+
+	/**
+	 * This is strictly about pulling from the queue
+	 * to send to the client: we're trying to cover short gaps
+	 * in connection from the client (within reason)
+	 */
+	public void disconnect() {
+		keepGoing = false;
+		clientThread.interrupt();
 	}
 
 	/**
 	 *
 	 */
-	private void destroy() {
-		Log.log(Level.FINE, this, "session {0} destroyed", username);
+	public void destroy() {
+		Log.log(Level.FINE, this, "session {0} destroyed", userId);
 		// session expired.
 		toClient.clear();
-		currentRoom.disconnect(this);
+		currentRoom.unsubscribe(this);
 		currentRoom = null;
 	}
 
 	@Override
 	public String toString() {
-		return this.getClass().getName() + "[id=" + mediatorId + ", username=" + username +"]";
+		return this.getClass().getName() + "[roomId=" + roomId + ", userId=" + userId +"]";
 	}
 }

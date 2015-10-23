@@ -17,14 +17,15 @@ package net.wasdev.gameon.player.ws;
 
 import java.io.StringReader;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.Json;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParser.Event;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.websocket.Session;
 
 /**
@@ -33,19 +34,18 @@ import javax.websocket.Session;
  */
 @ApplicationScoped
 public class PlayerSessionManager {
-	public static final String MEDIATOR_ID = "mediator-id";
-	public static final String ROOM_ID = "room-id";
-	public static final String LAST_SEEN = "last-seen";
-
-	private final ConcurrentHashMap<String, PlayerSession> parkedSessions = new ConcurrentHashMap<String, PlayerSession>();
+	private final ConcurrentHashMap<String, PlayerSession> suspendedSessions = new ConcurrentHashMap<String, PlayerSession>();
 
 	/** CDI injection of Java EE7 Managed scheduled executor service */
 	@Resource
 	protected ManagedScheduledExecutorService executor;
 
+	/** CDI injection of Java EE7 Managed thread factory */
 	@Resource
-	ManagedThreadFactory threadFactory;
+	protected ManagedThreadFactory threadFactory;
 
+	@Resource
+	protected Concierge concierge;
 
 	/**
 	 * Set the PlayerSession into the websocket session user properties.
@@ -66,82 +66,29 @@ public class PlayerSessionManager {
 	}
 
 	/**
-	 * Start or resume a "player session". This attempts to smooth things over in the face of a
-	 * client that drops frequently but momentarily.
+	 * Create a new player session to mediate between the client and the room
 	 *
 	 * @param clientSession WebSocket session for the connection between the client and the player
-	 * @param routingInfo Routing information: mediator-id, room-id, last-seen
+	 * @param userId User's unique id
+	 * @param clientCache Information from the client: updated room, last message seen
 	 * @return a new or resumed PlayerSession
 	 */
-	public PlayerSession startSession(Session clientSession, String userName, String routingInfo) {
-		JsonParser jsonParser = Json.createParser(new StringReader(routingInfo));
+	public PlayerSession startSession(Session clientSession, String userName, String localStorageData) {
 
-		String keyName = null;
+		JsonReader jsonReader = Json.createReader(new StringReader(localStorageData));
+		JsonObject sessionData = jsonReader.readObject();
 
-		String mediatorId = null;
-		String roomId = null;
-		long lastmessage = 0;
-
-		if ( routingInfo.length() > 0 ) {
-			// Read data provided by the client:
-			//   mediator-id: string id for a previous session
-			//   room-id: string id for the last known room
-			//   last-seen: long id for last message seen from the last known room
-			while (jsonParser.hasNext()) {
-				Event event = jsonParser.next();
-				switch(event) {
-					case KEY_NAME:
-						keyName = jsonParser.getString();
-						break;
-					case VALUE_STRING :
-						switch(keyName) {
-							case MEDIATOR_ID :
-								mediatorId = jsonParser.getString();
-								break;
-							case ROOM_ID :
-								roomId = jsonParser.getString();
-								break;
-							default :
-								break;
-						}
-						break;
-					case VALUE_NUMBER :
-						switch (keyName) {
-							case LAST_SEEN :
-								lastmessage = jsonParser.getLong();
-								break;
-							default :
-								break;
-						}
-					default :
-						break;
-				}
-			}
-		}
+		String mediatorId = sessionData.getString(Constants.MEDIATOR_ID, null);
+		String roomId = sessionData.getString(Constants.ROOM_ID, null);
+		long lastmessage = sessionData.getInt(Constants.BOOKMARK, 0);
 
 		PlayerSession playerSession = null;
-
-		// try to resume a parked session
 		if ( mediatorId != null ) {
-			playerSession = parkedSessions.remove(mediatorId);
-			if ( playerSession != null ) {
-				playerSession = playerSession.validate(roomId);
-			}
+			playerSession = suspendedSessions.remove(mediatorId);
 		}
-
 		if ( playerSession == null ) {
-			// We don't have a session we can resume, make a new one
-			playerSession = new PlayerSession(userName, roomId);
-			lastmessage = 0;
+			playerSession = new PlayerSession(userName, threadFactory, concierge);
 		}
-
-		// Send the ack back to the client with the (new or confirmed) mediator id
-		ConnectionUtils.sendText(clientSession, playerSession.ack());
-
-		// catch up on (and continue to drain) messages headed to the client.
-		// when the connection is closed, this thread will clean up on its own
-		// as the Runnable exits.
-		threadFactory.newThread(playerSession.connect(lastmessage, clientSession)).start();
 
 		return playerSession;
 	}
@@ -152,9 +99,10 @@ public class PlayerSessionManager {
 	 * @see PlayerEndpoint#onClose(String, Session, javax.websocket.CloseReason)
 	 */
 	public void suspendSession(PlayerSession session) {
+		Log.log(Level.FINER, this, "Suspending session {0}", session);
 		if ( session != null ) {
+			suspendedSessions.put(session.getId(), session);
 			session.disconnect();
-			parkedSessions.put(session.getMediatorId(), session);
 		}
 	}
 }
