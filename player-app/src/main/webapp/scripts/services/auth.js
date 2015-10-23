@@ -103,10 +103,6 @@ angular.module('playerApp')
          */
         function obtain_jwt() {
           $log.debug('Obtain JWT for token %o', _token);
-          var token = _token;
-          
-          _token = undefined;
-          delete localStorage.token;
 
           var q = $http({
               method : 'GET',
@@ -115,11 +111,25 @@ angular.module('playerApp')
           }).then(function(response) {
         	  //http 200 
               $log.debug('JWT(good) '+response.status + ' ' + response.statusText + ' ' + response.data);
-              var tmp = angular.fromJson(response.data);              
+              var tmp = angular.fromJson(response.data);    
+              
+              //since we now know token state, we can setup a promise that acts like verify had been invoked.
+              _authenticated = new Promise(function(resolve,reject){
+            	  resolve(true);            	  
+              });
+              
+              _jwt = tmp.jwt;
+              localStorage.jwt = tmp.jwt;
+              
               return tmp.jwt; // return value of the promise
           }, function(response) {
         	  //http error
               $log.debug('JWT(bad) '+response.status + ' ' + response.statusText + ' ' + response.data);
+              
+              //since we now know token state, we can setup a promise that acts like verify had been invoked.
+              _authenticated = new Promise(function(resolve,reject){
+            	  resolve(false);            	  
+              });
           });
 
           // RETURNING A PROMISE

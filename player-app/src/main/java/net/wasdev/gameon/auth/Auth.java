@@ -10,6 +10,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.naming.InitialContext;
@@ -38,28 +39,104 @@ public class Auth {
 	FacebookVerify fv = new FacebookVerify();
 	FacebookIntrospect fi = new FacebookIntrospect();
 	
+	
+	private static class TimeStampedResponse{
+		long timestamp;
+		String verifyResponse;
+		String introspectResponse;
+	}
+	private static class CacheHashMap<K, T extends TimeStampedResponse> extends LinkedHashMap<K, T> {
+		private static final long serialVersionUID = 1L;
+		private final int maxSize;
+
+	    public CacheHashMap(int maxSize) {
+	        this(maxSize, 16, .75f, true);
+	    }
+
+	    public CacheHashMap(int maxSize, int initialCapacity, float loadFactor, boolean accessOrder) {
+	        super(initialCapacity, loadFactor, accessOrder);
+	        this.maxSize = maxSize;
+	    }	    
+
+	    @Override
+	    protected boolean removeEldestEntry(Map.Entry<K, T> eldest) {
+	        return size() > maxSize;
+	    }
+	}
+	
+	private static CacheHashMap<String, TimeStampedResponse> cache = new CacheHashMap<String, TimeStampedResponse>(50);
+	private static final int MAXAGE = 1000*60*15; //15m as ms. 
+	
 	@GET
 	@Path("/verify/{auth}")
     @Produces(MediaType.APPLICATION_JSON)
 	public Response verify(@PathParam("auth") String auth) throws IOException {
-		if(auth.startsWith("TWITTER::")){
-			return tv.verify(auth);
-		}else if (auth.startsWith("FACEBOOK::")){
-			return fv.verify(auth);
+		TimeStampedResponse t = cache.get(auth);
+		Response r = Response.status(400).build();
+		if(t!=null && t.verifyResponse!=null && (System.currentTimeMillis()-t.timestamp)<MAXAGE){
+			System.out.println("Using cached verify response for auth "+auth);
+			r = Response.ok(t.verifyResponse).build(); 
+		}else{
+			if(auth.startsWith("TWITTER::")){
+				r = tv.verify(auth);
+			}else if (auth.startsWith("FACEBOOK::")){
+				r = fv.verify(auth);
+			}
+			if(r.getStatus()!=400){
+				if(r.getStatus()==200){					
+					synchronized(cache){
+						TimeStampedResponse newT;
+						if(!cache.containsKey(auth)){
+							newT = new TimeStampedResponse();
+							cache.put(auth, newT);
+						}else{
+							newT = cache.get(auth);
+							//refresh the entry in the map.. (because we are removing oldest entries from the map)
+							cache.put(auth, newT);
+						}						
+						newT.timestamp = System.currentTimeMillis();
+						newT.verifyResponse = r.getEntity().toString();
+					}
+				}
+			}
 		}
-		return Response.status(400).build();
+		return r;
 	}
 	
 	@GET
 	@Path("/introspect/{auth}")
     @Produces(MediaType.APPLICATION_JSON)
 	public Response introspect(@PathParam("auth") String auth) throws IOException {
-		if(auth.startsWith("TWITTER::")){
-			return ti.introspect(auth);
-		}else if (auth.startsWith("FACEBOOK::")){
-			return fi.introspect(auth);
+		TimeStampedResponse t = cache.get(auth);
+		Response r = Response.status(400).build();
+		if(t!=null && t.introspectResponse!=null && (System.currentTimeMillis()-t.timestamp)<MAXAGE){
+			System.out.println("Using cached introspect response for auth "+auth);
+			r = Response.ok(t.introspectResponse).build(); 
+		}else{
+			if(auth.startsWith("TWITTER::")){
+				r = ti.introspect(auth);
+			}else if (auth.startsWith("FACEBOOK::")){
+				r = fi.introspect(auth);
+			}
+			if(r.getStatus()!=400){
+				if(r.getStatus()==200){					
+					synchronized(cache){
+						TimeStampedResponse newT;
+						if(!cache.containsKey(auth)){
+							newT = new TimeStampedResponse();
+							cache.put(auth, newT);
+						}else{
+							newT = cache.get(auth);
+							//refresh the entry in the map.. (because we are removing oldest entries from the map)
+							cache.put(auth, newT);
+						}						
+						newT.timestamp = System.currentTimeMillis();
+						newT.introspectResponse = r.getEntity().toString();
+					}
+				}
+			}
 		}
-		return Response.status(400).build();
+		return r;
 	}
 	
 	private static Key signingKey = null;

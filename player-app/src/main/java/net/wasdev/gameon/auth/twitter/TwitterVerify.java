@@ -46,9 +46,8 @@ public class TwitterVerify {
 			twitter.verifyCredentials();	
 			
 	        Map<String, RateLimitStatus> rl = twitter.getRateLimitStatus();
-	        for(Map.Entry<String, RateLimitStatus> e : rl.entrySet()){
-	        	System.out.println(e.getKey() +" :: limit: "+e.getValue().getLimit()+" remaining: "+e.getValue().getRemaining()+" reset: "+e.getValue().getSecondsUntilReset());
-	        }
+	        System.out.println("Rate Limit Query Limits : " + rl.get("/application/rate_limit_status"));
+	        System.out.println("Verify Credential Limits : " + rl.get("/account/verify_credentials"));
 	        			
     		return Response.ok("{\"valid\" : \"true\"}").build();
 		} catch (TwitterException e) {
