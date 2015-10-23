@@ -48,8 +48,11 @@ angular.module('playerApp')
       }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 
-          return true;
+          var tmp = angular.fromJson(response.data);
+          user.profile.name = tmp.name;
+          user.profile.favoriteColor = tmp.favoriteColor;
           
+          return true;          
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + playerURL);
 

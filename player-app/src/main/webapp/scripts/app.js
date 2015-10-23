@@ -131,20 +131,24 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           url: '/play',
           templateUrl: 'templates/play.html',
           controller: 'PlayCtrl as play',
-          onEnter: function($state, auth, user){
-        	console.log("AUTHING ROOM");
-
-            auth.getAuthenticationState().then(function(isAuthenticated){
-            	if(!isAuthenticated){
-            		$state.go('default.login');           	
-            	}else{
-            		console.log("room is authed.");	
-                	if(typeof user.profile.id === 'undefined'){
-                		console.log("user is missing .. rebuilding");
-                		$state.go('default.usersetup');
-                	}
-            	}
-            });
+          resolve: {   	
+        	  //a fictional var that we'll have injected to onEntry and into the PlayCtrl
+        	  //resolve will make sure we don't create PlayCtrl or enter onEntry until 
+        	  //the promises below are all complete. 
+        	  "userAndAuth" : function(auth,user,$state) {
+    			  return auth.getAuthenticationState().then(function(isAuthenticated){
+				    	if(!isAuthenticated){
+				    		$state.go('default.login');  				    		
+				    	}else{
+				        	if(typeof user.profile.id === 'undefined'){
+				        		$state.go('default.usersetup');
+				        	}
+				    	}
+    			  });        			
+    		  }      
+          },
+          onEnter: function($state, auth, user, userAndAuth){
+        	  console.log("In play state");
           }
         })
         .state('play.room', {
