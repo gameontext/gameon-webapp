@@ -115,12 +115,14 @@ angular.module('playerApp')
       };
       
       var send = function(message) {
-        var input = {
+        var output = {
             username: user.profile.name, 
-            content: input
+            userId: user.profile.id,
+            content: message
         };
+        $log.debug('message: %o', output);
         
-        ws.send("room,"+playerSession.roomId+","+input);
+        ws.send("room,"+playerSession.roomId+","+angular.toJson(output));
       };
       
       // Available methods and structures

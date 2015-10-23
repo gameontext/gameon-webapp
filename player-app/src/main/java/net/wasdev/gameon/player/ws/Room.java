@@ -15,68 +15,51 @@
  *******************************************************************************/
 package net.wasdev.gameon.player.ws;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import javax.websocket.CloseReason;
+import javax.websocket.Session;
 
 /**
  *
  */
-public abstract class Room {
+public interface Room {
 
-	/** Queue of messages destined for the room */
-	private final BlockingQueue<String> toRoom = new LinkedBlockingQueue<String>();
+	/**
+	 * Route to room or to player depending on routing.
+	 * @param routing Array of 3 elements: (room|player):(roomId|playerId):content
+	 */
+	void route(String[] routing);
 
-	private final String roomId;
-	private boolean roomConnected = false;
-
-	public Room(String roomId) {
-		this.roomId = roomId;
-	}
+	/**
+	 * @param playerSession
+	 * @param lastmessage
+	 */
+	boolean subscribe(PlayerSession playerSession, long lastmessage);
 
 	/**
 	 * @param playerSession
 	 */
-	public void connect(PlayerSession playerSession) {
-		System.out.println("CONNECT: " + playerSession);
-	}
-
+	void unsubscribe(PlayerSession playerSession);
 
 	/**
-	 * Fetch history from the server (no outstanding queue)
-	 * @param lastseen
 	 * @return
 	 */
-	public Collection<? extends String> catchUp(long lastseen) {
-		// populate missing history from the room
-		return Collections.emptyList();
-	}
+	String getId();
 
 	/**
-	 * Send a single message to the queue for the room.
-	 * @param routing Room-bound string
+	 * Called when the room-side of the connection is closed.
+	 * @param reason Why the connection was closed.
 	 */
-	public void sendToRoom(String[] routing) {
-		System.out.println("SEND TO ROOM: " + routing);
-	}
+	void disconnect(CloseReason reason);
 
 	/**
-	 * @param playerSession
+	 * @param session
+	 * @return
 	 */
-	public void disconnect(PlayerSession playerSession) {
-		System.out.println("DISCONNECT: " + playerSession);
+	static Room getRoom(Session session) {
+		return (Room) session.getUserProperties().get(Room.class.getName());
+	};
+
+	static void setRoom(Session session, Room room) {
+		session.getUserProperties().put(Room.class.getName(), session);
 	}
-
-
-	public void destroy() {
-		roomConnected = false;
-		toRoom.clear();
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getName() + "[" + roomId + "]";
-	}
-
 }

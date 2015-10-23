@@ -9,8 +9,8 @@
  */
 angular.module('playerApp')
   .controller('PlayCtrl', 
-  [          '$scope','$log','playerSocket','user',
-    function ($scope,  $log,  playerSocket,  user, userAndAuth) {
+  [          '$scope','$log','playerSocket','user','userAndAuth',
+    function ($scope,  $log,  playerSocket,  user,  userAndAuth) {
       $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
       
       $scope.roomEvents = playerSocket.roomEvents;

@@ -16,48 +16,26 @@
 package net.wasdev.gameon.player.ws;
 
 import java.io.StringReader;
-import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
+import javax.websocket.CloseReason;
 
 /**
- * The first room: This is a tutorial room, shown to the user
- * when their account is first created. It does a few things like
- * make sure their profile has interesting information in it,
- * and does a little about showing how the UI works.
+ * @author elh
+ *
  */
-public class FirstRoom extends Room {
-	private final String username;
-	private PlayerSession playerSession;
+public class FirstRoom implements Room {
+
+	PlayerSession session= null;
 	private AtomicInteger counter = new AtomicInteger(0);
 
-	/**
-	 * @param username
-	 */
-	public FirstRoom(String username) {
-		super(Constants.FIRST_ROOM);
-		this.username = username;
-	}
 
 	@Override
-	public Collection<? extends String> catchUp(long lastseen) {
-		System.out.println("Catch-up: " + lastseen);
-		return super.catchUp(lastseen);
-	}
-
-	@Override
-	public void connect(PlayerSession playerSession) {
-		this.playerSession = playerSession;
-	}
-
-	@Override
-	public void sendToRoom(String[] routing) {
-		// unique to first room (in the player). Take the sent message, parse it lightly,
-		// send it back to the client.
+	public void route(String[] routing) {
 		JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));
 		JsonObject sourceMessage = jsonReader.readObject();
 
@@ -66,13 +44,7 @@ public class FirstRoom extends Room {
 		parseCommand(sourceMessage, builder);
 		builder.add(Constants.BOOKMARK, counter.incrementAndGet());
 
-		// The First Room is always a private conversation with the player.
-		playerSession.route(new String[] {"player", username, builder.build().toString()});
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getName() + "[id=" + Constants.FIRST_ROOM + ", username=" + username + "]";
+		session.sendToClient(new String[] {"player", sourceMessage.getString(Constants.USER_ID), builder.build().toString()});
 	}
 
 	protected void parseCommand(JsonObject sourceMessage, JsonObjectBuilder responseBuilder) {
@@ -83,9 +55,29 @@ public class FirstRoom extends Room {
 			responseBuilder.add(Constants.TYPE, Constants.EVENT)
 			.add(Constants.CONTENT, "event " + content);
 		} else {
-			responseBuilder.add(Constants.USERNAME, "user:"+username)
+			responseBuilder.add(Constants.USERNAME, sourceMessage.getString(Constants.USERNAME))
 			.add(Constants.CONTENT, "echo " + content)
 			.add(Constants.TYPE, Constants.CHAT);
 		}
 	}
+
+	@Override
+	public boolean subscribe(PlayerSession playerSession, long lastmessage) {
+		this.session = playerSession;
+		return true;
+	}
+
+	@Override
+	public void unsubscribe(PlayerSession playerSession) {
+	}
+
+	@Override
+	public String getId() {
+		return Constants.FIRST_ROOM;
+	}
+
+	@Override
+	public void disconnect(CloseReason reason) {
+	}
+
 }

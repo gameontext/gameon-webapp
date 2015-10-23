@@ -21,9 +21,10 @@ package net.wasdev.gameon.player.ws;
  */
 public interface Constants {
 
-	// Perhaps a routing enum would work better
 	String ROOM = "room";
 	String PLAYER = "player";
+	String PLAYER_LOCATION = "playerLocation";
+	String SOS = "sos";
 
 	String FIRST_ROOM = "TheFirstRoom";
 
@@ -32,10 +33,13 @@ public interface Constants {
 	String CHAT = "chat";
 	String EVENT = "event";
 
-	// A field enum or just free-form?
-	String USERNAME = "username";
+	String MEDIATOR_ID = "mediatorId";
+	String ROOM_ID = "roomId";
 	String BOOKMARK = "bookmark";
+
+	String USERNAME = "username";
+	String USER_ID = "userId";
 	String CONTENT = "content";
 
-
+	String NETHER_REGION = null;
 }
