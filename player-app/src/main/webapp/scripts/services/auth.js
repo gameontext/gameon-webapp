@@ -34,24 +34,19 @@ angular.module('playerApp')
               url : API.VERIFY_URL + token,
               cache : false
           }).then(function(response) {
-              $log.debug('Verify '+response.status + ' ' + response.statusText + ' ' + response.data);
+              $log.debug('Verify(good) '+response.status + ' ' + response.statusText + ' ' + response.data);
               var tmp = angular.fromJson(response.data);
               
-              if ( tmp.valid === "true" ) {
-            	$log.debug("Token was valid");
-                // server verified good token.
-                _token = token;         
-                console.log(_token);
-                localStorage.token = angular.toJson(_token);
-              } else {
-            	$log.debug("Token was invalid %o",tmp);
-            	//this doesn't work.
-                $q.reject("Token invalid");
-              }
+        	  $log.debug("Token was valid");
+              // server verified good token.
+              _token = token;         
+              console.log(_token);
+              localStorage.token = angular.toJson(_token);
               
-              return tmp.valid === "true"; // return value of the promise
+              return true; // return value of the promise
           }, function(response) {
-            $log.debug('verify(outer) '+response.status + ' ' + response.statusText + ' ' + response.data);
+            $log.debug('Verify(bad) '+response.status + ' ' + response.statusText + ' ' + response.data);
+            return false;
           });
           
           _authenticated = q;
@@ -75,28 +70,56 @@ angular.module('playerApp')
               url : API.INTROSPECT_URL + token,
               cache : false
           }).then(function(response) {
-              $log.debug('Introspect '+response.status + ' ' + response.statusText + ' ' + response.data);
+              $log.debug('Introspect(good) '+response.status + ' ' + response.statusText + ' ' + response.data);
               var tmp = angular.fromJson(response.data);
               
               //since we now know token state, we can setup a promise that acts like verify had been invoked.
               _authenticated = new Promise(function(resolve,reject){
-            	  resolve(tmp.valid);            	  
+            	  resolve(true);            	  
               });
               
-              if ( tmp.valid === "true" ) {
-                // server verified good token.
-                _token = token;
-                tmp.token = token;
-                localStorage.token = angular.toJson(_token);
-              } else {
-              	$log.debug("Token was invalid %o",tmp);
-            	//this doesn't work.
-                $q.reject("Token invalid");
-              }
-              
+              // server verified good token.
+              _token = token;
+              tmp.token = token;
+              localStorage.token = angular.toJson(_token);
+            
               return tmp; // return value of the promise
           }, function(response) {
-            $log.debug('introspect(outer) '+response.status + ' ' + response.statusText + ' ' + response.data);
+            $log.debug('Introspect(bad) '+response.status + ' ' + response.statusText + ' ' + response.data);
+            
+            //since we now know token state, we can setup a promise that acts like verify had been invoked.
+            _authenticated = new Promise(function(resolve,reject){
+          	  resolve(true);            	  
+            });
+                        
+          });
+
+          // RETURNING A PROMISE
+          return q;
+        }
+        
+        /**
+         * Used during login to obtain id for user. 
+         */
+        function obtain_jwt() {
+          $log.debug('Obtain JWT for token %o', _token);
+          var token = _token;
+          
+          _token = undefined;
+          delete localStorage.token;
+
+          var q = $http({
+              method : 'GET',
+              url : API.JWT_URL + token,
+              cache : false
+          }).then(function(response) {
+        	  //http 200 
+              $log.debug('JWT(good) '+response.status + ' ' + response.statusText + ' ' + response.data);
+              var tmp = angular.fromJson(response.data);              
+              return tmp.jwt; // return value of the promise
+          }, function(response) {
+        	  //http error
+              $log.debug('JWT(bad) '+response.status + ' ' + response.statusText + ' ' + response.data);
           });
 
           // RETURNING A PROMISE

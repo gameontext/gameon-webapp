@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -69,9 +70,14 @@ public class FacebookIntrospect {
 	
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String introspect(@PathParam("auth") String auth) throws IOException { 	
+    public Response introspect(@PathParam("auth") String auth) throws IOException { 	
     	    	
     	Map<String,String> result = introspectAuth(auth);
+    	
+    	//convert an invalid status into a 400 return.
+    	if(result.get("valid").equals("false")){
+    		Response.status(401).build();
+    	}
     	
     	//serialize out the map as json.. 
     	//TBD: use something a little more elegant.. even json4j
@@ -87,6 +93,6 @@ public class FacebookIntrospect {
         out.println("\n}");
         out.close();
 
-        return sw.toString();
+        return Response.ok(sw.toString()).build();
     }
 }

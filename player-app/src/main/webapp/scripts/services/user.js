@@ -26,7 +26,7 @@ angular.module('playerApp')
     user.rules.colorPattern = /^\w{3,}$/;
 
     user.load = function(id,name) {
-
+    	
       $log.debug('quering token %o',localStorage.token);	
 
       //we're using the id from the token introspect as our player db id.

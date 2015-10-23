@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -40,25 +41,25 @@ public class Auth {
 	@GET
 	@Path("/verify/{auth}")
     @Produces(MediaType.APPLICATION_JSON)
-	public String verify(@PathParam("auth") String auth) throws IOException {
+	public Response verify(@PathParam("auth") String auth) throws IOException {
 		if(auth.startsWith("TWITTER::")){
 			return tv.verify(auth);
 		}else if (auth.startsWith("FACEBOOK::")){
 			return fv.verify(auth);
 		}
-		return "{ valid: false} }";
+		return Response.status(400).build();
 	}
 	
 	@GET
 	@Path("/introspect/{auth}")
     @Produces(MediaType.APPLICATION_JSON)
-	public String introspect(@PathParam("auth") String auth) throws IOException {
+	public Response introspect(@PathParam("auth") String auth) throws IOException {
 		if(auth.startsWith("TWITTER::")){
 			return ti.introspect(auth);
 		}else if (auth.startsWith("FACEBOOK::")){
 			return fi.introspect(auth);
 		}
-		return "{ valid: false} }";
+		return Response.status(400).build();
 	}
 	
 	private static Key signingKey = null;
@@ -97,7 +98,7 @@ public class Auth {
 	@GET
 	@Path("/jwt/{auth}")
     @Produces(MediaType.APPLICATION_JSON)
-	public String generateJWT(@PathParam("auth") String auth) throws IOException {
+	public Response generateJWT(@PathParam("auth") String auth) throws IOException {
 		
 		if(signingKey==null)
 			getKeyStoreInfo();
@@ -112,7 +113,7 @@ public class Auth {
 		
 		//if auth key was no longer valid, we won't build a jwt.
 		if(!"true".equals(data.get("valid"))){
-			return "{ }";
+			return Response.status(400).build();
 		}
 		
 		Claims onwardsClaims = Jwts.claims();
@@ -132,6 +133,6 @@ public class Auth {
 		//they should verifiy it with.
 		String newJwt = Jwts.builder().setHeaderParam("kid","playerssl").setClaims(onwardsClaims).signWith(SignatureAlgorithm.RS256,signingKey).compact();
 
-		return "{ \"jwt\" : \""+newJwt+"\" }";				
+		return Response.ok("{ \"jwt\" : \""+newJwt+"\" }").build();		
 	}
 }
