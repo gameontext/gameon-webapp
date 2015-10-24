@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
  *
  */
 @ApplicationScoped
-public class Concierge {
+public class ConciergeClient {
 
 	/** CDI injection of Java EE7 Managed thread factory */
 	@Resource
@@ -100,8 +100,8 @@ public class Concierge {
 	}
 
 	public RoomEndpointList getRoomEndpoints() {
-		WebTarget target = this.root.path("startingLocation");
-		Log.log(Level.FINER, this, "making requestion to {0} for starting rooms", target.toString());
+		WebTarget target = this.root.path("startingRoom");
+		Log.log(Level.FINER, this, "making request to {0} for starting rooms", target.getUri().toString());
 		RoomEndpointList result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointList.class);
 
 		return result;
@@ -109,7 +109,7 @@ public class Concierge {
 
 	public RoomEndpointList getRoomEndpoints(String roomId) {
 		WebTarget target = this.root.path("rooms/{roomId}").resolveTemplate("roomId", roomId);
-		Log.log(Level.FINER, this, "making requestion to {0} for room", target.toString());
+		Log.log(Level.FINER, this, "making request to {0} for room", target.getUri().toString());
 		RoomEndpointList result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointList.class);
 
 		return result;
@@ -117,7 +117,7 @@ public class Concierge {
 
 	public RoomEndpointList getRoomEndpoints(String roomId, String exit) {
 		WebTarget target = this.root.path("rooms/{roomId}/{exit}").resolveTemplate("roomId", roomId).resolveTemplate("exit", exit);
-		Log.log(Level.FINER, this, "making requestion to {0} for list of exit", target.toString());
+		Log.log(Level.FINER, this, "making request to {0} for list of exit", target.getUri().toString());
 		RoomEndpointList result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointList.class);
 
 		return result;

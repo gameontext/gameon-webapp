@@ -40,7 +40,7 @@ public class PlayerSession implements Runnable {
 	private final String username;
 	private final String id = UUID.randomUUID().toString();
 	private final ThreadFactory threadFactory;
-	private final Concierge concierge;
+	private final ConciergeClient concierge;
 
 	private Session clientSession = null;
 	private Thread clientThread = null;
@@ -57,7 +57,7 @@ public class PlayerSession implements Runnable {
 	 * @param userId Name of user for this session
 	 * @param threadFactory
 	 */
-	public PlayerSession(String userId, String username, ManagedThreadFactory threadFactory, Concierge concierge) {
+	public PlayerSession(String userId, String username, ManagedThreadFactory threadFactory, ConciergeClient concierge) {
 		this.userId = userId;
 		this.username = username;
 		this.threadFactory = threadFactory;

@@ -47,7 +47,7 @@ public class PlayerSessionManager {
 	protected ManagedThreadFactory threadFactory;
 
 	@Inject
-	protected Concierge concierge;
+	protected ConciergeClient concierge;
 
 	@PostConstruct
 	public void init() {
