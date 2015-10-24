@@ -102,35 +102,39 @@ public class ConciergeClient {
 	public RoomEndpointList getRoomEndpoints() {
 		WebTarget target = this.root.path("startingRoom");
 		Log.log(Level.FINER, this, "making request to {0} for starting rooms", target.getUri().toString());
-		RoomEndpointList result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointList.class);
+		RoomEndpointListWrapper result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointListWrapper.class);
 
-		return result;
+		
+		return result.getRel();
 	}
 
 	public RoomEndpointList getRoomEndpoints(String roomId) {
 		WebTarget target = this.root.path("rooms/{roomId}").resolveTemplate("roomId", roomId);
 		Log.log(Level.FINER, this, "making request to {0} for room", target.getUri().toString());
-		RoomEndpointList result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointList.class);
+		RoomEndpointListWrapper result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointListWrapper.class);
 
-		return result;
+		return result.getRel();
 	}
 
 	public RoomEndpointList getRoomEndpoints(String roomId, String exit) {
 		WebTarget target = this.root.path("rooms/{roomId}/{exit}").resolveTemplate("roomId", roomId).resolveTemplate("exit", exit);
 		Log.log(Level.FINER, this, "making request to {0} for list of exit", target.getUri().toString());
-		RoomEndpointList result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointList.class);
+		RoomEndpointListWrapper result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointListWrapper.class);
 
-		return result;
+		return result.getRel();
 	}
 
-	static class RoomList {
-		List<RoomEndpointList> rooms;
+	static class RoomEndpointListWrapper {
+		RoomEndpointList rel;
 
-		public List<RoomEndpointList> getRooms() {
-			return rooms;
+		public RoomEndpointList getRel() {
+			return rel;
+		}
+
+		public void setRel(RoomEndpointList rel) {
+			this.rel = rel;
 		}
 	}
-
 	static class RoomEndpointList {
 		String roomId;
 		List<String> endpoints;
