@@ -28,9 +28,9 @@ import javax.websocket.CloseReason;
 /**
  *
  */
-public class FirstRoom implements Room {
+public class FirstRoom implements RoomMediator {
 
-	PlayerSession session= null;
+	PlayerConnectionMediator session= null;
 	private AtomicInteger counter = new AtomicInteger(0);
 
 	@Override
@@ -81,13 +81,13 @@ public class FirstRoom implements Room {
 
 
 	@Override
-	public boolean subscribe(PlayerSession playerSession, long lastmessage) {
+	public boolean subscribe(PlayerConnectionMediator playerSession, long lastmessage) {
 		this.session = playerSession;
 		return true;
 	}
 
 	@Override
-	public void unsubscribe(PlayerSession playerSession) {
+	public void unsubscribe(PlayerConnectionMediator playerSession) {
 	}
 
 	@Override

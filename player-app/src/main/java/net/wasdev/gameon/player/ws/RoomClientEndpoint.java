@@ -30,7 +30,7 @@ import javax.websocket.Session;
  *
  */
 @ClientEndpoint
-public class RoomEndpoint {
+public class RoomClientEndpoint {
 
 	@OnOpen
 	public void onOpen(Session session, EndpointConfig ec) {
@@ -38,15 +38,15 @@ public class RoomEndpoint {
 
 	@OnClose
 	public void onClose(Session session, CloseReason reason) {
-		Room room = Room.getRoom(session);
+		RoomMediator room = RoomMediator.getRoom(session);
 		Log.log(Level.FINEST, session, "connection to room {0} closed", room.getId());
-		Room.setRoom(session, null);
+		RoomMediator.setRoom(session, null);
 		room.disconnect(reason);
 	}
 
 	@OnMessage
 	public void onMessage(Session session, String message) {
-		Room room = Room.getRoom(session);
+		RoomMediator room = RoomMediator.getRoom(session);
 		Log.log(Level.FINEST, session, "received from room {0}: {1}", room.getId(), message);
 		String[] routing = ConnectionUtils.splitRouting(message);
 
@@ -55,7 +55,7 @@ public class RoomEndpoint {
 
 	@OnError
 	public void onError(Throwable t, Session session) {
-		Room room = Room.getRoom(session);
+		RoomMediator room = RoomMediator.getRoom(session);
 		Log.log(Level.FINEST, session, "received from room {0}: {1}", room.getId(), t);
 		t.printStackTrace();
 		ConnectionUtils.tryToClose(session,

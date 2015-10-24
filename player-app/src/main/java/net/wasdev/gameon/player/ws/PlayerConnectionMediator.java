@@ -34,7 +34,7 @@ import javax.websocket.Session;
  * A session that buffers content destined for the client devices across
  * connect/disconnects.
  */
-public class PlayerSession implements Runnable {
+public class PlayerConnectionMediator implements Runnable {
 
 	private final String userId;
 	private final String username;
@@ -47,7 +47,7 @@ public class PlayerSession implements Runnable {
 	private volatile boolean keepGoing = true;
 
 	private String roomId = null;
-	private Room currentRoom = null;
+	private RoomMediator currentRoom = null;
 
 	/** Queue of messages destined for the client device */
 	private final LinkedBlockingDeque<String> toClient = new LinkedBlockingDeque<String>();
@@ -57,7 +57,7 @@ public class PlayerSession implements Runnable {
 	 * @param userId Name of user for this session
 	 * @param threadFactory
 	 */
-	public PlayerSession(String userId, String username, ManagedThreadFactory threadFactory, ConciergeClient concierge) {
+	public PlayerConnectionMediator(String userId, String username, ManagedThreadFactory threadFactory, ConciergeClient concierge) {
 		this.userId = userId;
 		this.username = username;
 		this.threadFactory = threadFactory;
@@ -159,7 +159,7 @@ public class PlayerSession implements Runnable {
 	public boolean initializeConnection(Session clientSession, String roomId, long lastmessage) {
 		this.clientSession = clientSession;
 
-		Room newRoom = concierge.checkin(null, currentRoom, roomId == null ? Constants.FIRST_ROOM : roomId);
+		RoomMediator newRoom = concierge.checkin(null, currentRoom, roomId == null ? Constants.FIRST_ROOM : roomId);
 
 		// Get connection to the room (resets vars, does good things)
 		if ( connectToRoom(newRoom) ) {
@@ -174,8 +174,8 @@ public class PlayerSession implements Runnable {
 	}
 
 	private void switchRooms(String[] routing) {
-		Room newRoom;
-		Room oldRoom = currentRoom;
+		RoomMediator newRoom;
+		RoomMediator oldRoom = currentRoom;
 
 		// Disconnect from the current room: stop receiving additional messages
 		oldRoom.unsubscribe(this);
@@ -212,7 +212,7 @@ public class PlayerSession implements Runnable {
 		}
 	}
 
-	private boolean connectToRoom(Room room) {
+	private boolean connectToRoom(RoomMediator room) {
 		Set<String> visitedRooms = new HashSet<String>();
 		visitedRooms.add(room.getId());
 

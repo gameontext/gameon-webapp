@@ -38,7 +38,7 @@ import javax.websocket.server.ServerEndpoint;
  *
  */
 @ServerEndpoint(value = "/ws1/{userId}")
-public class PlayerEndpoint {
+public class PlayerServerEndpoint {
 
 	@Inject
 	PlayerSessionManager playerSessionManager;
@@ -64,7 +64,7 @@ public class PlayerEndpoint {
 	public void onClose(@PathParam("userId") String userId, Session session, CloseReason reason) {
 		Log.log(Level.FINER, session, "client closed - {0}", userId);
 
-		PlayerSession ps = playerSessionManager.getPlayerSession(session);
+		PlayerConnectionMediator ps = playerSessionManager.getPlayerSession(session);
 		playerSessionManager.suspendSession(ps);
 	}
 
@@ -84,12 +84,12 @@ public class PlayerEndpoint {
 			case "ready" : {
 				// create a new or resume an existing player session
 				String savedSession = routing.length > 1 ? routing[1] : "";
-				PlayerSession ps = playerSessionManager.startSession(session, userId, savedSession);
+				PlayerConnectionMediator ps = playerSessionManager.startSession(session, userId, savedSession);
 				playerSessionManager.setPlayerSession(session, ps);
 				break;
 			}
 			default : {
-				PlayerSession ps = playerSessionManager.getPlayerSession(session);
+				PlayerConnectionMediator ps = playerSessionManager.getPlayerSession(session);
 				ps.sendToRoom(routing);
 				break;
 			}

@@ -56,7 +56,7 @@ public class ConciergeClient {
 		Log.log(Level.FINER, this, "Concierge initialized with {0}", conciergeLocation);
 	}
 
-	public Room checkin(PlayerSession playerSession, Room currentRoom, String roomId) {
+	public RoomMediator checkin(PlayerConnectionMediator playerSession, RoomMediator currentRoom, String roomId) {
 		if ( roomId == null || roomId.isEmpty() || Constants.FIRST_ROOM.equals(roomId) ) {
 			// NEWBIE!!
 			return new FirstRoom();
@@ -75,7 +75,7 @@ public class ConciergeClient {
 
 		// Make a new room;
 		RoomEndpointList endpointList = getRoomEndpoints(roomId);
-		RemoteRoom room = new RemoteRoom(roomId, endpointList.getEndpoints(), threadFactory);
+		RemoteRoomMediator room = new RemoteRoomMediator(roomId, endpointList.getEndpoints(), threadFactory);
 
 		// Create a new room
 		return room;
@@ -86,7 +86,7 @@ public class ConciergeClient {
 	 * @param currentRoom
 	 * @return
 	 */
-	public Room changeRooms(Room currentRoom, String exit) {
+	public RoomMediator changeRooms(RoomMediator currentRoom, String exit) {
 		RoomEndpointList roomEndpoints = null;
 
 		if ( exit == null ) {
@@ -96,7 +96,7 @@ public class ConciergeClient {
 			roomEndpoints = getRoomEndpoints(currentRoom.getId(), exit);
 		}
 
-		return new RemoteRoom(roomEndpoints.getRoomId(), roomEndpoints.getEndpoints(), threadFactory);
+		return new RemoteRoomMediator(roomEndpoints.getRoomId(), roomEndpoints.getEndpoints(), threadFactory);
 	}
 
 	public RoomEndpointList getRoomEndpoints() {

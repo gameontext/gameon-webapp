@@ -36,7 +36,7 @@ import javax.websocket.Session;
  */
 @ApplicationScoped
 public class PlayerSessionManager {
-	private final ConcurrentHashMap<String, PlayerSession> suspendedSessions = new ConcurrentHashMap<String, PlayerSession>();
+	private final ConcurrentHashMap<String, PlayerConnectionMediator> suspendedSessions = new ConcurrentHashMap<String, PlayerConnectionMediator>();
 
 	/** CDI injection of Java EE7 Managed scheduled executor service */
 	@Resource
@@ -60,8 +60,8 @@ public class PlayerSessionManager {
 	 * @param session target websocket session
 	 * @param playerSession player session
 	 */
-	public void setPlayerSession(Session session, PlayerSession playerSession) {
-		session.getUserProperties().put(PlayerSession.class.getName(), playerSession);
+	public void setPlayerSession(Session session, PlayerConnectionMediator playerSession) {
+		session.getUserProperties().put(PlayerConnectionMediator.class.getName(), playerSession);
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class PlayerSessionManager {
 	 * @param session source websocket session
 	 * @return cached PlayerSession
 	 */
-	public PlayerSession getPlayerSession(Session session) {
-		return (PlayerSession) session.getUserProperties().get(PlayerSession.class.getName());
+	public PlayerConnectionMediator getPlayerSession(Session session) {
+		return (PlayerConnectionMediator) session.getUserProperties().get(PlayerConnectionMediator.class.getName());
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class PlayerSessionManager {
 	 * @param clientCache Information from the client: updated room, last message seen
 	 * @return a new or resumed PlayerSession
 	 */
-	public PlayerSession startSession(Session clientSession, String userName, String localStorageData) {
+	public PlayerConnectionMediator startSession(Session clientSession, String userName, String localStorageData) {
 
 		JsonReader jsonReader = Json.createReader(new StringReader(localStorageData));
 		JsonObject sessionData = jsonReader.readObject();
@@ -91,12 +91,12 @@ public class PlayerSessionManager {
 		String username = sessionData.getString(Constants.USERNAME, null);
 		long lastmessage = sessionData.getInt(Constants.BOOKMARK, 0);
 
-		PlayerSession playerSession = null;
+		PlayerConnectionMediator playerSession = null;
 		if ( mediatorId != null ) {
 			playerSession = suspendedSessions.remove(mediatorId);
 		}
 		if ( playerSession == null ) {
-			playerSession = new PlayerSession(userName, username, threadFactory, concierge);
+			playerSession = new PlayerConnectionMediator(userName, username, threadFactory, concierge);
 		}
 
 		playerSession.initializeConnection(clientSession, roomId, lastmessage);
@@ -106,9 +106,9 @@ public class PlayerSessionManager {
 	/**
 	 * Move the PlayerSession to the list of suspended sessions.
 	 *
-	 * @see PlayerEndpoint#onClose(String, Session, javax.websocket.CloseReason)
+	 * @see PlayerServerEndpoint#onClose(String, Session, javax.websocket.CloseReason)
 	 */
-	public void suspendSession(PlayerSession session) {
+	public void suspendSession(PlayerConnectionMediator session) {
 		Log.log(Level.FINER, this, "Suspending session {0}", session);
 		if ( session != null ) {
 			suspendedSessions.put(session.getId(), session);

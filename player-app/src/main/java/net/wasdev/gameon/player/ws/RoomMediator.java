@@ -21,7 +21,7 @@ import javax.websocket.Session;
 /**
  *
  */
-public interface Room {
+public interface RoomMediator {
 
 	/**
 	 * Route to room or to player depending on routing.
@@ -33,12 +33,12 @@ public interface Room {
 	 * @param playerSession
 	 * @param lastmessage
 	 */
-	boolean subscribe(PlayerSession playerSession, long lastmessage);
+	boolean subscribe(PlayerConnectionMediator playerSession, long lastmessage);
 
 	/**
 	 * @param playerSession
 	 */
-	void unsubscribe(PlayerSession playerSession);
+	void unsubscribe(PlayerConnectionMediator playerSession);
 
 	/**
 	 * @return
@@ -55,11 +55,11 @@ public interface Room {
 	 * @param session
 	 * @return
 	 */
-	static Room getRoom(Session session) {
-		return (Room) session.getUserProperties().get(Room.class.getName());
+	static RoomMediator getRoom(Session session) {
+		return (RoomMediator) session.getUserProperties().get(RoomMediator.class.getName());
 	};
 
-	static void setRoom(Session session, Room room) {
-		session.getUserProperties().put(Room.class.getName(), session);
+	static void setRoom(Session session, RoomMediator room) {
+		session.getUserProperties().put(RoomMediator.class.getName(), session);
 	}
 }

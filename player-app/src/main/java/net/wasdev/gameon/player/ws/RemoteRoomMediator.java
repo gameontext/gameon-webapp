@@ -28,7 +28,7 @@ import javax.websocket.DeploymentException;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
-public class RemoteRoom implements Runnable, Room {
+public class RemoteRoomMediator implements Runnable, RoomMediator {
 
 	private final String roomId;
 	private final List<String> targetUrls;
@@ -36,7 +36,7 @@ public class RemoteRoom implements Runnable, Room {
 
 	private Session roomSession;
 	private Thread roomThread;
-	private PlayerSession playerSession;
+	private PlayerConnectionMediator playerSession;
 	private volatile boolean keepGoing = true;
 
 	/** Queue of messages destined for the client device */
@@ -46,7 +46,7 @@ public class RemoteRoom implements Runnable, Room {
 	 * @param roomId
 	 * @param threadFactory
 	 */
-	public RemoteRoom(String roomId, List<String> targetUrls, ThreadFactory threadFactory) {
+	public RemoteRoomMediator(String roomId, List<String> targetUrls, ThreadFactory threadFactory) {
 		this.roomId = roomId;
 		this.targetUrls = targetUrls;
 		this.threadFactory = threadFactory;
@@ -103,7 +103,7 @@ public class RemoteRoom implements Runnable, Room {
 	 * @param playerSession
 	 */
 	@Override
-	public boolean subscribe(PlayerSession playerSession, long lastMessage) {
+	public boolean subscribe(PlayerConnectionMediator playerSession, long lastMessage) {
 		this.playerSession = playerSession;
 
 		if ( connect() ) {
@@ -121,7 +121,7 @@ public class RemoteRoom implements Runnable, Room {
 	 * @param playerSession
 	 */
 	@Override
-	public void unsubscribe(PlayerSession playerSession) {
+	public void unsubscribe(PlayerConnectionMediator playerSession) {
 		this.playerSession = null;
 
 		// Clean up the room session
@@ -145,7 +145,7 @@ public class RemoteRoom implements Runnable, Room {
 				Session s = c.connectToServer(this.getClass(), uriServerEP);
 
 				// YAY! Connected!
-				Room.setRoom(s, this);
+				RoomMediator.setRoom(s, this);
 				return true;
 			} catch (DeploymentException e) {
 				Log.log(Level.FINER, this, "Deployment exception creating connection to room " + roomId, e);
