@@ -22,6 +22,9 @@ package net.wasdev.gameon.player.ws;
 public interface Constants {
 
 	String ROOM = "room";
+	String ROOM_HELLO = "roomHello";
+	String ROOM_GOODBYE = "roomGoodbye";
+
 	String PLAYER = "player";
 	String PLAYER_LOCATION = "playerLocation";
 	String SOS = "sos";
@@ -32,14 +35,16 @@ public interface Constants {
 	String TYPE = "type";
 	String CHAT = "chat";
 	String EVENT = "event";
+	String EXIT = "exit";
 
 	String MEDIATOR_ID = "mediatorId";
 	String ROOM_ID = "roomId";
+	String EXIT_ID = "exitId";
 	String BOOKMARK = "bookmark";
 
 	String USERNAME = "username";
 	String USER_ID = "userId";
 	String CONTENT = "content";
 
-	String NETHER_REGION = null;
+	String NETHER_REGION = "player,%s,{\"type\": \"%s\",\"content\": \"%s\",\"bookmark\": 0}";
 }

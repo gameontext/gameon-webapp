@@ -88,6 +88,7 @@ public class PlayerSessionManager {
 
 		String mediatorId = sessionData.getString(Constants.MEDIATOR_ID, null);
 		String roomId = sessionData.getString(Constants.ROOM_ID, null);
+		String username = sessionData.getString(Constants.USERNAME, null);
 		long lastmessage = sessionData.getInt(Constants.BOOKMARK, 0);
 
 		PlayerSession playerSession = null;
@@ -95,10 +96,10 @@ public class PlayerSessionManager {
 			playerSession = suspendedSessions.remove(mediatorId);
 		}
 		if ( playerSession == null ) {
-			playerSession = new PlayerSession(userName, threadFactory, concierge);
+			playerSession = new PlayerSession(userName, username, threadFactory, concierge);
 		}
 
-		playerSession.connectToRoom(clientSession, roomId, lastmessage);
+		playerSession.initializeConnection(clientSession, roomId, lastmessage);
 		return playerSession;
 	}
 
