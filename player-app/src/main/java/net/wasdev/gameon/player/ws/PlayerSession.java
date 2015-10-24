@@ -181,7 +181,9 @@ public class PlayerSession implements Runnable {
 		oldRoom.unsubscribe(this);
 
 		// Send the client to a transitional place. They might sit here awhile waiting for connection to new room
-		toClient.offer(String.format(Constants.NETHER_REGION, userId));
+		toClient.offer(String.format(Constants.NETHER_REGION,
+				userId, "exit",
+				"You feel a strange sensation, and suddenly find yourself in a nebulous, gray area with no apparent usable doors."));
 
 		if ( Constants.SOS.equals(routing[0]) || Constants.FIRST_ROOM.equals(oldRoom.getId())) {
 			// For an SOS or for First room, we don't care about the current room's exits,

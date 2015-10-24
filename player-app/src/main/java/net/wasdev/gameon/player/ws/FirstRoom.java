@@ -26,14 +26,12 @@ import javax.json.JsonReader;
 import javax.websocket.CloseReason;
 
 /**
- * @author elh
  *
  */
 public class FirstRoom implements Room {
 
 	PlayerSession session= null;
 	private AtomicInteger counter = new AtomicInteger(0);
-
 
 	@Override
 	public void route(String[] routing) {
@@ -50,8 +48,13 @@ public class FirstRoom implements Room {
 
 				parseCommand(sourceMessage, builder);
 				builder.add(Constants.BOOKMARK, counter.incrementAndGet());
+				JsonObject response = builder.build();
 
-				session.sendToClient(new String[] {"player", sourceMessage.getString(Constants.USER_ID), builder.build().toString()});
+				String target = Constants.PLAYER;
+				if ( response.containsKey(Constants.EXIT_ID) ) {
+					target = Constants.PLAYER_LOCATION;
+				}
+				session.sendToClient(new String[] {target, sourceMessage.getString(Constants.USER_ID), response.toString()});
 		}
 	}
 
@@ -59,15 +62,23 @@ public class FirstRoom implements Room {
 		String content = sourceMessage.getString(Constants.CONTENT);
 		String contentToLower = content.toLowerCase();
 
-		if ( contentToLower.contains("look")) {
+
+		// The First Room will just look for the leading / with a few verbs.
+		// Other rooms may go for more complicated grammar (though leading slash will be prevalent).
+		if ( contentToLower.startsWith("/look")) {
 			responseBuilder.add(Constants.TYPE, Constants.EVENT)
-			.add(Constants.CONTENT, "event " + content);
+			.add(Constants.CONTENT, "");
+		} else if ( contentToLower.startsWith("/exit") || contentToLower.startsWith("/go") ) {
+			responseBuilder.add(Constants.TYPE, Constants.EXIT)
+			.add(Constants.EXIT_ID, "N")
+			.add(Constants.CONTENT, "You've found a way out, well done!");
 		} else {
 			responseBuilder.add(Constants.USERNAME, sourceMessage.getString(Constants.USERNAME))
 			.add(Constants.CONTENT, "echo " + content)
 			.add(Constants.TYPE, Constants.CHAT);
 		}
 	}
+
 
 	@Override
 	public boolean subscribe(PlayerSession playerSession, long lastmessage) {
