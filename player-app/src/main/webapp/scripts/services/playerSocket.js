@@ -84,8 +84,18 @@ angular.module('playerApp')
               });
               break;
             case 'exit':
+              roomEvents.push({
+                type: res.type,
+                content: res.content,
+                timeStamp: event.timeStamp
+              });
               break;
             case 'location':
+              roomEvents.push({
+                type: res.type,
+                content: res.content,
+                timeStamp: event.timeStamp
+              });
               break;
           }
         }

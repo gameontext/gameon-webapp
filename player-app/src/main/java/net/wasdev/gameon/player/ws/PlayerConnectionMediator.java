@@ -179,6 +179,8 @@ public class PlayerConnectionMediator implements Runnable {
 	}
 
 	private void switchRooms(String[] routing) {
+		Log.log(Level.FINER, this, "SWITCH ROOMS");
+
 		RoomMediator newRoom;
 		RoomMediator oldRoom = currentRoom;
 
@@ -219,8 +221,6 @@ public class PlayerConnectionMediator implements Runnable {
 	}
 
 	private boolean connectToRoom(RoomMediator room) {
-		Log.log(Level.FINER, this, "connecting to room {0}", room.getId());
-
 		Set<String> visitedRooms = new HashSet<String>();
 		visitedRooms.add(room.getId());
 
