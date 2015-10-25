@@ -142,10 +142,11 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 			// try each in turn, return as soon as we successfully connect
 			URI uriServerEP = URI.create(urlString);
 			try {
-				Session s = c.connectToServer(this.getClass(), uriServerEP);
+				Session s = c.connectToServer(RoomClientEndpoint.class, uriServerEP);
 
 				// YAY! Connected!
 				RoomMediator.setRoom(s, this);
+				roomSession = s;
 				return true;
 			} catch (DeploymentException e) {
 				Log.log(Level.FINER, this, "Deployment exception creating connection to room " + roomId, e);
