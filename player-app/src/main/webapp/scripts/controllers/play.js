@@ -15,6 +15,7 @@ angular.module('playerApp')
       
       $scope.roomEvents = playerSocket.roomEvents;
       $scope.userInput = '';
+      $scope.playerSession = playerSocket.playerSession;
       
       $scope.input = function(e) {
         if (e.keyCode === 13) {
@@ -29,4 +30,8 @@ angular.module('playerApp')
           playerSocket.send(input);
         }
       };
+      
+      $scope.sendFixed = function(input) {
+        playerSocket.send(input);
+      }
   }]);
