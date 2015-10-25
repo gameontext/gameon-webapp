@@ -34,12 +34,14 @@ public class RoomClientEndpoint {
 
 	@OnOpen
 	public void onOpen(Session session, EndpointConfig ec) {
+		RoomMediator room = RoomMediator.getRoom(session);
+		Log.log(Level.FINEST, session, "connection to room {0} OPEN", room.getId());
 	}
 
 	@OnClose
 	public void onClose(Session session, CloseReason reason) {
 		RoomMediator room = RoomMediator.getRoom(session);
-		Log.log(Level.FINEST, session, "connection to room {0} closed", room.getId());
+		Log.log(Level.FINEST, session, "connection to room {0} CLOSED", room.getId());
 		RoomMediator.setRoom(session, null);
 		room.disconnect(reason);
 	}

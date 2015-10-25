@@ -63,12 +63,10 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 	 */
 	@Override
 	public void route(String[] routing) {
-		switch(routing[0]) {
-			case Constants.ROOM :
-				toRoom.offer(String.join(",", routing));
-				break;
-			case Constants.PLAYER :
-				playerSession.sendToClient(routing);
+		if ( routing[0].startsWith(Constants.PLAYER)) {
+			playerSession.sendToClient(routing);
+		} else {
+			toRoom.offer(String.join(",", routing));
 		}
 		// TODO: Capacity?
 	}
@@ -83,6 +81,7 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 		while( keepGoing ) {
 			try {
 				String message = toRoom.take();
+				Log.log(Level.FINEST, this, "Sending to room: {0}", message);
 
 				if ( !ConnectionUtils.sendText(roomSession, message) ) {
 					// If the send failed, tuck the message back in the head of the queue.
@@ -95,7 +94,8 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 				}
 			}
 		}
-		Log.log(Level.FINER, this, "Exit room writer thread {0}", this);
+		Log.log(Level.FINER, this, "END room writer thread {0}", this);
+		roomThread = null;
 	}
 
 
@@ -126,7 +126,9 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 
 		// Clean up the room session
 		// (player leaving the room or client connection destroyed)
-		roomThread.interrupt();
+		if ( roomThread != null )
+			roomThread.interrupt();
+
 		toRoom.clear();
 		ConnectionUtils.tryToClose(roomSession);
 	}
@@ -135,6 +137,10 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 	 *
 	 */
 	private boolean connect() {
+		if ( roomSession != null && roomSession.isOpen() ) {
+			return true;
+		}
+
 		WebSocketContainer c = ContainerProvider.getWebSocketContainer();
 		Log.log(Level.FINE, this, "Creating connection to room {0}", roomId);
 

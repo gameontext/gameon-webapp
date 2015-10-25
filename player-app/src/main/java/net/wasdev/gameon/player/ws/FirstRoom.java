@@ -38,7 +38,8 @@ public class FirstRoom implements RoomMediator {
 		switch(routing[0]) {
 			case Constants.ROOM_HELLO :
 			case Constants.ROOM_GOODBYE :
-				Log.log(Level.FINER, this, "{0} {1}", routing[0], routing[2]);
+				// total fake send, but good for sanity as it looks the same as the remote case
+				Log.log(Level.FINEST, this, "Sending to room: {0}", String.join(",", routing));
 				break;
 			default :
 				JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));

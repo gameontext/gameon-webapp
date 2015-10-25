@@ -71,19 +71,23 @@ public class PlayerConnectionMediator implements Runnable {
 		return id;
 	}
 
+	public void sendToRoom(String[] routing) {
+		this.sendToRoom(currentRoom, routing);
+	}
+
 	/**
 	 * Given room,&lt;roomId&gt;,{...}, make sure the specified room id
 	 * matches the target room.
-	 *
-	 * @param routing
+	 * @param targetRoom Room to write to (like the old room)
+	 * @param routing Array of 3 elements: room*,&lt;roomId&gt;,{json payload}
 	 *
 	 */
-	public void sendToRoom(String[] routing) {
+	public void sendToRoom(RoomMediator targetRoom, String[] routing) {
 		if ( Constants.SOS.equals(routing[0])) {
 			switchRooms(routing);
-		} else if ( currentRoom.getId().equals(routing[1]) ){
+		} else if ( targetRoom.getId().equals(routing[1]) ){
 			// send messages for the current room on to the room (others fall on the floor)
-			currentRoom.route(routing);
+			targetRoom.route(routing);
 		} else {
 			Log.log(Level.FINEST, this, "sendToRoom -- Dropping message {0}", Arrays.asList(routing));
 		}
@@ -99,6 +103,7 @@ public class PlayerConnectionMediator implements Runnable {
 		while( keepGoing ) {
 			try {
 				String message = toClient.take();
+				Log.log(Level.FINEST, this, "Sending to client: {0}", message);
 
 				if ( !ConnectionUtils.sendText(clientSession, message) ) {
 					// If the send failed, tuck the message back in the head of the queue.
@@ -200,12 +205,13 @@ public class PlayerConnectionMediator implements Runnable {
 		}
 
 		if ( connectToRoom(newRoom) ) {
+			Log.log(Level.FINER, this, "GOODBYE {0}", oldRoom.getId());
+
 			// We connected to the new room! Say goodbye to the old room
-			sendToRoom(new String[] {Constants.ROOM_GOODBYE, oldRoom.getId(),
+			sendToRoom(oldRoom, new String[] {Constants.ROOM_GOODBYE, oldRoom.getId(),
 					Json.createObjectBuilder()
 					.add(Constants.USERNAME, username)
 					.add(Constants.USER_ID, userId).build().toString() });
-
 		} else {
 			// recover: back into the old room
 			connectToRoom(oldRoom);
@@ -213,13 +219,16 @@ public class PlayerConnectionMediator implements Runnable {
 	}
 
 	private boolean connectToRoom(RoomMediator room) {
+		Log.log(Level.FINER, this, "connecting to room {0}", room.getId());
+
 		Set<String> visitedRooms = new HashSet<String>();
 		visitedRooms.add(room.getId());
 
 		// SUBSCRIBE: Open the connection to receive notifications from the room
 		while ( !room.subscribe(this, 0) ) {
 			if ( !visitedRooms.add(room.getId()) ) {
-				return false; // repeat! no connection :(
+				// NO CONNECTION! :(
+				return false;
 			}
 			room = concierge.changeRooms(room, null);
 		}
@@ -227,7 +236,8 @@ public class PlayerConnectionMediator implements Runnable {
 		this.currentRoom = room;
 		this.roomId = room.getId();
 
-		sendToRoom(new String[] {Constants.ROOM_HELLO, room.getId(),
+		Log.log(Level.FINER, this, "HELLO {0}", room.getId());
+		sendToRoom(currentRoom, new String[] {Constants.ROOM_HELLO, room.getId(),
 				Json.createObjectBuilder()
 				.add(Constants.USERNAME, username)
 				.add(Constants.USER_ID, userId).build().toString() });
