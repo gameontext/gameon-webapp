@@ -60,6 +60,6 @@ public interface RoomMediator {
 	};
 
 	static void setRoom(Session session, RoomMediator room) {
-		session.getUserProperties().put(RoomMediator.class.getName(), session);
+		session.getUserProperties().put(RoomMediator.class.getName(), room);
 	}
 }

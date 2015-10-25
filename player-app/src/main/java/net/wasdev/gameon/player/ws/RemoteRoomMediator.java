@@ -22,19 +22,12 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 
-import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
-import javax.websocket.EndpointConfig;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
-@ClientEndpoint
 public class RemoteRoomMediator implements Runnable, RoomMediator {
 
 	private final String roomId;
@@ -155,7 +148,7 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 			// try each in turn, return as soon as we successfully connect
 			URI uriServerEP = URI.create(urlString);
 			try {
-				Session s = c.connectToServer(this, uriServerEP);
+				Session s = c.connectToServer(RoomClientEndpoint.class, uriServerEP);
 				Log.log(Level.FINEST, s, "CONNECTED to room {0}", roomId);
 
 				// YAY! Connected!
@@ -180,39 +173,6 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 		// This is driven by disconnect: if the connection is disconnected for
 		// a not-normal reason, do we reconnect? Respawn the whole room?
 		Log.log(Level.FINER, this, "Disconnect {0}: {1}", roomId, reason);
-	}
-
-
-	@OnOpen
-	public void onOpen(Session session, EndpointConfig ec) {
-		RoomMediator room = RoomMediator.getRoom(session);
-		Log.log(Level.FINEST, session, "connection to room {0} OPEN {1}", room.getId());
-	}
-
-	@OnClose
-	public void onClose(Session session, CloseReason reason) {
-		RoomMediator room = RoomMediator.getRoom(session);
-		Log.log(Level.FINEST, session, "connection to room {0} CLOSED", room.getId());
-		RoomMediator.setRoom(session, null);
-		room.disconnect(reason);
-	}
-
-	@OnMessage
-	public void onMessage(Session session, String message) {
-		RoomMediator room = RoomMediator.getRoom(session);
-		Log.log(Level.FINEST, session, "received from room {0}: {1}", room.getId(), message);
-		String[] routing = ConnectionUtils.splitRouting(message);
-
-		room.route(routing);
-	}
-
-	@OnError
-	public void onError(Throwable t, Session session) {
-		RoomMediator room = RoomMediator.getRoom(session);
-		Log.log(Level.FINEST, session, "received from room {0}: {1}", room.getId(), t);
-		t.printStackTrace();
-		ConnectionUtils.tryToClose(session,
-				new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, t.getClass().getName()));
 	}
 
 	@Override

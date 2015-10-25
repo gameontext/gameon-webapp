@@ -38,6 +38,7 @@
   <jndiEntry jndiName="jwtKeyStoreAlias" value="default"/>
   
   <jndiEntry jndiName="conciergeUrl" value="${env.CONCIERGE_URL}"/>
+  <logging traceSpecification="*=info:com.ibm.ws.wsoc.*=all" />
 
   <webApplication id="player-app" location="player-app.war" name="player-app" contextRoot="/play">
     <classloader commonLibraryRef="MongoLib"/>
