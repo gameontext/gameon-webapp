@@ -21,6 +21,7 @@ angular.module('playerApp')
     
       var ws;
       var websocketURL = API.WS_URL + user.profile.id;
+      var id = 0;
      
       // Collection for holding data: play.room.html displays
       // this scrolling collection.
@@ -73,6 +74,7 @@ angular.module('playerApp')
                 type: res.type,
                 username: res.username,
                 content: res.content,
+                id: id++,
                 timeStamp: event.timeStamp
               });
               break;
@@ -80,6 +82,7 @@ angular.module('playerApp')
               roomEvents.push({
                 type: res.type,
                 content: res.content,
+                id: id++,
                 timeStamp: event.timeStamp
               });
               break;
@@ -87,6 +90,7 @@ angular.module('playerApp')
               roomEvents.push({
                 type: res.type,
                 content: res.content,
+                id: id++,
                 timeStamp: event.timeStamp
               });
               break;
@@ -94,6 +98,7 @@ angular.module('playerApp')
               roomEvents.push({
                 type: res.type,
                 content: res.content,
+                id: id++,
                 timeStamp: event.timeStamp
               });
               break;
