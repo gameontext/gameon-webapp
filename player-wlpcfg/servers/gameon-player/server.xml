@@ -23,7 +23,7 @@
     <file name="lib/mongo-java-driver-2.12.3.jar"/>
   </library>
   
-  <mongo id="mongo" libraryRef="MongoLib"/>
+  <mongo id="mongo" libraryRef="MongoLib" hostNames="${env.MONGO_HOST}" ports="${env.MONGO_PORT}" />
   <mongoDB databaseName="playerDB" jndiName="mongo/playerDB" mongoRef="mongo"/>
   
   <!-- To access this server from a remote client add a host attribute to 

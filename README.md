@@ -56,7 +56,7 @@ Or, if you don't have gradle, then:
 ### Interactive Run
 
 ```
-docker run -it -p 9443:9443 -e LICENSE=accept gameon-player bash
+docker run -it -p 9443:9443 --env-file=./dockerrc --name gameon-player gameon-player bash
 ```
 
 Then, you can start the server with 
@@ -67,7 +67,7 @@ Then, you can start the server with
 ### Daemon Run
 
 ```
-docker run -d -p 9443:9443 -e LICENSE=accept -e DOCKER_CONCIERGE_URL=http://game-on.org:9081/concierge --name gameon-player gameon-player
+docker run -d -p 9443:9443 --env-file=./dockerrc --name gameon-player gameon-player
 ```
 
 ### Stop
@@ -79,7 +79,7 @@ docker stop gameon-player ; docker rm gameon-player
 ### Restart Daemon
 
 ```
-docker stop gameon-player ; docker rm gameon-player; docker run -d -p 9443:9443 -e LICENSE=accept --name gameon-player gameon-player
+docker stop gameon-player ; docker rm gameon-player; docker run -d -p 9443:9443 --env-file=./dockerrc --name gameon-player gameon-player
 ```
 
 
