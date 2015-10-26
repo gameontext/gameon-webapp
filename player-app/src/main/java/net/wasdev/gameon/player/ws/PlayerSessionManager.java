@@ -69,6 +69,7 @@ public class PlayerSessionManager implements Runnable {
 				i.getValue().destroy();
 			}
 		}
+		executor.schedule(this, 5, TimeUnit.MINUTES);
 	}
 
 

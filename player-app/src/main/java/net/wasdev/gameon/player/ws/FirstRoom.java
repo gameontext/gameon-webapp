@@ -70,8 +70,7 @@ public class FirstRoom implements RoomMediator {
 		// The First Room will just look for the leading / with a few verbs.
 		// Other rooms may go for more complicated grammar (though leading slash will be prevalent).
 		if ( contentToLower.startsWith("/look")) {
-			responseBuilder.add(Constants.TYPE, Constants.EVENT)
-			.add(Constants.CONTENT, "");
+			buildLocationResponse(responseBuilder);
 		} else if ( contentToLower.startsWith("/exits") ) {
 			responseBuilder.add(Constants.TYPE, Constants.EXITS)
 			.add(Constants.CONTENT, buildExitsResponse());
@@ -81,7 +80,10 @@ public class FirstRoom implements RoomMediator {
 			.add(Constants.CONTENT, "You've found a way out, well done!");
 		} else if ( contentToLower.startsWith("/inventory") ) {
 			responseBuilder.add(Constants.TYPE, Constants.EVENT)
-			.add(Constants.CONTENT, buildContentResponse("You do not appear to be carrying anything"));
+			.add(Constants.CONTENT, buildContentResponse("You do not appear to be carrying anything."));
+		} else if ( contentToLower.startsWith("/examine") ) {
+			responseBuilder.add(Constants.TYPE, Constants.EVENT)
+			.add(Constants.CONTENT, buildContentResponse("You don't see anything of interest."));
 		} else {
 			responseBuilder.add(Constants.USERNAME, sourceMessage.getString(Constants.USERNAME))
 			.add(Constants.CONTENT, "echo " + content)

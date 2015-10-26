@@ -37,36 +37,23 @@
   </div>
   <div class="section" data-ng-switch-when="default.profile">
     <form name="createProfileForm">
-      <p>Just a bit more... </p>
       <div class="row">
         <div class="one-half column">
           <label for="username">Username</label> 
           <input class="u-full-width" type="text" name="username" data-ng-model="user.profile.name" 
                  required title="{{user.rules.nameRule}}" data-ng-pattern="user.rules.namePattern" /> 
           <a class="button u-full-width" data-ng-click="generateUsername()">Generate a username</a>
+          <div ng-show="createProfileForm.username.$error.required">&lt;?&gt; moves the chair.</div> 
+          <div ng-hide="createProfileForm.username.$error.required">{{ createProfileForm.username.$viewValue }} moves the chair.</div>
+          <div ng-show="createProfileForm.username.$error.pattern">{{ user.rules.nameRule }}</div>&nbsp; 
         </div>
         <div class="one-half column">
           <label for="favColor">Favorite color</label> 
           <input class="u-full-width" type="text" name="favoriteColor" data-ng-model="user.profile.favoriteColor" 
                  required title="{{user.rules.colorRule}}" data-ng-pattern="user.rules.colorPattern"> 
           <a class="button u-full-width" data-ng-click="generateColor()">Generate a color</a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="one-half column">
-          <div ng-show="createProfileForm.username.$error.required">&lt;?&gt; moves the chair.</div> 
-          <div ng-hide="createProfileForm.username.$error.required">{{ createProfileForm.username.$viewValue }} moves the chair.</div>
-        </div>
-        <div class="one-half column">
           <div ng-show="createProfileForm.favoriteColor.$error.required">{{ createProfileForm.username.$viewValue }} loves the color &lt;?&gt;</div> 
           <div ng-hide="createProfileForm.favoriteColor.$error.required">{{ createProfileForm.username.$viewValue }} loves the color {{ createProfileForm.favoriteColor.$viewValue }}</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="one-half column">
-          <div ng-show="createProfileForm.username.$error.pattern">{{ user.rules.nameRule }}</div>&nbsp; 
-        </div>
-        <div class="one-half column">
           <div ng-show="createProfileForm.favoriteColor.$error.pattern">{{ user.rules.colorRule }}</div>&nbsp; 
         </div>
       </div>

@@ -17,6 +17,14 @@ angular.module('playerApp')
       
       // make the user & auth object persist across states.
       $scope.user = user;      
-      $scope.auth = auth
+      $scope.auth = auth;
+      
+      $scope.generateUsername = function() {
+        user.profile.name = "FrostedCupcake";
+      };
+      
+      $scope.generateColor = function() {
+        user.profile.favoriteColor = "Tangerine";
+      };
     }
   ]);
