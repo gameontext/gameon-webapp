@@ -111,6 +111,12 @@ nav.bottom .action i {
   font-style: italic;
   color: #999;
 }
+.joinpart {
+  font-size: 1rem;
+  font-style: italic;
+  color: #0080ff;
+  text-align: right;
+  }
 .chat:before {
   font-family: "FontAwesome";
   content: "\f0e6 ";
@@ -127,9 +133,17 @@ nav.bottom .action i {
   padding-left: 2rem;
 }
 .event {
-  border-top: 1px solid #eee;
   margin-top: .2rem;
   margin-bottom: .5rem;
+}
+li.exit {
+  list-style-type: none;
+  padding-left: 2rem;
+} 
+.exit .door {
+  font-weight: bold;
+  display: inline-block;
+  width: 3rem;
 }
 .trophy .date,
 .chat .date {

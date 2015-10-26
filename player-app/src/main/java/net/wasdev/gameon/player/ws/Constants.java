@@ -31,12 +31,19 @@ public interface Constants {
 	String SOS = "sos";
 
 	String FIRST_ROOM = "TheFirstRoom";
+	String FIRST_ROOM_DESC = "You've entered a vaguely squarish room, with walls of an indeterminate color.";
+	String FIRST_ROOM_INV = "Sadly, there is nothing here";
 
 	// Perhaps a type enum would work better
 	String TYPE = "type";
 	String CHAT = "chat";
 	String EVENT = "event";
 	String EXIT = "exit";
+
+	String LOCATION = "location";
+	String NAME = "name";
+	String DESCRIPTION = "description";
+	String EXITS = "exits";
 
 	String MEDIATOR_ID = "mediatorId";
 	String ROOM_ID = "roomId";
@@ -47,6 +54,9 @@ public interface Constants {
 	String USER_ID = "userId";
 	String CONTENT = "content";
 
-	String NETHER_REGION = "player,%s,{\"type\": \"exit\",\"content\": \"You feel a strange sensation, and suddenly find yourself in a nebulous, gray area with no apparent usable doors.\",\"bookmark\": 0}";
+	String NETHER_REGION = "player,%s,{\"type\": \"event\",\"content\": {\"*\": \"You feel a strange sensation, and suddenly find yourself in a nebulous, gray area with no apparent usable doors.\"},\"bookmark\": 0}";
 	String LIFE_RING = "player,%s,{\"type\": \"exit\",\"content\": \"In a desperate plea for rescue, you stick out your <a href='http://everything2.com/title/Electronic+Thumb' target='_blank'>Electric Thumb</a> and hope for the best.\",\"bookmark\": 0}";
+
+	String JOIN = "player,%s,{\"type\": \"joinpart\",\"content\": \"enter %s\",\"bookmark\": 0}";
+	String PART = "player,%s,{\"type\": \"joinpart\",\"content\": \"exit %s\",\"bookmark\": 0}";
 }

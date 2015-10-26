@@ -198,6 +198,7 @@ public class PlayerConnectionMediator implements Runnable {
 		}
 
 		// Send the client to a transitional place. They might sit here awhile waiting for connection to new room
+		toClient.offer(String.format(Constants.PART, userId, oldRoom.getId()));
 		toClient.offer(String.format(Constants.NETHER_REGION, userId));
 
 		if ( SOS || Constants.FIRST_ROOM.equals(oldRoom.getId())) {
@@ -245,6 +246,7 @@ public class PlayerConnectionMediator implements Runnable {
 		this.roomId = room.getId();
 
 		Log.log(Level.FINER, this, "HELLO {0}", room.getId());
+		toClient.offer(String.format(Constants.JOIN, userId, room.getId()));
 		sendToRoom(currentRoom, new String[] {Constants.ROOM_HELLO, room.getId(),
 				Json.createObjectBuilder()
 				.add(Constants.USERNAME, username)

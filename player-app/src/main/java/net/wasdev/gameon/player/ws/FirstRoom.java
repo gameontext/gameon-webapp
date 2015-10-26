@@ -35,44 +35,53 @@ public class FirstRoom implements RoomMediator {
 
 	@Override
 	public void route(String[] routing) {
+		Log.log(Level.FINEST, this, "TheFirstRoom received: {0}", String.join(",", routing));
+
+		JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));
+		JsonObject sourceMessage = jsonReader.readObject();
+
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add(Constants.BOOKMARK, counter.incrementAndGet());
 		switch(routing[0]) {
 			case Constants.ROOM_HELLO :
-			case Constants.ROOM_GOODBYE :
-				// total fake send, but good for sanity as it looks the same as the remote case
-				Log.log(Level.FINEST, this, "Sending to room: {0}", String.join(",", routing));
+				buildLocationResponse(builder);
 				break;
+			case Constants.ROOM_GOODBYE :
+				// no response for roomGoodbye
+				return;
 			default :
-				JsonReader jsonReader = Json.createReader(new StringReader(routing[2]));
-				JsonObject sourceMessage = jsonReader.readObject();
-
-				JsonObjectBuilder builder = Json.createObjectBuilder();
-
 				parseCommand(sourceMessage, builder);
-				builder.add(Constants.BOOKMARK, counter.incrementAndGet());
-				JsonObject response = builder.build();
-
-				String target = Constants.PLAYER;
-				if ( response.containsKey(Constants.EXIT_ID) ) {
-					target = Constants.PLAYER_LOCATION;
-				}
-				session.sendToClient(new String[] {target, sourceMessage.getString(Constants.USER_ID), response.toString()});
 		}
+
+
+		JsonObject response = builder.build();
+
+		String target = Constants.PLAYER;
+		if ( response.containsKey(Constants.EXIT_ID) ) {
+			target = Constants.PLAYER_LOCATION;
+		}
+		session.sendToClient(new String[] {target, sourceMessage.getString(Constants.USER_ID), response.toString()});
 	}
 
 	protected void parseCommand(JsonObject sourceMessage, JsonObjectBuilder responseBuilder) {
 		String content = sourceMessage.getString(Constants.CONTENT);
 		String contentToLower = content.toLowerCase();
 
-
 		// The First Room will just look for the leading / with a few verbs.
 		// Other rooms may go for more complicated grammar (though leading slash will be prevalent).
 		if ( contentToLower.startsWith("/look")) {
 			responseBuilder.add(Constants.TYPE, Constants.EVENT)
 			.add(Constants.CONTENT, "");
-		} else if ( contentToLower.startsWith("/exit") || contentToLower.startsWith("/go") ) {
+		} else if ( contentToLower.startsWith("/exits") ) {
+			responseBuilder.add(Constants.TYPE, Constants.EXITS)
+			.add(Constants.CONTENT, buildExitsResponse());
+		} else if ( contentToLower.startsWith("/exit") || contentToLower.startsWith("/go ") ) {
 			responseBuilder.add(Constants.TYPE, Constants.EXIT)
 			.add(Constants.EXIT_ID, "N")
 			.add(Constants.CONTENT, "You've found a way out, well done!");
+		} else if ( contentToLower.startsWith("/inventory") ) {
+			responseBuilder.add(Constants.TYPE, Constants.EVENT)
+			.add(Constants.CONTENT, buildContentResponse("You do not appear to be carrying anything"));
 		} else {
 			responseBuilder.add(Constants.USERNAME, sourceMessage.getString(Constants.USERNAME))
 			.add(Constants.CONTENT, "echo " + content)
@@ -80,6 +89,30 @@ public class FirstRoom implements RoomMediator {
 		}
 	}
 
+	private JsonObject buildContentResponse(String message) {
+		JsonObjectBuilder content = Json.createObjectBuilder();
+		content.add("*", message);
+		return content.build();
+	}
+
+	private void buildLocationResponse(JsonObjectBuilder responseBuilder) {
+		responseBuilder.add(Constants.TYPE, Constants.LOCATION);
+		responseBuilder.add(Constants.NAME, Constants.FIRST_ROOM);
+		responseBuilder.add(Constants.DESCRIPTION, Constants.FIRST_ROOM_DESC);
+		responseBuilder.add(Constants.EXITS, buildExitsResponse());
+	}
+
+	private JsonObject buildExitsResponse() {
+		JsonObjectBuilder content = Json.createObjectBuilder();
+		content.add("N", "Simple door to the North (/exit N)");
+		content.add("S", "Simple door to the South (/exit S)");
+		content.add("E", "Simple door to the East (/exit E)");
+		content.add("W", "Simple door to the West (/exit W)");
+		content.add("U", "Hatch in the ceiling (/exit U)");
+		content.add("D", "Trap-door in the floor (/exit D)");
+
+		return content.build();
+	}
 
 	@Override
 	public boolean subscribe(PlayerConnectionMediator playerSession, long lastmessage) {

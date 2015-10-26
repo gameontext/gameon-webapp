@@ -7,13 +7,16 @@
           <div class="content">{{data.content}}</div>
         </div>
         <div data-ng-switch-when="event" class="event"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="exit"><div ng-bind-html="data.content" class="content">{{data.content}}</div><div class="exit">{{data.exitRoom}}</div></div>
-        <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div><div class="exit">{{data.exitRoom}}</div></div>
+        <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
+        <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div></div>
+        <div data-ng-switch-when="exit"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
         <div data-ng-switch-when="location" class="location"><div class="name"> &nbsp;{{data.name}}</div>
              <div class="description">{{data.description}}</div>
              <div ng-bind-html="data.content" class="content">{{data.content}}</div>
-             <div class="objects">You notice: <ul ng-repeat="object in data.objects"><li ng-bind-html="object">{{ object }}</li></ul></div>
+             <div data-ng-if="data.objects" class="objects">You notice: <ul ng-repeat="object in data.objects"><li ng-bind-html="object">{{ object }}</li></ul></div>
         </div>
+        <div data-ng-switch-when="exits"><div data-ng-if="data.content" class="objects">You notice: 
+              <ul ng-repeat="(key, value) in data.content"><li class="exit"><span class="door">{{ key }}</span> {{ value }}</li></ul></div></div>
         <div data-ng-switch-default>{{ data }}</div>
       </div>
     </div>
