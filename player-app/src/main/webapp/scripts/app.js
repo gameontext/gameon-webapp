@@ -151,18 +151,6 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           url: '',
           templateUrl: 'templates/play.room.html'
         })
-        .state('play.go', {
-          url: '/go',
-          templateUrl: 'templates/play.go.html'
-        })
-        .state('play.pockets', {
-          url: '/pockets',
-          templateUrl: 'templates/play.pockets.html'
-        })
-        .state('play.trophies', {
-          url: '/trophies',
-          templateUrl: 'templates/play.trophies.html'
-        })
         .state('play.me', {
           url: '/me',
           templateUrl: 'templates/play.me.html'

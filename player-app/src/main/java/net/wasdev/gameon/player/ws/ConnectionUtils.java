@@ -109,11 +109,11 @@ public class ConnectionUtils {
 		int i = 0;
 		int j = message.indexOf(',');
 		while (j > 0 && j < brace) {
-			list.add(message.substring(i, j));
+			list.add(message.substring(i, j).trim());
 			i = j+1;
 			j = message.indexOf(',', i);
 		}
-		list.add(message.substring(i));
+		list.add(message.substring(i).trim());
 
 		return list.toArray(new String[]{});
 	}

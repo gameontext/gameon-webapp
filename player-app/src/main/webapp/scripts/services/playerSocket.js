@@ -62,45 +62,25 @@ angular.module('playerApp')
           res = parseJson(payload);
           playerSession.mediatorId = res.mediatorId;
           playerSession.roomId = res.roomId;
+          playerSession.roomName = res.roomName;
         } else {
           comma = payload.indexOf(',');
           target = payload.slice(0,comma);
           payload = payload.slice(comma+1);
           res = parseJson(payload);
+          res.id = id++;
           
           switch (res.type) {
-            case 'chat':
-              roomEvents.push({
-                type: res.type,
-                username: res.username,
-                content: res.content,
-                id: id++,
-                timeStamp: event.timeStamp
-              });
-              break;
             case 'event':
-              roomEvents.push({
-                type: res.type,
-                content: res.content,
-                id: id++,
-                timeStamp: event.timeStamp
-              });
+              if ( res.content[user.profile.id] ) {
+                res.content = res.content[user.profile.id];
+              } else { 
+                res.content = res.content['*'];
+              }
+              roomEvents.push(res);
               break;
-            case 'exit':
-              roomEvents.push({
-                type: res.type,
-                content: res.content,
-                id: id++,
-                timeStamp: event.timeStamp
-              });
-              break;
-            case 'location':
-              roomEvents.push({
-                type: res.type,
-                content: res.content,
-                id: id++,
-                timeStamp: event.timeStamp
-              });
+            default:
+              roomEvents.push(res);
               break;
           }
         }
@@ -144,6 +124,7 @@ angular.module('playerApp')
       // Available methods and structures
       var sharedApi = {
         roomEvents: roomEvents,
+        playerSession: playerSession,
         send: send
       };
 
