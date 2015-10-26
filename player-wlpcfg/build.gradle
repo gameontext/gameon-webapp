@@ -11,9 +11,15 @@ buildscript {
 }
 
 
-task copyTask(type: Copy) {
+task copyWAR(type: Copy) {
     from '../player-app/build/libs/player-app-1.0.war'
     into 'servers/gameon-player/apps/'
+    rename("player-app-1.0.war", "player-app.war")
+}
+
+task copyMongo(type: Copy) {
+    from '../player-app/build/libs/mongo-java-driver-2.12.3.jar'
+    into 'servers/gameon-player/lib/'
 }
 
 apply plugin: 'com.bmuschko.docker-remote-api'
@@ -24,7 +30,7 @@ docker {
     url = 'unix:///var/run/docker.sock'
 }
 
-task buildImage(type: DockerBuildImage, dependsOn: 'copyTask') {
+task buildImage(type: DockerBuildImage, dependsOn: ['copyWAR', 'copyMongo']) {
 	inputDir = file('.')
     tag = 'gameon-player'
 }
