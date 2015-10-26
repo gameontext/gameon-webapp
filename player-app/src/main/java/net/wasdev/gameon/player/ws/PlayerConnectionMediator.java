@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 import javax.enterprise.concurrent.ManagedThreadFactory;
@@ -48,6 +49,8 @@ public class PlayerConnectionMediator implements Runnable {
 
 	private String roomId = null;
 	private RoomMediator currentRoom = null;
+
+	private AtomicInteger suspendCount = new AtomicInteger(0);
 
 	/** Queue of messages destined for the client device */
 	private final LinkedBlockingDeque<String> toClient = new LinkedBlockingDeque<String>();
@@ -168,6 +171,8 @@ public class PlayerConnectionMediator implements Runnable {
 
 		// Get connection to the room (resets vars, does good things)
 		if ( connectToRoom(newRoom) ) {
+			suspendCount.set(0); // resumed!
+
 			// set up delivery thread
 			clientThread = threadFactory.newThread(this);
 			clientThread.start();
@@ -271,5 +276,9 @@ public class PlayerConnectionMediator implements Runnable {
 	@Override
 	public String toString() {
 		return this.getClass().getName() + "[roomId=" + roomId + ", userId=" + userId +"]";
+	}
+
+	public int incrementAndGet() {
+		return suspendCount.incrementAndGet();
 	}
 }
