@@ -25,6 +25,8 @@ import javax.ws.rs.core.Response;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import net.wasdev.gameon.auth.dummy.DummyIntrospect;
+import net.wasdev.gameon.auth.dummy.DummyVerify;
 import net.wasdev.gameon.auth.facebook.FacebookIntrospect;
 import net.wasdev.gameon.auth.facebook.FacebookVerify;
 import net.wasdev.gameon.auth.twitter.TwitterIntrospect;
@@ -38,6 +40,9 @@ public class Auth {
 	
 	FacebookVerify fv = new FacebookVerify();
 	FacebookIntrospect fi = new FacebookIntrospect();
+	
+	DummyVerify dv = new DummyVerify();
+	DummyIntrospect di = new DummyIntrospect();
 	
 	
 	private static class TimeStampedResponse{
@@ -81,6 +86,8 @@ public class Auth {
 				r = tv.verify(auth);
 			}else if (auth.startsWith("FACEBOOK::")){
 				r = fv.verify(auth);
+			}else if (auth.startsWith("DUMMY::")){
+				r = dv.verify(auth);
 			}
 			if(r.getStatus()!=400){
 				if(r.getStatus()==200){					
@@ -117,6 +124,8 @@ public class Auth {
 				r = ti.introspect(auth);
 			}else if (auth.startsWith("FACEBOOK::")){
 				r = fi.introspect(auth);
+			}else if (auth.startsWith("DUMMY::")){
+				r = di.introspect(auth);
 			}
 			if(r.getStatus()!=400){
 				if(r.getStatus()==200){					
@@ -186,6 +195,8 @@ public class Auth {
 			data =  ti.introspectAuth(auth);
 		}else if (auth.startsWith("FACEBOOK::")){
 			data =  fi.introspectAuth(auth);
+		}else if (auth.startsWith("DUMMY::")){
+			data =  di.introspectAuth(auth);
 		}
 		
 		//if auth key was no longer valid, we won't build a jwt.

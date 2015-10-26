@@ -30,6 +30,8 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "VERIFY_URL": "https://"+window.location.host+"/play/auth/verify/",
     "INTROSPECT_URL": "https://"+window.location.host+"/play/auth/introspect/",
     "JWT_URL": "https://"+window.location.host+"/play/auth/jwt/",
+    "DUMMYGOOGLE": "https://"+window.location.host+"/play/DummyAuth?dummyUserName=AnonymousGoogleUser",
+    "DUMMYLINKEDIN": "https://"+window.location.host+"/play/DummyAuth?dummyUserName=AnonymousLinkedinUser",
     "TWITTER": "https://"+window.location.host+"/play/TwitterAuth",
     "FACEBOOK": "https://"+window.location.host+"/play/FacebookAuth",
   })
