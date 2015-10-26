@@ -1,14 +1,7 @@
 <div class="gameView">
   <div ui-view></div>
   <nav class="bottom">
-    <div><input type="text" id="inputmessage" size="50" ng-model="userInput" ng-keypress="input($event)"/>
-    <a ng-click="send()"><i class="fa fa-send-o"></i></a></div>
-    <ul>
-      <li><a ui-sref="play.room"><i class="fa fa-cube"></i>Room</a></li>
-      <li><a ui-sref="play.go"><i class="fa fa-map-signs"></i>Go!</a></li>
-      <li><a ui-sref="play.pockets"><i class="fa fa-suitcase"></i>Pockets</a></li>
-      <li><a ui-sref="play.trophies"><i class="fa fa-trophy"></i>Trophies</a></li>
-      <li><a ui-sref="play.me"><i class="fa fa-user"></i>Me</a></li>
-    </ul>
+    <div class="action"><a ng-click="send()"><i class="fa fa-send-o"></i></a></div>
+    <div class="input-w"><input type="text" id="inputmessage" ng-model="userInput" ng-keypress="input($event)"/></div>
   </nav>
 </div>

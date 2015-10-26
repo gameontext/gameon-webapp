@@ -35,7 +35,7 @@
 .gameView .viewport {
   position: absolute;
   top: 3rem;
-  bottom: 8rem;
+  bottom: 4rem;
   margin: 0;
   width: 100%;
   overflow-y: scroll;
@@ -49,78 +49,36 @@ nav.top {
   top: 0;
   width: 100%;
   height: 3rem;
-  padding: 0;
-  overflow: hidden;
-  padding: .5rem 0 0 .5rem;
+  padding: .3rem 1rem;
   vertical-align: middle;
-}
-nav.top .title {
-  box-sizing: border-box;
-  position: relative;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 2em;
-  font-size: 1.2rem;
-}
-
-nav.top .action {
-  position: relative;
-  float: right;
-  white-space: nowrap;
 }
 nav.bottom {
   background-color: #ddd;
   border-top: 1px solid #aaa;
+  box-sizing: border-box;
   position: fixed;
   display: block;
   bottom: 0;
   width: 100%;
-  height: 8rem;
-  padding: 0;
-  box-sizing: border-box;
+  height: 4rem;
+  padding: .2rem 1rem;
+  vertical-align: middle;
 }
-nav ul {
-  text-align: justify;
-  vertical-align: top;
-  padding: .2rem .5rem;
-  margin: 0;
+nav.bottom .input-w {
+  float: none; /* key */
+  width: auto; /* key */
+  height: 100%;
+  overflow: hidden; /* key */
 }
-nav ul:after {
-  content: "";
+
+nav.bottom .input-w input {
   width: 100%;
-  display: inline-block;
+  height: 100%;
 }
-nav ul li {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  -webkit-transition: all 0.2s;
-  -moz-transition: all 0.2s;
-  -ms-transition: all 0.2s;
-  -o-transition: all 0.2s;
-  transition: all 0.2s;
-}
-nav a, nav>ul>li>a {
-  text-decoration: none;
-  color: #666;
-}
-nav a>i.fa, nav>ul>li>a>i.fa {
-  display: block;
+nav .action i {
+  float: right;
   font-size: 2rem;
-}
-nav.bottom>ul>li>a {
-  width: 4rem;
-  display: block;
-  font-size: 1rem;
-  text-align: center;
-}
-nav.bottom>div {
-  text-align: justify;
-}
-nav.bottom>div>a {
-  display: inline-block;
+  padding: .3rem .5rem;
 }
 .chat:before {
   font-family: "FontAwesome";

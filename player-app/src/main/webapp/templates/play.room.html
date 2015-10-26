@@ -14,5 +14,8 @@
   </div>    
 </div>
 <nav class="top">
+  <div class="action"><a><i class="fa fa-user"></i></a></div>
+  <div class="action"><a ng-click="sendFixed('/exits')"><i class="fa fa-map-signs"></i></a></div>
+  <div class="action"><a ng-click="sendFixed('/inventory')"><i class="fa fa-suitcase"></i></a></div>
   <div class="title"><a ng-click="sendFixed('/look')">{{ playerSession.roomId }}</a></div>
 </nav>
