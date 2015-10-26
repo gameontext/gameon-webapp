@@ -70,7 +70,6 @@ nav.bottom .input-w {
   height: 100%;
   overflow: hidden; /* key */
 }
-
 nav.bottom .input-w input {
   width: 100%;
   height: 100%;
@@ -80,14 +79,16 @@ nav .action i {
   font-size: 2rem;
   padding: .3rem .5rem;
 }
+.element {
+  border-top: 1px solid #eee;
+  margin-top: .2rem;
+  margin-bottom: .6rem;
+}
 .chat:before {
   font-family: "FontAwesome";
   content: "\f0e6 ";
 }
 .chat {
-  border-top: 1px solid #eee;
-  margin-top: .2rem;
-  margin-bottom: .5rem;
   color: #562F72
 }
 .chat .username {
@@ -107,7 +108,20 @@ nav .action i {
 .chat .date {
   float: right;
 }
-.chat:after, .trophy:after, nav.top:after, nav.bottom:after {
+.location .name:before {
+  font-family: "FontAwesome";
+  content: "\f277 ";
+}
+.location .name {
+  font-weight: bold;
+}
+.location .objects ul {
+  margin: 0;
+}
+.location .objects ul>li {
+  margin: 0;
+}
+.event:after, nav.top:after, nav.bottom:after {
   content: "";
   display: table;
   clear: both;

@@ -1,14 +1,19 @@
 <div class="viewport" scroll-glue>
   <div class="container">
     <div>
-      <div ng-repeat="data in roomEvents track by data.id" data-ng-switch="data.type">
-        <div data-ng-switch-when="chat" class="chat"><div class="username">{{data.username}}</div><div class="content">{{data.content}}</div></div>
+      <div ng-repeat="data in roomEvents track by data.id" data-ng-switch="data.type" class="element">
+        <div data-ng-switch-when="chat" class="chat">
+          <div class="username">{{data.username}}</div>
+          <div class="content">{{data.content}}</div>
+        </div>
         <div data-ng-switch-when="event" class="event"><div class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="exit" class="exit"><div class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="location" class="location"><div class="name">{{data.name}}</div>
+        <div data-ng-switch-when="exit"><div class="content">{{data.content}}</div><div class="exit">{{data.exitRoom}}</div></div>
+        <div data-ng-switch-when="location" class="location"><div class="name"> &nbsp;{{data.name}}</div>
              <div class="description">{{data.description}}</div>
              <div class="content">{{data.content}}</div>
-             <div class="objects"><ul ng-repeat="object in data.objects"><li>{{ object }}</li></ul></div></div>
+             <div class="objects">You notice: <ul ng-repeat="object in data.objects"><li>{{ object }}</li></ul></div>
+        </div>
+        <div data-ng-switch-default>{{ data }}</div>
       </div>
     </div>
   </div>    

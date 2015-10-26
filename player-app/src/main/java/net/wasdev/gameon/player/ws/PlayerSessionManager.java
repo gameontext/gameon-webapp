@@ -16,7 +16,10 @@
 package net.wasdev.gameon.player.ws;
 
 import java.io.StringReader;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import javax.annotation.PostConstruct;
@@ -35,7 +38,7 @@ import javax.websocket.Session;
  *
  */
 @ApplicationScoped
-public class PlayerSessionManager {
+public class PlayerSessionManager implements Runnable {
 	private final ConcurrentHashMap<String, PlayerConnectionMediator> suspendedSessions = new ConcurrentHashMap<String, PlayerConnectionMediator>();
 
 	/** CDI injection of Java EE7 Managed scheduled executor service */
@@ -51,7 +54,20 @@ public class PlayerSessionManager {
 
 	@PostConstruct
 	public void init() {
-		System.out.println(concierge);
+		executor.schedule(this, 5, TimeUnit.MINUTES);
+	}
+
+	@Override
+	public void run() {
+		System.out.println("TIME TO CULL OLD SESSIONS... ");
+		Iterator<Entry<String,PlayerConnectionMediator>> entries = suspendedSessions.entrySet().iterator();
+		while (entries.hasNext()) {
+			Entry<String,PlayerConnectionMediator> i = entries.next();
+			if ( i.getValue().incrementAndGet() > 5 ) {
+				entries.remove();
+				i.getValue().destroy();
+			}
+		}
 	}
 
 
