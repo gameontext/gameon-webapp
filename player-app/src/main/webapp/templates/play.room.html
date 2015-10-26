@@ -6,12 +6,13 @@
           <div class="username">{{data.username}}</div>
           <div class="content">{{data.content}}</div>
         </div>
-        <div data-ng-switch-when="event" class="event"><div class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="exit"><div class="content">{{data.content}}</div><div class="exit">{{data.exitRoom}}</div></div>
+        <div data-ng-switch-when="event" class="event"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
+        <div data-ng-switch-when="exit"><div ng-bind-html="data.content" class="content">{{data.content}}</div><div class="exit">{{data.exitRoom}}</div></div>
+        <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div><div class="exit">{{data.exitRoom}}</div></div>
         <div data-ng-switch-when="location" class="location"><div class="name"> &nbsp;{{data.name}}</div>
              <div class="description">{{data.description}}</div>
-             <div class="content">{{data.content}}</div>
-             <div class="objects">You notice: <ul ng-repeat="object in data.objects"><li>{{ object }}</li></ul></div>
+             <div ng-bind-html="data.content" class="content">{{data.content}}</div>
+             <div class="objects">You notice: <ul ng-repeat="object in data.objects"><li ng-bind-html="object">{{ object }}</li></ul></div>
         </div>
         <div data-ng-switch-default>{{ data }}</div>
       </div>
@@ -19,8 +20,10 @@
   </div>    
 </div>
 <nav class="top">
-  <div class="action"><a><i class="fa fa-user"></i></a></div>
+  <div class="action"><a ng-click="sendFixed('/me')"><i class="fa fa-user"></i></a></div>
+  <div class="action"><a ng-click="sendFixed('/sos')"><i class="fa fa-life-ring"></i></a></div>
   <div class="action"><a ng-click="sendFixed('/exits')"><i class="fa fa-map-signs"></i></a></div>
   <div class="action"><a ng-click="sendFixed('/inventory')"><i class="fa fa-suitcase"></i></a></div>
+  <div class="action"><a ng-click="fillin('/examine ')"><i class="fa fa-eye"></i></a></div>
   <div class="title"><a ng-click="sendFixed('/look')">{{ playerSession.roomId }}</a></div>
 </nav>

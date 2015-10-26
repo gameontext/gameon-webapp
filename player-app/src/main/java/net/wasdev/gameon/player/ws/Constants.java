@@ -47,5 +47,6 @@ public interface Constants {
 	String USER_ID = "userId";
 	String CONTENT = "content";
 
-	String NETHER_REGION = "player,%s,{\"type\": \"%s\",\"content\": \"%s\",\"bookmark\": 0}";
+	String NETHER_REGION = "player,%s,{\"type\": \"exit\",\"content\": \"You feel a strange sensation, and suddenly find yourself in a nebulous, gray area with no apparent usable doors.\",\"bookmark\": 0}";
+	String LIFE_RING = "player,%s,{\"type\": \"exit\",\"content\": \"In a desperate plea for rescue, you stick out your <a href='http://everything2.com/title/Electronic+Thumb' target='_blank'>Electric Thumb</a> and hope for the best.\",\"bookmark\": 0}";
 }

@@ -51,6 +51,7 @@ nav.top {
   height: 3rem;
   padding: .3rem 1rem;
   vertical-align: middle;
+  background-color: #13898D;
 }
 nav.bottom {
   background-color: #ddd;
@@ -61,8 +62,9 @@ nav.bottom {
   bottom: 0;
   width: 100%;
   height: 4rem;
-  padding: .2rem 1rem;
+  padding: .2rem 0rem .2rem 0rem;
   vertical-align: middle;
+  background-color: #13898D;
 }
 nav.bottom .input-w {
   float: none; /* key */
@@ -78,11 +80,36 @@ nav .action i {
   float: right;
   font-size: 2rem;
   padding: .3rem .5rem;
+  color: #fff;
+}
+nav.bottom .slash a,
+nav .action i,
+nav.top a {
+  color: #fff;
+}
+nav.bottom .slash a:hover,
+nav.top a:hover,
+nav .action i:hover {
+  color: #ddd;
+}
+nav.bottom .slash {
+  font-size: 2rem;
+  padding: .3rem 1.2rem;
+  float: left;
+  box-sizing: border-box;
+}
+nav.bottom .action i {
+  box-sizing: border-box;
+  padding: .8rem 1rem .3rem 1rem;
 }
 .element {
-  border-top: 1px solid #eee;
-  margin-top: .2rem;
+  margin-top: 1rem;
   margin-bottom: .6rem;
+}
+.command {
+  font-size: 1rem;
+  font-style: italic;
+  color: #999;
 }
 .chat:before {
   font-family: "FontAwesome";
@@ -115,8 +142,12 @@ nav .action i {
 .location .name {
   font-weight: bold;
 }
+.location .objects {
+  margin: 1em 0;
+}
 .location .objects ul {
   margin: 0;
+  padding-left: 1em;
 }
 .location .objects ul>li {
   margin: 0;

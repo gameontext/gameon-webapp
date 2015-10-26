@@ -64,6 +64,7 @@ public class PlayerSessionManager implements Runnable {
 		while (entries.hasNext()) {
 			Entry<String,PlayerConnectionMediator> i = entries.next();
 			if ( i.getValue().incrementAndGet() > 5 ) {
+				System.out.println("SESSION: " + i.getValue());
 				entries.remove();
 				i.getValue().destroy();
 			}
