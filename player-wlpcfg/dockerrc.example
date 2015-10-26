@@ -2,3 +2,4 @@ WLP_SKIP_MAXPERMSIZE=true
 CONCIERGE_URL=http://localhost:9081/concierge
 MONGO_HOST=localhost
 MONGO_PORT=27017
+LICENSE=accept
