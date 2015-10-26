@@ -9,9 +9,11 @@
  */
 angular.module('playerApp')
   .controller('PlayCtrl', 
-  [          '$scope','$log','playerSocket','user','userAndAuth',
-    function ($scope,  $log,  playerSocket,  user,  userAndAuth) {
+  [          '$scope','$log','playerSocket','user','userAndAuth','$window',
+    function ($scope,  $log,  playerSocket,  user,  userAndAuth,  $window) {
       $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
+      
+      var inputBox = $window.document.getElementById('inputbox');
       
       $scope.roomEvents = playerSocket.roomEvents;
       $scope.userInput = '';
@@ -21,6 +23,11 @@ angular.module('playerApp')
         if (e.keyCode === 13) {
           $scope.send();
         }
+      };
+      
+      $scope.fillin = function(input) {
+        $scope.userInput = input;
+        inputBox.focus();
       };
       
       $scope.send = function() {
@@ -33,5 +40,6 @@ angular.module('playerApp')
       
       $scope.sendFixed = function(input) {
         playerSocket.send(input);
-      }
+        inputBox.focus();
+      };
   }]);

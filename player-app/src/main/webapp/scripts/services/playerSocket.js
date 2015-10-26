@@ -69,6 +69,7 @@ angular.module('playerApp')
           payload = payload.slice(comma+1);
           res = parseJson(payload);
           res.id = id++;
+          playerSession.bookmark = res.bookmark;
           
           switch (res.type) {
             case 'event':
@@ -102,11 +103,12 @@ angular.module('playerApp')
       var parseJson = function(message) {
         var res;
         try {
-          res = JSON.parse(message);
+          res = angular.fromJson(message);
         } catch(e) {
+          $log.debug('parse %o %o', message, e);
           res = {username: user.username, content: message};
         }
-        $log.debug('message: %o', res);
+        $log.debug('message: %o %o', message, res);
         return res;
       };
       
@@ -116,8 +118,24 @@ angular.module('playerApp')
             userId: user.profile.id,
             content: message
         };
+        
         $log.debug('message: %o', output);
         
+        if ( message.charAt(0) == '/') {
+          // echo command to user's screen
+          roomEvents.push({
+            type: 'command',
+            content: message,
+            id: id++
+            });
+          
+          // Handle special cases here while we have the pieces
+          if ( message === '/sos') {
+            ws.send("sos,"+playerSession.roomId+",{}");
+            return; // DONE/SENT!
+          }
+        }
+
         ws.send("room,"+playerSession.roomId+","+angular.toJson(output));
       };
       
