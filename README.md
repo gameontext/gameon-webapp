@@ -39,6 +39,49 @@ Running `grunt test` will run the unit tests with karma.
 
 Gradle integration should mean running e2e tests for JS and Java app in one go (not there yet)
 
+## Docker
+
+To build a Docker image for this app/service, execute the following:
+
+```
+gradle buildImage
+```
+
+Or, if you don't have gradle, then:
+
+```
+./gradlew buildImage
+```
+
+### Interactive Run
+
+```
+docker run -it -p 9443:9443 -e LICENSE=accept gameon-player bash
+```
+
+Then, you can start the server with 
+```
+/opt/ibm/wlp/bin/server run defaultServer
+```
+
+### Daemon Run
+
+```
+docker run -d -p 9443:9443 -e LICENSE=accept --name gameon-player gameon-player
+```
+
+### Stop
+
+```
+docker stop gameon-player ; docker rm gameon-player
+```
+
+### Restart Daemon
+
+```
+docker run -d -p 9443:9443 -e LICENSE=accept --name gameon-player gameon-player ; docker stop gameon-player ; docker rm gameon-player
+```
+
 
 ## TODO
 
