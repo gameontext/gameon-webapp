@@ -64,7 +64,7 @@ public class PlayerSessionManager implements Runnable {
 		while (entries.hasNext()) {
 			Entry<String,PlayerConnectionMediator> i = entries.next();
 			if ( i.getValue().incrementAndGet() > 5 ) {
-				System.out.println("SESSION: " + i.getValue());
+				System.out.println("CULLING SESSION: " + i.getValue());
 				entries.remove();
 				i.getValue().destroy();
 			}
@@ -109,11 +109,13 @@ public class PlayerSessionManager implements Runnable {
 		long lastmessage = sessionData.getInt(Constants.BOOKMARK, 0);
 
 		PlayerConnectionMediator playerSession = null;
-		if ( mediatorId != null ) {
+		if ( mediatorId != null ) {			
 			playerSession = suspendedSessions.remove(mediatorId);
+			Log.log(Level.FINER, this, "Resuming session session {0} for user {1}", playerSession, userName);
 		}
 		if ( playerSession == null ) {
 			playerSession = new PlayerConnectionMediator(userName, username, threadFactory, concierge);
+			Log.log(Level.FINER, this, "Created new session {0} for user {1}", playerSession, userName);
 		}
 
 		playerSession.initializeConnection(clientSession, roomId, lastmessage);
