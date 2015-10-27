@@ -116,8 +116,6 @@ public class PlayerConnectionMediator implements Runnable {
 				if ( keepGoing ) {
 					Thread.interrupted();
 					keepGoing = false;
-				} else {
-					System.out.println("Interrupted -- stopping now");
 				}
 			}
 		}
@@ -170,7 +168,7 @@ public class PlayerConnectionMediator implements Runnable {
 		RoomMediator newRoom = concierge.checkin(null, currentRoom, roomId == null ? Constants.FIRST_ROOM : roomId);
 
 		// Get connection to the room (resets vars, does good things)
-		if ( connectToRoom(newRoom) ) {
+		if ( connectToRoom(newRoom, true) ) {
 			suspendCount.set(0); // resumed!
 
 			// set up delivery thread
@@ -215,7 +213,9 @@ public class PlayerConnectionMediator implements Runnable {
 			newRoom = concierge.changeRooms(oldRoom, exitId);
 		}
 
-		if ( connectToRoom(newRoom) ) {
+		// Try to connect to the new room; safe to fallback to a new/random room if
+		// we can't connect to the room the concierge told us to use
+		if ( connectToRoom(newRoom, true) ) {
 			Log.log(Level.FINER, this, "GOODBYE {0}", oldRoom.getId());
 
 			// We connected to the new room! Say goodbye to the old room
@@ -224,19 +224,19 @@ public class PlayerConnectionMediator implements Runnable {
 					.add(Constants.USERNAME, username)
 					.add(Constants.USER_ID, userId).build().toString() });
 		} else {
-			// recover: back into the old room
-			connectToRoom(oldRoom);
+			// recover: back into the old room -- no fallback
+			connectToRoom(oldRoom, false);
 		}
 	}
 
-	private boolean connectToRoom(RoomMediator room) {
+	private boolean connectToRoom(RoomMediator room, boolean fallback) {
 		Set<String> visitedRooms = new HashSet<String>();
 		visitedRooms.add(room.getId());
 
 		// SUBSCRIBE: Open the connection to receive notifications from the room
 		while ( !room.subscribe(this, 0) ) {
-			if ( !visitedRooms.add(room.getId()) ) {
-				// NO CONNECTION! :(
+			if ( !fallback || !visitedRooms.add(room.getId()) ) {
+				// either no fallback, or no new room to try :(
 				return false;
 			}
 			room = concierge.changeRooms(room, null);
@@ -254,6 +254,14 @@ public class PlayerConnectionMediator implements Runnable {
 
 		sendClientAck(); // update client room
 		return true; // connected
+	}
+
+	public void reconnectToRoom() {
+		if( !connectToRoom(currentRoom, false) ) {
+			// not able to reconnect to room, initiate a real switch
+			// complete with join/part messages
+			switchRooms(new String[] { Constants.SOS });
+		}
 	}
 
 	/**

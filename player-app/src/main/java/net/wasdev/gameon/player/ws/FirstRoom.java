@@ -132,7 +132,7 @@ public class FirstRoom implements RoomMediator {
 	}
 
 	@Override
-	public void disconnect(CloseReason reason) {
+	public void connectionClosed(CloseReason reason) {
 	}
 
 }

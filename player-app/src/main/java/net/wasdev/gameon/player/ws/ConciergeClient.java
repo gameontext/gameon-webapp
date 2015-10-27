@@ -35,7 +35,10 @@ import javax.ws.rs.core.MediaType;
 @ApplicationScoped
 public class ConciergeClient {
 
-	/** CDI injection of Java EE7 Managed thread factory */
+	/**
+	 * CDI injection of Java EE7 Managed thread factory: passed on to Rooms, which are created
+	 * here based on the room type.
+	 */
 	@Resource
 	protected ManagedThreadFactory threadFactory;
 
@@ -104,7 +107,7 @@ public class ConciergeClient {
 		Log.log(Level.FINER, this, "making request to {0} for starting rooms", target.getUri().toString());
 		RoomEndpointListWrapper result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointListWrapper.class);
 
-		
+
 		return result.getRel();
 	}
 

@@ -49,7 +49,7 @@ public interface RoomMediator {
 	 * Called when the room-side of the connection is closed.
 	 * @param reason Why the connection was closed.
 	 */
-	void disconnect(CloseReason reason);
+	void connectionClosed(CloseReason reason);
 
 	/**
 	 * @param session
