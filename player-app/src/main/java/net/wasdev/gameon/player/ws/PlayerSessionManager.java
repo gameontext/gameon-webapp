@@ -57,7 +57,7 @@ public class PlayerSessionManager implements Runnable {
 
 	@Override
 	public void run() {
-		Log.log(Level.FINEST, this, "start culling sessions: %d", suspendedSessions.size());
+		Log.log(Level.FINEST, this, "start culling sessions: " + suspendedSessions.size());
 		Iterator<Entry<String,PlayerConnectionMediator>> entries = suspendedSessions.entrySet().iterator();
 		while (entries.hasNext()) {
 			Entry<String,PlayerConnectionMediator> i = entries.next();
@@ -78,7 +78,7 @@ public class PlayerSessionManager implements Runnable {
 			// no more suspended sessions, clear the reaper rather than resetting
 			reaper.set(null);
 		} else {
-			// We still have suspended sessions, reschedule for 5 minutes from now.
+			// We still have suspended sessions, reschedule for 2 minutes from now.
 			reaper.set(executor.schedule(this, 2, TimeUnit.MINUTES));
 		}
 	}
@@ -120,7 +120,7 @@ public class PlayerSessionManager implements Runnable {
 		long lastmessage = sessionData.getInt(Constants.BOOKMARK, 0);
 
 		PlayerConnectionMediator playerSession = null;
-		if ( mediatorId != null ) {			
+		if ( mediatorId != null ) {
 			playerSession = suspendedSessions.remove(mediatorId);
 			Log.log(Level.FINER, this, "Resuming session session {0} for user {1}", playerSession, userName);
 		}

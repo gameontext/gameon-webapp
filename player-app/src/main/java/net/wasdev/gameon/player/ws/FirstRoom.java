@@ -32,6 +32,15 @@ public class FirstRoom implements RoomMediator {
 
 	PlayerConnectionMediator session= null;
 	private AtomicInteger counter = new AtomicInteger(0);
+	boolean newbie = false;
+
+	public FirstRoom() {
+		this(false);
+	}
+
+	public FirstRoom(boolean newbie) {
+		this.newbie = newbie;
+	}
 
 	@Override
 	public void route(String[] routing) {
@@ -100,18 +109,24 @@ public class FirstRoom implements RoomMediator {
 	private void buildLocationResponse(JsonObjectBuilder responseBuilder) {
 		responseBuilder.add(Constants.TYPE, Constants.LOCATION);
 		responseBuilder.add(Constants.NAME, Constants.FIRST_ROOM);
-		responseBuilder.add(Constants.DESCRIPTION, Constants.FIRST_ROOM_DESC);
 		responseBuilder.add(Constants.EXITS, buildExitsResponse());
+
+		if ( newbie ) {
+			responseBuilder.add(Constants.DESCRIPTION, Constants.FIRST_ROOM_DESC + Constants.FIRST_ROOM_EXTENDED);
+			newbie = false;
+		} else {
+			responseBuilder.add(Constants.DESCRIPTION, Constants.FIRST_ROOM_DESC);
+		}
 	}
 
 	private JsonObject buildExitsResponse() {
 		JsonObjectBuilder content = Json.createObjectBuilder();
-		content.add("N", "Simple door to the North (/exit N)");
-		content.add("S", "Simple door to the South (/exit S)");
-		content.add("E", "Simple door to the East (/exit E)");
-		content.add("W", "Simple door to the West (/exit W)");
-		content.add("U", "Hatch in the ceiling (/exit U)");
-		content.add("D", "Trap-door in the floor (/exit D)");
+		content.add("N", "Simple door to the North (<b>/go N</b>)");
+		content.add("S", "Simple door to the South (<b>/go S</b>)");
+		content.add("E", "Simple door to the East (<b>/go E</b>)");
+		content.add("W", "Simple door to the West (<b>/go W</b>)");
+		content.add("U", "Hatch in the ceiling (<b>/go U</b>)");
+		content.add("D", "Trap-door in the floor (<b>/go D</b>)");
 
 		return content.build();
 	}

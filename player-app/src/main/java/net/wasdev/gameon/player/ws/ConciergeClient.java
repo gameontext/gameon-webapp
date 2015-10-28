@@ -24,10 +24,14 @@ import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -60,14 +64,14 @@ public class ConciergeClient {
 	}
 
 	public RoomMediator checkin(PlayerConnectionMediator playerSession, RoomMediator currentRoom, String roomId) {
-		if ( roomId == null || roomId.isEmpty() || Constants.FIRST_ROOM.equals(roomId) ) {
+		if ( currentRoom == null && (roomId == null || roomId.isEmpty() || Constants.FIRST_ROOM.equals(roomId)) ) {
 			// NEWBIE!!
-			return new FirstRoom();
+			return new FirstRoom(true);
 		}
 
 		if ( currentRoom != null ) {
 			if ( currentRoom.getId().equals(roomId)) {
-				// SESSION RESUME!! WOO!!
+				// Room session resume
 				return currentRoom;
 			} else {
 				// The player moved rooms somewhere along the way
@@ -76,12 +80,15 @@ public class ConciergeClient {
 			}
 		}
 
-		// Make a new room;
 		RoomEndpointList endpointList = getRoomEndpoints(roomId);
-		RemoteRoomMediator room = new RemoteRoomMediator(roomId, endpointList.getEndpoints(), threadFactory);
-
-		// Create a new room
-		return room;
+		if ( endpointList == null ) {
+			// Safe fallback (session reset)
+			return new FirstRoom();
+		} else {
+			// Create a new room
+			RemoteRoomMediator room = new RemoteRoomMediator(roomId, endpointList.getEndpoints(), threadFactory);
+			return room;
+		}
 	}
 
 
@@ -99,32 +106,44 @@ public class ConciergeClient {
 			roomEndpoints = getRoomEndpoints(currentRoom.getId(), exit);
 		}
 
-		return new RemoteRoomMediator(roomEndpoints.getRoomId(), roomEndpoints.getEndpoints(), threadFactory);
+		if ( roomEndpoints == null ) {
+			// safe fallback
+			return new FirstRoom();
+		} else {
+			return new RemoteRoomMediator(roomEndpoints.getRoomId(), roomEndpoints.getEndpoints(), threadFactory);
+		}
 	}
 
 	public RoomEndpointList getRoomEndpoints() {
 		WebTarget target = this.root.path("startingRoom");
-		Log.log(Level.FINER, this, "making request to {0} for starting rooms", target.getUri().toString());
-		RoomEndpointListWrapper result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointListWrapper.class);
-
-
-		return result.getRel();
+		return getRoomList(target);
 	}
 
 	public RoomEndpointList getRoomEndpoints(String roomId) {
 		WebTarget target = this.root.path("rooms/{roomId}").resolveTemplate("roomId", roomId);
-		Log.log(Level.FINER, this, "making request to {0} for room", target.getUri().toString());
-		RoomEndpointListWrapper result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointListWrapper.class);
-
-		return result.getRel();
+		return getRoomList(target);
 	}
 
 	public RoomEndpointList getRoomEndpoints(String roomId, String exit) {
 		WebTarget target = this.root.path("rooms/{roomId}/{exit}").resolveTemplate("roomId", roomId).resolveTemplate("exit", exit);
-		Log.log(Level.FINER, this, "making request to {0} for list of exit", target.getUri().toString());
-		RoomEndpointListWrapper result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointListWrapper.class);
+		return getRoomList(target);
+	}
 
-		return result.getRel();
+	protected RoomEndpointList getRoomList(WebTarget target) {
+		Log.log(Level.FINER, this, "making request to {0} for room", target.getUri().toString());
+		try {
+			RoomEndpointListWrapper result = target.request(MediaType.APPLICATION_JSON).get(RoomEndpointListWrapper.class);
+			return result.getRel();
+		} catch (ResponseProcessingException rpe) {
+			Response response = rpe.getResponse();
+			Log.log(Level.FINER, this, "Exception fetching room list (%s): %s, %s",
+					target.getUri().toString(),
+					response.getStatusInfo());
+			Log.log(Level.FINEST, this, "Exception fetching room list", rpe);
+		} catch ( ProcessingException|WebApplicationException ex ) {
+			Log.log(Level.FINEST, this, "Exception fetching room list ("+target.getUri().toString()+")", ex);
+		}
+		return null;
 	}
 
 	static class RoomEndpointListWrapper {
@@ -138,6 +157,7 @@ public class ConciergeClient {
 			this.rel = rel;
 		}
 	}
+
 	static class RoomEndpointList {
 		String roomId;
 		List<String> endpoints;

@@ -65,7 +65,6 @@ public class PlayerConnectionMediator implements Runnable {
 		this.username = username;
 		this.threadFactory = threadFactory;
 		this.concierge = concierge;
-		Log.log(Level.FINEST, this, "playerConnectionMediator built. currentRoom should be null at the mo.. is it? "+(currentRoom==null));
 	}
 
 	/**
@@ -93,7 +92,7 @@ public class PlayerConnectionMediator implements Runnable {
 			// send messages for the current room on to the room (others fall on the floor)
 			targetRoom.route(routing);
 		} else {
-			Log.log(Level.FINEST, this, "sendToRoom -- Dropping message {0} intended for {1} but currently targetting room {2}", Arrays.asList(routing), String.valueOf(routing[1]), String.valueOf(targetRoom.getId()));
+			Log.log(Level.FINEST, this, "sendToRoom -- Dropping message {0}", Arrays.asList(routing));
 		}
 	}
 
@@ -166,7 +165,7 @@ public class PlayerConnectionMediator implements Runnable {
 	public boolean initializeConnection(Session clientSession, String roomId, long lastmessage) {
 		this.clientSession = clientSession;
 
-		RoomMediator newRoom = concierge.checkin(null, currentRoom, roomId == null ? Constants.FIRST_ROOM : roomId);
+		RoomMediator newRoom = concierge.checkin(this, currentRoom, roomId);
 
 		// Get connection to the room (resets vars, does good things)
 		if ( connectToRoom(newRoom, true) ) {
@@ -243,7 +242,6 @@ public class PlayerConnectionMediator implements Runnable {
 			room = concierge.changeRooms(room, null);
 		}
 
-		Log.log(Level.FINER, this, "playerConnectionMediator just set room for {0} to be {1}", userId, room.getId());
 		this.currentRoom = room;
 		this.roomId = room.getId();
 
@@ -284,9 +282,6 @@ public class PlayerConnectionMediator implements Runnable {
 		Log.log(Level.FINE, this, "session {0} destroyed", userId);
 		// session expired.
 		toClient.clear();
-		
-		Log.log(Level.FINER, this, "playerConnectionMediator for {1} unsubscribing from currentRoom {0} and setting it to null", currentRoom.getId(), userId);
-		
 		currentRoom.unsubscribe(this);
 		currentRoom = null;
 	}
