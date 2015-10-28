@@ -23,6 +23,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 
 import javax.websocket.CloseReason;
+import javax.websocket.CloseReason.CloseCodes;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.Session;
@@ -166,13 +167,20 @@ public class RemoteRoomMediator implements Runnable, RoomMediator {
 	}
 
 	/**
-	 *
+	 * Called by onClose method from the room.
+	 * If the connection was closed
 	 */
 	@Override
-	public void disconnect(CloseReason reason) {
-		// This is driven by disconnect: if the connection is disconnected for
-		// a not-normal reason, do we reconnect? Respawn the whole room?
-		Log.log(Level.FINER, this, "Disconnect {0}: {1}", roomId, reason);
+	public void connectionClosed(CloseReason reason) {
+		Log.log(Level.FINER, this, "connection closed {0}: {1}", roomId, reason);
+
+		// This is driven by onClose from the room.
+		// If the connection was closed due to an error, we should try to reconnect,
+		// which will include a potential re-route to somewhere else if the room
+		// can't be re-connected.
+		if ( !reason.getCloseCode().equals(CloseCodes.NORMAL_CLOSURE)) {
+			playerSession.reconnectToRoom();
+		}
 	}
 
 	@Override

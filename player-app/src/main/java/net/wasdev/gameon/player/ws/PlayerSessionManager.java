@@ -19,10 +19,11 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.concurrent.ManagedThreadFactory;
@@ -49,29 +50,38 @@ public class PlayerSessionManager implements Runnable {
 	@Resource
 	protected ManagedThreadFactory threadFactory;
 
+	private AtomicReference<ScheduledFuture<?>> reaper = new AtomicReference<ScheduledFuture<?>>(null);
+
 	@Inject
 	protected ConciergeClient concierge;
 
-	@PostConstruct
-	public void init() {
-		executor.schedule(this, 5, TimeUnit.MINUTES);
-	}
-
 	@Override
 	public void run() {
-		System.out.println("TIME TO CULL OLD SESSIONS... ");
+		Log.log(Level.FINEST, this, "start culling sessions: %d", suspendedSessions.size());
 		Iterator<Entry<String,PlayerConnectionMediator>> entries = suspendedSessions.entrySet().iterator();
 		while (entries.hasNext()) {
 			Entry<String,PlayerConnectionMediator> i = entries.next();
+			Log.log(Level.FINEST, this, "evaluating session " + i.getValue());
 			if ( i.getValue().incrementAndGet() > 5 ) {
-				System.out.println("CULLING SESSION: " + i.getValue());
 				entries.remove();
 				i.getValue().destroy();
 			}
 		}
-		executor.schedule(this, 5, TimeUnit.MINUTES);
+
+		updateReaper();
+
+		Log.log(Level.FINEST, this, "End culling sessions");
 	}
 
+	private void updateReaper() {
+		if ( suspendedSessions.isEmpty() ) {
+			// no more suspended sessions, clear the reaper rather than resetting
+			reaper.set(null);
+		} else {
+			// We still have suspended sessions, reschedule for 5 minutes from now.
+			reaper.set(executor.schedule(this, 2, TimeUnit.MINUTES));
+		}
+	}
 
 	/**
 	 * Set the PlayerSession into the websocket session user properties.
@@ -133,6 +143,10 @@ public class PlayerSessionManager implements Runnable {
 		if ( session != null ) {
 			suspendedSessions.put(session.getId(), session);
 			session.disconnect();
+
+			if ( reaper.get() == null ) {
+				updateReaper();
+			}
 		}
 	}
 }
