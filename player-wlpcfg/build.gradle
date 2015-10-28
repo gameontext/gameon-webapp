@@ -33,7 +33,7 @@ docker {
 
 task buildDockerImage(type: DockerBuildImage, dependsOn: ['copyWAR','copyMongo']) {
 	inputDir = file('.')
-    tag = 'gameon-room'
+    tag = 'gameon-player'
     quiet = false
 }
 
