@@ -166,7 +166,7 @@ public class PlayerConnectionMediator implements Runnable {
 	public boolean initializeConnection(Session clientSession, String roomId, long lastmessage) {
 		this.clientSession = clientSession;
 
-		RoomMediator newRoom = concierge.checkin(null, currentRoom, roomId == null ? Constants.FIRST_ROOM : roomId);
+		RoomMediator newRoom = concierge.checkin(this, currentRoom, roomId);
 
 		// Get connection to the room (resets vars, does good things)
 		if ( connectToRoom(newRoom, true) ) {

@@ -32,6 +32,10 @@ public interface Constants {
 
 	String FIRST_ROOM = "TheFirstRoom";
 	String FIRST_ROOM_DESC = "You've entered a vaguely squarish room, with walls of an indeterminate color.";
+	String FIRST_ROOM_EXTENDED = " You are alone at the moment, but have a strong suspicion that you've entered a place that "
+			+ " has sometimes frutrating syntax and requires '/' before commands. You notice buttons at "
+			+ " the top right of the screen that make typing the most common commands easier, and even a button"
+			+ " at the bottom to remind you of that leading slash. <br /><br />You feel a strong temptation to try the buttons.";
 	String FIRST_ROOM_INV = "Sadly, there is nothing here";
 
 	// Perhaps a type enum would work better
