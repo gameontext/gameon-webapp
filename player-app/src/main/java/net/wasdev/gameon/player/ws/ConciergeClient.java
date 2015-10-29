@@ -149,23 +149,30 @@ public class ConciergeClient {
             JsonReader reader = Json.createReader(new StringReader(resultStr));
             JsonObject result = reader.readObject();
             JsonObject rel = (JsonObject)result.get("rel");
-            RoomEndpointList res = new RoomEndpointList();
-            JsonString id = rel.getJsonString("roomId");
-            res.setRoomId(id.getString());
-            JsonArray exits = rel.getJsonArray("endpoints");
-            ArrayList<String> strexits = new ArrayList<String>();
-            if(exits!=null){
-                    for(JsonValue e : exits){                    	
-                    		JsonString s = (JsonString)e;
-                            strexits.add(s.getString());
-                    }
+            if(rel!=null){
+	            RoomEndpointList res = new RoomEndpointList();
+	            JsonString id = rel.getJsonString("roomId");
+	            res.setRoomId(id.getString());
+	            JsonArray exits = rel.getJsonArray("endpoints");
+	            ArrayList<String> strexits = new ArrayList<String>();
+	            if(exits!=null){
+	                    for(JsonValue e : exits){                    	
+	                    		JsonString s = (JsonString)e;
+	                            strexits.add(s.getString());
+	                    }
+	            }
+	            res.setEndpoints(strexits);
+	            return res;
+            }else{
+            	Log.log(Level.FINER, this, "Room list was lacking any rel element uri: {0} result: {1}",
+            			target.getUri().toString(),
+    					resultStr);
             }
-            res.setEndpoints(strexits);
 
-            return res;            
+            return null;
 		} catch (ResponseProcessingException rpe) {
 			Response response = rpe.getResponse();
-			Log.log(Level.FINER, this, "Exception fetching room list uri {0},: resp code {1}, data {2}",
+			Log.log(Level.FINER, this, "Exception fetching room list uri: {0} resp code: {1} data: {2}",
 					target.getUri().toString(),
 					response.getStatusInfo().getStatusCode()+" "+response.getStatusInfo().getReasonPhrase(),
 					response.readEntity(String.class));
