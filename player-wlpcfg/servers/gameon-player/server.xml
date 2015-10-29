@@ -40,6 +40,14 @@
   <jndiEntry jndiName="conciergeUrl" value="${env.CONCIERGE_URL}"/>
   <logging traceSpecification="*=info:com.ibm.ws.wsoc.*=all" />
 
+  <!-- Twitter Application Info... -->
+  <jndiEntry jndiName="twitterOAuthConsumerKey" value="${env.TWITTER_CONSUMER_KEY}"/>
+  <jndiEntry jndiName="twitterOAuthConsumerSecret" value="${env.TWITTER_CONSUMER_SECRET}"/>
+  
+  <!-- Facebook Application Info...  -->
+  <jndiEntry jndiName="facebookAppID" value="${env.FACEBOOK_APP_ID}"/>
+  <jndiEntry jndiName="facebookAppSecret" value="${env.FACEBOOK_APP_SECRET}"/>
+  
   <webApplication id="player-app" location="player-app.war" name="player-app" contextRoot="/play">
     <classloader commonLibraryRef="MongoLib"/>
   </webApplication> 

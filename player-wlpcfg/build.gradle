@@ -54,8 +54,12 @@ task createNewContainer(type: DockerCreateContainer) {
 	env = ["LICENSE=accept", 
 			"CONCIERGE_URL=" + System.getenv('CONCIERGE_URL'),
 			"MONGO_HOST=" + System.getenv('MONGO_HOST'),
-			"MONGO_PORT=" + System.getenv('MONGO_PORT')
-			]
+			"MONGO_PORT=" + System.getenv('MONGO_PORT'),
+			"TWITTER_CONSUMER_KEY=' + System.getenv('TWITTER_CONSUMER_KEY'),
+			"TWITTER_CONSUMER_SECRET=' + System.getenv('TWITTER_CONSUMER_SECRET'),
+			"FACEBOOK_APP_ID=' + System.getenv('FACEBOOK_APP_ID'),
+			"FACEBOOK_APP_SECRET=' + System.getenv('FACEBOOK_APP_SECRET')
+		]
 }
 
 task startNewContainer(type: DockerStartContainer) {
