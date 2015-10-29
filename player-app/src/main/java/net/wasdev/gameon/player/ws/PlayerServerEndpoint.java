@@ -90,7 +90,10 @@ public class PlayerServerEndpoint {
 			}
 			default : {
 				PlayerConnectionMediator ps = playerSessionManager.getPlayerSession(session);
-				ps.sendToRoom(routing);
+				//after a restart we may get messages for websockets we don't associate to sessions (yet)
+				if(ps!=null){
+					ps.sendToRoom(routing);
+				}
 				break;
 			}
 		}
