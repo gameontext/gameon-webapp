@@ -11,9 +11,9 @@ wget http://game-on.org:8081/docker -O ./docker -q
 chmod +x docker
 export DOCKER_HOST="tcp://game-on.org:2375"
 echo Building the docker image...
-./docker build -t gameon-frontend .
+./docker build -t gameon-webapp .
 echo Stopping the existing container...
-./docker stop -t 0 gameon-frontend || true
+./docker stop -t 0 gameon-webapp || true
 ./docker rm gameon-frontend || true
 echo Starting the new container...
-./docker run -d -p 3000:3000 --name=gameon-frontend gameon-frontend
+./docker run -d -p 3000:3000 --name=gameon-webapp gameon-webapp
