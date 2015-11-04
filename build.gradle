@@ -1,8 +1,0 @@
-allprojects {
-    group = 'net.wasdev.wlp.sample'
-    version = '1.0'
-
-    repositories {
-        mavenCentral()
-    }
-}

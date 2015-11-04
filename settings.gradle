@@ -1,4 +1,0 @@
-include 'player-app'
-include 'player-wlpcfg'
-
-rootProject.name='gameon-player'
