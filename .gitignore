@@ -1,9 +1,3 @@
-.*.swp
-.gradle
-.classpath
 .project
-.settings
-.DS_Store
-/bin
-/build
-/local.properties
+src/node_modules
+src/public/bower_components
