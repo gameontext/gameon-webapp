@@ -8,7 +8,7 @@
     <div class="center">
       <div>You are in a maze of little interconnected rooms, none alike.</div>
       <div>And you aren't alone.</div>
-      <div><a class="button" ui-sref="default.login">Login</a></div>
+      <div class="padded"><a class="button" ui-sref="default.login">Login</a></div>
     </div>
   </div>
   <div class="section" data-ng-switch-when="default.login">
@@ -39,22 +39,22 @@
     <form name="createProfileForm">
       <div class="row">
         <div class="one-half column">
-          <label for="username">Username</label> 
-          <input class="u-full-width" type="text" name="username" data-ng-model="user.profile.name" 
-                 required title="{{user.rules.nameRule}}" data-ng-pattern="user.rules.namePattern" /> 
+          <label for="username">Username</label>
+          <input class="u-full-width" type="text" name="username" data-ng-model="user.profile.name"
+                 required title="{{user.rules.nameRule}}" data-ng-pattern="user.rules.namePattern" />
           <a class="button u-full-width" data-ng-click="generateUsername()">Generate a username</a>
-          <div ng-show="createProfileForm.username.$error.required">&lt;?&gt; moves the chair.</div> 
+          <div ng-show="createProfileForm.username.$error.required">&lt;?&gt; moves the chair.</div>
           <div ng-hide="createProfileForm.username.$error.required">{{ createProfileForm.username.$viewValue }} moves the chair.</div>
-          <div ng-show="createProfileForm.username.$error.pattern">{{ user.rules.nameRule }}</div>&nbsp; 
+          <div ng-show="createProfileForm.username.$error.pattern">{{ user.rules.nameRule }}</div>&nbsp;
         </div>
         <div class="one-half column">
-          <label for="favColor">Favorite color</label> 
-          <input class="u-full-width" type="text" name="favoriteColor" data-ng-model="user.profile.favoriteColor" 
-                 required title="{{user.rules.colorRule}}" data-ng-pattern="user.rules.colorPattern"> 
+          <label for="favColor">Favorite color</label>
+          <input class="u-full-width" type="text" name="favoriteColor" data-ng-model="user.profile.favoriteColor"
+                 required title="{{user.rules.colorRule}}" data-ng-pattern="user.rules.colorPattern">
           <a class="button u-full-width" data-ng-click="generateColor()">Generate a color</a>
-          <div ng-show="createProfileForm.favoriteColor.$error.required">{{ createProfileForm.username.$viewValue }} loves the color &lt;?&gt;</div> 
+          <div ng-show="createProfileForm.favoriteColor.$error.required">{{ createProfileForm.username.$viewValue }} loves the color &lt;?&gt;</div>
           <div ng-hide="createProfileForm.favoriteColor.$error.required">{{ createProfileForm.username.$viewValue }} loves the color {{ createProfileForm.favoriteColor.$viewValue }}</div>
-          <div ng-show="createProfileForm.favoriteColor.$error.pattern">{{ user.rules.colorRule }}</div>&nbsp; 
+          <div ng-show="createProfileForm.favoriteColor.$error.pattern">{{ user.rules.colorRule }}</div>&nbsp;
         </div>
       </div>
       <div class="section center">
@@ -65,13 +65,17 @@
     </form>
   </div>
   <div class="section" data-ng-switch-default>
-    <div class="section">
+    <div class="center">
         <div>Something went wrong...</div>
     </div>
   </div>
+  <div class="section">
+    <div class="center">
+      <div><a href="http://game-on.org">All about Game On!</a></div>
+    </div>
+  </div>
 </div>
-<footer class="footer section container">
+<footer class="footer section">
   <div title="peace, love, play"><i class="fa fa-hand-peace-o"></i> <i class="fa fa-heart-o"></i> <i class="fa fa-play"></i></div>
-    the <a href="http://wasdev.net" target="_blank">wasdev</a> team<br />
-    <a href="http://game-on.org">info site</a>
+  <div>the <a href="http://wasdev.net" target="_blank">wasdev</a> team</div>
 </footer>

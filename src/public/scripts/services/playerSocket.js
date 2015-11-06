@@ -2,12 +2,12 @@
 
 /**
  * This wraps interaction between the client device and the server-side Player
- * service. The Player service is the Player's view of the world, and the 
- * websocket between the client and this player-focused hub service should 
- * contain most of the back and forth required for interacting with the 
- * game (room/chat, inventory), and the leaderboard (storing/retrieving 
- * earned trophies and badges). 
- * 
+ * service. The Player service is the Player's view of the world, and the
+ * websocket between the client and this player-focused hub service should
+ * contain most of the back and forth required for interacting with the
+ * game (room/chat, inventory), and the leaderboard (storing/retrieving
+ * earned trophies and badges).
+ *
  * @ngdoc service
  * @name playerApp.playerSocket
  * @description
@@ -18,22 +18,21 @@ angular.module('playerApp')
   .factory('playerSocket',
   [          '$websocket','$log','user','auth','API',
     function ($websocket,  $log,  user,  auth,  API) {
-    
+
       var ws;
       var websocketURL = API.WS_URL + user.profile.id;
       var id = 0;
-     
+
       // Collection for holding data: play.room.html displays
       // this scrolling collection.
       var roomEvents = [];
-      
-      // Create a v1 websocket
-      $log.debug("Opening player socket %o for %o",websocketURL, user.profile);
-      ws = $websocket(websocketURL, { 
-             useApplyAsync: true,
-             reconnectIfNotNormalClose: true
-           });
-      
+
+      // Collection of messages pending send
+      var pendingSend = [];
+
+      // Status of socket: available to send or not
+      var canSend = false;
+
       // Restore some information from the session, like the bookmark (last seen message)
       var playerSession = angular.extend({}, angular.fromJson(localStorage.playerSession));
 
@@ -44,38 +43,54 @@ angular.module('playerApp')
       }
       playerSession.username = user.profile.name;
 
+      // Create a v1 websocket
+      $log.debug("Opening player socket %o for %o",websocketURL, user.profile);
+      ws = $websocket(websocketURL, {
+             useApplyAsync: true,
+             reconnectIfNotNormalClose: true
+           });
+
       // On open, check in with the concierge
       ws.onOpen(function() {
         console.log('connection open');
         ws.send('ready,' + angular.toJson(playerSession, 0));
       });
 
-      // On received message, push to the correct collection 
+      // On received message, push to the correct collection
       ws.onMessage(function(event) {
-        
+        $log.debug("OnMessage %o",event);
+
         var comma = event.data.indexOf(',');
         var command = event.data.slice(0,comma);
         var payload = event.data.slice(comma+1);
         var target, res;
-        
+
         if ( "ack" === command ) {
           res = parseJson(payload);
           playerSession.mediatorId = res.mediatorId;
           playerSession.roomId = res.roomId;
           playerSession.roomName = res.roomName;
+
+          if ( !canSend ) {
+            // indicate we can send again, and catch up with anything
+            // we queued while the connection was re-establishing itself
+            canSend = true;
+            sendPending();
+          }
         } else {
           comma = payload.indexOf(',');
           target = payload.slice(0,comma);
           payload = payload.slice(comma+1);
+
           res = parseJson(payload);
-          res.id = id++;
           playerSession.bookmark = res.bookmark;
-          
+          res.id = id++; // this prevents element re-rendering in the UI
+
           switch (res.type) {
             case 'event':
               if ( res.content[user.profile.id] ) {
                 res.content = res.content[user.profile.id];
-              } else { 
+              } else {
                 res.content = res.content['*'];
               }
               roomEvents.push(res);
@@ -85,10 +100,9 @@ angular.module('playerApp')
               break;
           }
         }
-
       });
 
-      // On error, report the error, and close the connection 
+      // On error, report the error, and close the connection
       // (try to reconnect)
       ws.onError(function(event) {
         $log.debug('connection Error', event);
@@ -98,8 +112,9 @@ angular.module('playerApp')
       ws.onClose(function(event) {
         $log.debug('connection closed', event);
         localStorage.playerSession = angular.toJson(playerSession);
+        canSend = false;
       });
-      
+
       var parseJson = function(message) {
         var res;
         try {
@@ -108,37 +123,69 @@ angular.module('playerApp')
           $log.debug('parse %o %o', message, e);
           res = {username: user.username, content: message};
         }
-        $log.debug('message: %o %o', message, res);
+
+        $log.debug('parse message: %o %o', message, res);
         return res;
       };
-      
-      var send = function(message) {
-        var output = {
-            username: user.profile.name, 
-            userId: user.profile.id,
-            content: message
-        };
-        
-        $log.debug('message: %o', output);
-        
-        if ( message.charAt(0) == '/') {
-          // echo command to user's screen
-          roomEvents.push({
-            type: 'command',
-            content: message,
-            id: id++
-            });
-          
-          // Handle special cases here while we have the pieces
-          if ( message === '/sos') {
-            ws.send("sos,"+playerSession.roomId+",{}");
-            return; // DONE/SENT!
+
+      var sendPending = function() {
+        var i = 0;
+
+        // Iterate through the pending messages, stopping if the connection
+        // is closed again *sigh*
+        pendingSend.every(message => {
+          if ( send(message) ) {
+            i++;
+            return true;
           }
+          return false;
+        });
+
+        $log.debug('CATCH UP: pendingSend.length = %o, sent %o', pendingSend.length, i);
+        pendingSend.splice(0, i);
+      }
+
+      var send = function(message) {
+        if ( canSend ) {
+          var sendMsg;
+
+          if ( message.charAt(0) == '/') {
+            // echo command to user's screen
+            roomEvents.push({
+              type: 'command',
+              content: message,
+              id: id++
+              });
+
+            // Handle special case for commands here while we have the pieces
+            if ( message === '/sos') {
+              sendMsg = "sos,"+playerSession.roomId+",{}";
+
+              $log.debug('sending message: %o', sendMsg);
+              ws.send(sendMsg);
+              return canSend; // DONE/SENT!, return whether or not we can still send
+            }
+          }
+
+          var output = {
+              username: user.profile.name,
+              userId: user.profile.id,
+              content: message
+          };
+
+          sendMsg = "room,"+playerSession.roomId+","+angular.toJson(output);
+
+          $log.debug('sending message: %o', sendMsg);
+          ws.send(sendMsg);
+        } else {
+          pendingSend.push(message);
+          $log.debug('Not able to send at the moment. Pushing message to pending list (%o): %o', pendingSend.length, message);
         }
 
-        ws.send("room,"+playerSession.roomId+","+angular.toJson(output));
+        // return whether or not we can still send
+        return canSend;
       };
-      
+
       // Available methods and structures
       var sharedApi = {
         roomEvents: roomEvents,
@@ -148,7 +195,7 @@ angular.module('playerApp')
 
       return sharedApi;
   }
- 
-  
-  
+
+
+
   ]);
