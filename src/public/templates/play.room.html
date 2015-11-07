@@ -11,16 +11,17 @@
         <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div></div>
         <div data-ng-switch-when="exit"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
         <div data-ng-switch-when="location" class="location"><div class="name"> &nbsp;{{data.name}}</div>
-             <div ng-bind-html="data.description" class="description">{{data.description}}</div>
-             <div ng-bind-html="data.content" class="content">{{data.content}}</div>
-             <div data-ng-if="data.objects" class="objects">You notice: <ul ng-repeat="object in data.objects"><li ng-bind-html="object">{{ object }}</li></ul></div>
+          <div ng-bind-html="data.description" class="description">{{data.description}}</div>
+          <div ng-bind-html="data.content" class="content">{{data.content}}</div>
+          <div data-ng-if="data.objects.length" class="objects">You notice: <ul><li ng-repeat="object in data.objects" ng-bind-html="object">{{ object }}</li></ul></div>
         </div>
-        <div data-ng-switch-when="exits"><div data-ng-if="data.content" class="objects">You notice: 
-              <ul ng-repeat="(key, value) in data.content" ng-bind-html="value" ><li class="exit"><span class="door" >{{ key }}</span> {{ value }}</li></ul></div></div>
+        <div data-ng-switch-when="exits"><div data-ng-if="data.content">You can get out the following ways:
+          <dl class="exits"><dt class="door" ng-repeat-start="(key, value) in data.content"><a title="/go {{key}}" ng-click="sendFixed('/go ' + key)">{{ key }}</a></dt><dd ng-repeat-end>{{value}}</dd></dl>
+        </div></div>
         <div data-ng-switch-default>{{ data }}</div>
       </div>
     </div>
-  </div>    
+  </div>
 </div>
 <nav class="top">
   <div class="action"><a ng-click="sendFixed('/me')"><i class="fa fa-user"></i></a></div>

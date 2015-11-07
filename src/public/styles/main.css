@@ -23,14 +23,16 @@
   text-align: center;
 }
 .section {
-  border-top: 1px solid #eee;
-  padding: 3rem 0;
+  padding: 2rem 0;
   margin-bottom: 0;
 }
 .section h2 {
   text-transform: uppercase;
   font-size: 1.4rem;
   letter-spacing: .2rem;
+}
+.section .padded .button {
+  margin-top: 2rem;
 }
 .gameView .viewport {
   position: absolute;
@@ -136,18 +138,20 @@ nav.bottom .action i {
   margin-top: .2rem;
   margin-bottom: .5rem;
 }
-li.exit {
-  list-style-type: none;
-  padding-left: 2rem;
-} 
-.exit .door {
-  font-weight: bold;
-  display: inline-block;
+.exits dt {
+  float: left;
+  clear: left;
   width: 3rem;
+  text-align: right;
+  font-weight: bold;
+  color: green;
 }
-.trophy .date,
-.chat .date {
-  float: right;
+.exits dt:after {
+  content: ":";
+}
+.exits dd {
+  margin: 0 0 0 3.5rem;
+  padding: 0 0 0.5rem 0;
 }
 .location .name:before {
   font-family: "FontAwesome";
