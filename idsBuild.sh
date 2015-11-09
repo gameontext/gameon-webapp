@@ -6,10 +6,13 @@
 
 echo Informing slack...
 curl -X 'POST' --silent --data-binary '{"text":"A new build for the web application has started."}' $WEBHOOK > /dev/null
-echo Downloading the Docker binary from game-on.org...
-wget http://game-on.org:8081/docker -O ./docker -q
-chmod +x docker
-export DOCKER_HOST="tcp://game-on.org:2375"
+mkdir dockercfg ; cd dockercfg
+echo Downloading Docker requirements..
+wget http://docker-2.game-on.org:8081/dockerneeds.tar -q
+echo Setting up Docker...
+tar xzf dockerneeds.tar ; mv docker ../ ; cd .. ; chmod +x docker ; \
+	export DOCKER_HOST="tcp://docker-2.game-on.org:2375" DOCKER_TLS_VERIFY=1 DOCKER_CONFIG=./dockercfg
+
 echo Building the docker image...
 ./docker build -t gameon-webapp .
 echo Stopping the existing container...
