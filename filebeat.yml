@@ -1,0 +1,10 @@
+filebeat:
+  prospectors:
+    -
+      paths:
+        - /opt/frontend/access.log
+      input_type: log
+output:
+  logstash:
+    enabled: true
+    hosts: ["PLACEHOLDER_DOCKERHOST:5044"]
