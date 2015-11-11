@@ -2,17 +2,17 @@ FROM    node:0.10
 
 MAINTAINER Ben Smith (benjsmi@us.ibm.com)
 
+ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_linux_amd64 /opt/forwarder
+ADD http://game-on.org:8081/logstashneeds.tar /opt/logstashneeds.tar
+
 RUN mkdir -p /opt/frontend
 COPY ./src/ /opt/frontend/
 
-RUN echo "Installing Node modules..." ; cd /opt/frontend ; npm install ; \
+RUN cd /opt ; chmod +x ./forwarder ; tar xvzf logstashneeds.tar ; rm logstashneeds.tar ; \
+	echo "Installing Node modules..." ; cd /opt/frontend ; npm install ; \
 	echo "Installing Bower modules..." ; node_modules/.bin/bower install --allow-root 
 
-ADD https://download.elastic.co/beats/filebeat/filebeat-1.0.0-rc1-x86_64.tar.gz /opt/filebeat.tar.gz
-
-RUN cd /opt ; tar xzf filebeat.tar.gz
-
-COPY ./filebeat.yml /opt/filebeat-1.0.0-rc1-x86_64/filebeat.yml
+COPY ./forwarder.conf /opt/forwarder.conf
 COPY ./startup.sh /opt/startup.sh
 
 EXPOSE 3000
