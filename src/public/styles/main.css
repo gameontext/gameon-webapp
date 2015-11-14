@@ -31,7 +31,7 @@
   font-size: 1.4rem;
   letter-spacing: .2rem;
 }
-.section .padded .button {
+.padded {
   margin-top: 2rem;
 }
 .gameView .viewport {
@@ -84,6 +84,7 @@ nav .action i {
   padding: .3rem .5rem;
   color: #fff;
 }
+nav.top,
 nav.bottom .slash a,
 nav .action i,
 nav.top a {

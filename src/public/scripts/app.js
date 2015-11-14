@@ -9,11 +9,11 @@
  * Main module of the application.
  */
 
-var baseUrl = "game-on.org"
+var baseUrl = window.location.host;
 
 angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives'])
   .run(
-  [          '$rootScope', '$state', '$stateParams', 
+  [          '$rootScope', '$state', '$stateParams',
     function ($rootScope,   $state,   $stateParams) {
       console.log("Page init starting.");
 
@@ -23,8 +23,8 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
       // From https://github.com/angular-ui/ui-router/blob/gh-pages/sample/app/app.js
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
-      
-      console.log("Page init complete");
+
+      console.log("Page init complete: " + baseUrl);
     }
   ])
   .constant("API", {
@@ -39,22 +39,22 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "FACEBOOK": "https://"+baseUrl+"/play/FacebookAuth",
   })
   .config(
-  [          '$stateProvider','$urlRouterProvider', 
+  [          '$stateProvider','$urlRouterProvider',
     function ($stateProvider,  $urlRouterProvider) {
-    
+
       // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
       // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
       $urlRouterProvider
         .otherwise('/');
-          
+
       //////////////////////////
-      // State Configurations 
+      // State Configurations
 
       $stateProvider
         .state('default', {
           url: '/',
           templateUrl: 'templates/default.html',
-          controller: 'DefaultCtrl as default'
+          controller: 'DefaultCtrl as ctrl'
         })
         .state('default.login', {
             url: '^/login',
@@ -62,46 +62,46 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default.auth', {
           url: '^/login/callback/{token:.*}',
 
-          // State triggered by authentication callback (only). 
+          // State triggered by authentication callback (only).
           onEnter: function($state, $stateParams, auth, user) {
             // this step has to read the token from the params passed ($stateParams.token)
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
 
             console.log("default.auth.onEnter - calling auth.validate_token");
             auth.validate_token($stateParams.token).then(function(isValid) {
-              // Verify the returned token... 
+              // Verify the returned token...
               if(isValid){
                 console.log("token callback from auth service was valid");
                 $state.go('default.usersetup');
               }else{
-                //TODO: goto a login failed page.. 
+                //TODO: goto a login failed page..
                 $state.go('default.login');
               }
-            });        	
+            });
           }
         })
-        .state('default.usersetup', { 
+        .state('default.usersetup', {
           url: '^/login/usersetup',
-          // Triggered by default.auth state. 
+          // Triggered by default.auth state.
           onEnter: function($state, $stateParams,auth,user) {
             console.log("building user object");
             auth.introspect_token().then(function(tokeninfo) {
               if(tokeninfo.valid){
-                // Verify the returned token... 
+                // Verify the returned token...
                 console.log("cached/recovered token was valid, token info object was");
                 console.log(tokeninfo);
 
-                //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
+                //user.load returns a promise that resolves to true if the user was found.. false otherwise.
                 user.load(tokeninfo.id, tokeninfo.name).then(function(userKnownToDB){
                   if(userKnownToDB){
                     $state.go('play.room');
                   }else{
-                    $state.go('default.profile');  
+                    $state.go('default.profile');
                   }
                 });
               }else{
-                //cached / recovered token was invalid. 
-                //TODO: goto a login failed page.. 
+                //cached / recovered token was invalid.
+                //TODO: goto a login failed page..
                 $state.go('default.login');
               }
             });
@@ -109,8 +109,8 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.profile', { // initial profile creation
           url: '^/login/profile',
-          onEnter: function($state, $stateParams, user, auth) {        	  
-            //if we're missing our auth token info.. user may have hit refresh here.. 
+          onEnter: function($state, $stateParams, user, auth) {
+            //if we're missing our auth token info.. user may have hit refresh here..
             //since we've just lost all our context, send them back to the start..
             //mebbe can make this nicer ;p
             if(typeof user.profile.name === 'undefined'){
@@ -132,10 +132,10 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           url: '/play',
           templateUrl: 'templates/play.html',
           controller: 'PlayCtrl as play',
-          resolve: {   	
+          resolve: {
             // a fictional var that we'll have injected to onEntry and into the PlayCtrl.
-            // resolve will make sure we don't create PlayCtrl or enter onEntry until 
-            // the promises below are all complete. 
+            // resolve will make sure we don't create PlayCtrl or enter onEntry until
+            // the promises below are all complete.
             "userAndAuth" : function(auth,user,$state) {
               return auth.getAuthenticationState().then(function(isAuthenticated){
                 if(!isAuthenticated){
@@ -161,5 +161,14 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           templateUrl: 'templates/play.me.html'
         });
     }
-  ]);
-
+  ])
+  .directive('profileCore', function() {
+    return {
+      scope: {
+        user: '=',
+        form: '='
+      },
+      restrict: 'E',
+      templateUrl: 'templates/profileCore.html'
+    };
+  });
