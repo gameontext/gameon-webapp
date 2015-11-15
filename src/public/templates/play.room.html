@@ -1,7 +1,7 @@
 <div class="viewport" scroll-glue>
   <div class="container">
     <div>
-      <div ng-repeat="data in roomEvents track by data.id" data-ng-switch="data.type" class="element">
+      <div ng-repeat="data in play.roomEvents track by data.id" data-ng-switch="data.type" class="element">
         <div data-ng-switch-when="chat" class="chat">
           <div class="username">{{data.username}}</div>
           <div class="content">{{data.content}}</div>
@@ -16,7 +16,7 @@
           <div data-ng-if="data.objects.length" class="objects">You notice: <ul><li ng-repeat="object in data.objects" ng-bind-html="object">{{ object }}</li></ul></div>
         </div>
         <div data-ng-switch-when="exits"><div data-ng-if="data.content">You can get out the following ways:
-          <dl class="exits"><dt class="door" ng-repeat-start="(key, value) in data.content"><a title="/go {{key}}" ng-click="sendFixed('/go ' + key)">{{ key }}</a></dt><dd ng-repeat-end>{{value}}</dd></dl>
+          <dl class="exits"><dt class="door" ng-repeat-start="(key, value) in data.content"><a title="/go {{key}}" ng-click="play.sendFixed('/go ' + key)">{{ key }}</a></dt><dd ng-repeat-end>{{value}}</dd></dl>
         </div></div>
         <div data-ng-switch-default>{{ data }}</div>
       </div>
@@ -24,10 +24,10 @@
   </div>
 </div>
 <nav class="top">
-  <div class="action"><a ng-click="sendFixed('/me')"><i class="fa fa-user"></i></a></div>
-  <div class="action"><a ng-click="sendFixed('/help')"><i class="fa fa-life-ring"></i></a></div>
-  <div class="action"><a ng-click="sendFixed('/exits')"><i class="fa fa-map-signs"></i></a></div>
-  <div class="action"><a ng-click="sendFixed('/inventory')"><i class="fa fa-suitcase"></i></a></div>
-  <div class="action"><a ng-click="fillin('/examine ')"><i class="fa fa-eye"></i></a></div>
-  <div class="title"><a ng-click="sendFixed('/look')">{{ playerSession.roomId }}</a></div>
+  <div class="action"><a ng-click="play.me()"><i class="fa fa-user"></i></a></div>
+  <div class="action"><a ng-click="play.sendFixed('/help')"><i class="fa fa-life-ring"></i></a></div>
+  <div class="action"><a ng-click="play.sendFixed('/exits')"><i class="fa fa-map-signs"></i></a></div>
+  <div class="action"><a ng-click="play.sendFixed('/inventory')"><i class="fa fa-suitcase"></i></a></div>
+  <div class="action"><a ng-click="play.fillin('/examine ')"><i class="fa fa-eye"></i></a></div>
+  <div class="title"><a ng-click="play.sendFixed('/look')">{{ play.playerSession.roomId }}</a></div>
 </nav>

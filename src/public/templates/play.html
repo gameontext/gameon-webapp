@@ -1,8 +1,8 @@
 <div class="gameView">
   <div ui-view></div>
   <nav class="bottom">
-    <div class="action"><a ng-click="send()"><i class="fa fa-send-o"></i></a></div>
-    <div class="slash"><a ng-click="fillin('/')">/</a></div>
-    <div class="input-w"><input type="text" id="inputbox" ng-model="userInput" ng-keypress="input($event)"/></div>
+    <div class="action"><a ng-click="play.send()"><i class="fa fa-send-o"></i></a></div>
+    <div class="slash"><a ng-click="play.fillin('/')">/</a></div>
+    <div class="input-w"><input type="text" id="inputbox" ng-model="play.userInput" ng-keypress="play.input($event)"/></div>
   </nav>
 </div>

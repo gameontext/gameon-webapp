@@ -128,21 +128,26 @@ angular.module('playerApp')
         return res;
       };
 
-      var sendPending = function() {
-        var i = 0;
-
-        // Iterate through the pending messages, stopping if the connection
-        // is closed again *sigh*
-        pendingSend.every(message => {
-          if ( send(message) ) {
-            i++;
+      var trySend = function(element, index, array) {
+          // CARE! 'this' is the value passed from sendPending for iterating over
+          // all pending elements (array.every), it is not playerSocket.
+          if ( send(element) ) {
+            this.i++;
             return true;
           }
           return false;
-        });
+      };
 
-        $log.debug('CATCH UP: pendingSend.length = %o, sent %o', pendingSend.length, i);
-        pendingSend.splice(0, i);
+      var sendPending = function() {
+        var i = 0;
+        var howfar = { i: 0 };
+
+        // Iterate through the pending messages, stopping if the connection
+        // is closed again *sigh*
+        pendingSend.every(trySend, howfar);
+
+        $log.debug('CATCH UP: pendingSend.length = %o, sent %o', pendingSend.length, howfar.i);
+        pendingSend.splice(0, howfar.i);
       }
 
       var send = function(message) {
@@ -163,7 +168,9 @@ angular.module('playerApp')
 
               $log.debug('sending message: %o', sendMsg);
               ws.send(sendMsg);
-              return canSend; // DONE/SENT!, return whether or not we can still send
+              // DONE/SENT!, return whether or not we can still send,
+              // which is updated via onClose
+              return canSend;
             }
           }
 

@@ -2,3 +2,4 @@
 src/node_modules
 src/public/bower_components
 src/access.log
+npm-debug.log

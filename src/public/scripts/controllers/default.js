@@ -8,23 +8,19 @@
  * Controller of the playerApp
  */
 angular.module('playerApp')
-  .controller('DefaultCtrl', 
-  [            '$scope','$state','$log', 'API', 'user', 'auth',
-    function (  $scope,  $state,  $log,   API,   user,   auth) {
-      
+  .controller('DefaultCtrl',
+  [            '$state','$log', 'API', 'user', 'auth',
+    function (  $state,  $log,   API,   user,   auth) {
+
       // Login links
-      $scope.api = API;
-      
+      this.api = API;
+
       // make the user & auth object persist across states.
-      $scope.user = user;      
-      $scope.auth = auth;
-      
-      $scope.generateUsername = function() {
-        user.profile.name = "FrostedCupcake";
-      };
-      
-      $scope.generateColor = function() {
-        user.profile.favoriteColor = "Tangerine";
-      };
+      this.user = user;
+      this.auth = auth;
+
+      this.backToTheBeginning = function() {
+          $state.go('default');
+      }
     }
   ]);
