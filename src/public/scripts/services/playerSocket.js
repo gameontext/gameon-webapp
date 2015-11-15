@@ -147,7 +147,7 @@ angular.module('playerApp')
         pendingSend.every(trySend, howfar);
 
         $log.debug('CATCH UP: pendingSend.length = %o, sent %o', pendingSend.length, howfar.i);
-        pendingSend.splice(0, i);
+        pendingSend.splice(0, howfar.i);
       }
 
       var send = function(message) {
