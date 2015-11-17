@@ -66,8 +66,8 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           onEnter: function($state, $stateParams, auth, user) {
             // this step has to read the token from the params passed ($stateParams.token)
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
+            console.log("default.auth.onEnter - calling auth.validate_token", auth, user);
 
-            console.log("default.auth.onEnter - calling auth.validate_token");
             auth.validate_token($stateParams.token).then(function(isValid) {
               // Verify the returned token...
               if(isValid){
@@ -88,8 +88,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             auth.introspect_token().then(function(tokeninfo) {
               if(tokeninfo.valid){
                 // Verify the returned token...
-                console.log("cached/recovered token was valid, token info object was");
-                console.log(tokeninfo);
+                console.log("cached/recovered token was valid, token info object was", tokeninfo);
 
                 //user.load returns a promise that resolves to true if the user was found.. false otherwise.
                 user.load(tokeninfo.id, tokeninfo.name).then(function(userKnownToDB){
@@ -117,8 +116,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
               console.log("Missing auth info.. redirecting.. ");
               $state.go('default.login');
             }else{
-              console.log("default.profile.onEnter has this ");
-              console.log(user.profile.name);
+              console.log("default.profile.onEnter has this ", user.profile.name, auth);
             }
           }
         })
@@ -149,7 +147,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             }
           },
           onEnter: function($state, auth, user, userAndAuth){
-            console.log("In play state");
+            console.log("In play state", user, auth, userAndAuth);
           }
         })
         .state('play.room', {

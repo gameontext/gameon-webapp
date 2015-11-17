@@ -17,26 +17,25 @@ angular.module('playerApp')
 
       this.user = user;
       this.userInput = '';
-      this.startOver = false;
       this.roomEvents = playerSocket.roomEvents;
       this.playerSession = playerSocket.playerSession;
 
-      this.me = function() {
-        if ( !$state.is('play.me') ) {
-          $state.go('play.me');
-        }
-      }
+      this.restart = function() {
+        this.sendFixed('/sos-restart');
+        $state.go('play.room');
+      };
+
+      this.logout = function() {
+        playerSocket.logout();
+        $state.go('default');
+      };
 
       this.updateProfile = function( ) {
-          $log.debug('All done with our profile: %o %o', this.startOver, this.profileForm);
-
           if ( this.profileForm.$invalid ) {
             // bogus form data: don't go yet without correcting
           } else {
-            user.update(this.startOver);
-
-            this.startOver = false;
-            $state.go('play.room')
+            user.update();
+            $state.go('play.room');
           }
       };
 

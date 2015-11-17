@@ -111,9 +111,21 @@ angular.module('playerApp')
       // On close, close gracefully
       ws.onClose(function(event) {
         $log.debug('connection closed', event);
-        localStorage.playerSession = angular.toJson(playerSession);
+
+        if ( playerSession.length > 0 ) {
+          localStorage.playerSession = angular.toJson(playerSession);
+        }
+
         canSend = false;
       });
+
+      var logout = function() {
+        playerSession = {};
+        delete localStorage.playerSession;
+
+        ws.close();
+        auth.logout();
+      };
 
       var parseJson = function(message) {
         var res;
@@ -128,7 +140,7 @@ angular.module('playerApp')
         return res;
       };
 
-      var trySend = function(element, index, array) {
+      var trySend = function(element) {
           // CARE! 'this' is the value passed from sendPending for iterating over
           // all pending elements (array.every), it is not playerSocket.
           if ( send(element) ) {
@@ -139,7 +151,6 @@ angular.module('playerApp')
       };
 
       var sendPending = function() {
-        var i = 0;
         var howfar = { i: 0 };
 
         // Iterate through the pending messages, stopping if the connection
@@ -148,13 +159,19 @@ angular.module('playerApp')
 
         $log.debug('CATCH UP: pendingSend.length = %o, sent %o', pendingSend.length, howfar.i);
         pendingSend.splice(0, howfar.i);
-      }
+      };
 
       var send = function(message) {
         if ( canSend ) {
           var sendMsg;
 
-          if ( message.charAt(0) == '/') {
+          var output = {
+              username: user.profile.name,
+              userId: user.profile.id,
+              content: message
+          };
+
+          if ( message.charAt(0) === '/') {
             // echo command to user's screen
             roomEvents.push({
               type: 'command',
@@ -163,8 +180,8 @@ angular.module('playerApp')
               });
 
             // Handle special case for commands here while we have the pieces
-            if ( message === '/sos') {
-              sendMsg = "sos,"+playerSession.roomId+",{}";
+            if ( message.indexOf('/sos') === 0 ) {
+              sendMsg = "sos,*," + angular.toJson(output);
 
               $log.debug('sending message: %o', sendMsg);
               ws.send(sendMsg);
@@ -173,12 +190,6 @@ angular.module('playerApp')
               return canSend;
             }
           }
-
-          var output = {
-              username: user.profile.name,
-              userId: user.profile.id,
-              content: message
-          };
 
           sendMsg = "room,"+playerSession.roomId+","+angular.toJson(output);
 
@@ -197,6 +208,7 @@ angular.module('playerApp')
       var sharedApi = {
         roomEvents: roomEvents,
         playerSession: playerSession,
+        logout: logout,
         send: send
       };
 
