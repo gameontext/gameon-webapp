@@ -1,7 +1,7 @@
   <div class="row">
     <div class="one-half column">
       <label for="username">Username</label>
-      <input class="u-full-width" type="text" name="username" data-ng-model="user.profile.name"
+      <input class="u-full-width" type="text" name="username" id="username" data-ng-model="user.profile.name"
              required title="{{user.rules.nameRule}}" data-ng-pattern="user.rules.namePattern" />
       <a class="button u-full-width" data-ng-click="user.generateName()">Generate a username</a>
       <div ng-show="form.username.$error.required">&lt;?&gt; moves the chair.</div>
@@ -9,8 +9,8 @@
       <div ng-show="form.username.$error.pattern">{{ user.rules.nameRule }}</div>&nbsp;
     </div>
     <div class="one-half column">
-      <label for="favColor">Favorite color</label>
-      <input class="u-full-width" type="text" name="favoriteColor" data-ng-model="user.profile.favoriteColor"
+      <label for="favoriteColor">Favorite color</label>
+      <input class="u-full-width" type="text" name="favoriteColor" id="favoriteColor" data-ng-model="user.profile.favoriteColor"
              required title="{{user.rules.colorRule}}" data-ng-pattern="user.rules.colorPattern">
       <a class="button u-full-width" data-ng-click="user.generateColor()">Generate a color</a>
       <div ng-show="form.favoriteColor.$error.required">{{ form.username.$viewValue }} loves the color &lt;?&gt;</div>

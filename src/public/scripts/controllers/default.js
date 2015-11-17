@@ -20,7 +20,8 @@ angular.module('playerApp')
       this.auth = auth;
 
       this.backToTheBeginning = function() {
+          auth.logout(); // reset to try again
           $state.go('default');
-      }
+      };
     }
   ]);
