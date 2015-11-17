@@ -13,7 +13,8 @@ if (/^dev|test$/.test(app.get('env'))) {
   app.use('/game', express.static(__dirname + '/.tmp'));
   app.use('/game', express.static(__dirname + '/public'));
 } else {
-  app.use('/game', express.static(__dirname + '/dist'));
+  // fix grunt! app.use('/game', express.static(__dirname + '/dist'));
+  app.use('/game', express.static(__dirname + '/public'));
 }
 
 var server = app.listen(3000, function () {
