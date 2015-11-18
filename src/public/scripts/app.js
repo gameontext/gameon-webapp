@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 
-var baseUrl = "game-on.org"
+var baseUrl = window.location.host;
 
 angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives'])
   .run(
@@ -30,9 +30,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
   .constant("API", {
     "PROFILE_URL": "https://"+baseUrl+"/play/players/",
     "WS_URL": "wss://"+baseUrl+"/play/ws1/",
-    "VERIFY_URL": "https://"+baseUrl+"/play/auth/verify/",
-    "INTROSPECT_URL": "https://"+baseUrl+"/play/auth/introspect/",
-    "JWT_URL": "https://"+baseUrl+"/play/auth/jwt/",
+    "CERT_URL": "https://"+baseUrl+"/play/PublicCertificate",
     "DUMMYGOOGLE": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousGoogleUser",
     "DUMMYLINKEDIN": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousLinkedinUser",
     "TWITTER": "https://"+baseUrl+"/play/TwitterAuth",
@@ -60,24 +58,36 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             url: '^/login',
         })
         .state('default.auth', {
-          url: '^/login/callback/{token:.*}',
-
-          // State triggered by authentication callback (only). 
+          url: '^/login/callback/{jwt:.*}',        
+		  // State triggered by authentication callback (only). 
+          onEnter: function($state, $stateParams,auth,user) {
+				auth.get_public_key(
+				function(){
+					auth.remember_jwt($stateParams.jwt);
+					$state.go('default.validatejwt');
+				},
+				function(){
+					//TODO: handle failure to obtain public key.
+					//      can't do much without it.
+					$state.go('default.yuk');
+				});          		
+           }
+        })
+        .state('default.validatejwt', {
+          url: '^/login/getpubliccert',
+		  // State triggered by auth obtaining public key
           onEnter: function($state, $stateParams, auth, user) {
             // this step has to read the token from the params passed ($stateParams.token)
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
 
-            console.log("default.auth.onEnter - calling auth.validate_token");
-            auth.validate_token($stateParams.token).then(function(isValid) {
-              // Verify the returned token... 
-              if(isValid){
+            console.log("default.validatejwt.onEnter");
+            if(auth.validate_jwt()){            
                 console.log("token callback from auth service was valid");
                 $state.go('default.usersetup');
-              }else{
+            }else{
                 //TODO: goto a login failed page.. 
                 $state.go('default.login');
-              }
-            });        	
+            }
           }
         })
         .state('default.usersetup', { 

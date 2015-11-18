@@ -15,126 +15,39 @@ angular.module('playerApp')
     function ($log,  API,  $http) {
 	    console.log("Loading AUTH");
 	  
-        var _token,
+        var _token,            
+        	_publicKey,
             _authenticated = null; 
 
-        /**
-         * Triggered by OAuth-style login: we need to validate the returned
-         * token.
-         */
-        function validate_token(token) {
-          $log.debug('Validating token %o', token);
-          
-          _authenticated = null;
-          _token = undefined;
-          delete localStorage.token;
-
-          var q = $http({
-              method : 'GET',
-              url : API.VERIFY_URL + token,
-              cache : false
-          }).then(function(response) {
-              $log.debug('Verify(good) '+response.status + ' ' + response.statusText + ' ' + response.data);
-              var tmp = angular.fromJson(response.data);
-              
-        	  $log.debug("Token was valid");
-              // server verified good token.
-              _token = token;         
-              console.log(_token);
-              localStorage.token = angular.toJson(_token);
-              
-              return true; // return value of the promise
-          }, function(response) {
-            $log.debug('Verify(bad) '+response.status + ' ' + response.statusText + ' ' + response.data);
-            return false;
-          });
-          
-          _authenticated = q;
-
-          // RETURNING A PROMISE
-          return q;
+        function get_public_key(success,failure){
+      		if(_publicKey === null){
+			    $.get(CERT_URL, function (data) {
+			        _publicKey = data;
+			    })
+			    .done(success)
+			    .fail(failure);
+      		}else{
+      			success();
+      		}
+        }
+        
+        function remember_jwt(jwt){
+        	_token = jwt;
         }
         
         /**
-         * Used during login to obtain id for user. 
+         * Verify if the jwt is still valid.
          */
-        function introspect_token() {
-          $log.debug('Introspect token %o', _token);
-          var token = _token;
-          
-          _token = undefined;
+        function validate_jwt() {
+          $log.debug('Validating jwt %o', _token);
           delete localStorage.token;
-
-          var q = $http({
-              method : 'GET',
-              url : API.INTROSPECT_URL + token,
-              cache : false
-          }).then(function(response) {
-              $log.debug('Introspect(good) '+response.status + ' ' + response.statusText + ' ' + response.data);
-              var tmp = angular.fromJson(response.data);
-              
-              //since we now know token state, we can setup a promise that acts like verify had been invoked.
-              _authenticated = new Promise(function(resolve,reject){
-            	  resolve(true);            	  
-              });
-              
-              // server verified good token.
-              _token = token;
-              tmp.token = token;
-              localStorage.token = angular.toJson(_token);
-            
-              return tmp; // return value of the promise
-          }, function(response) {
-            $log.debug('Introspect(bad) '+response.status + ' ' + response.statusText + ' ' + response.data);
-            
-            //since we now know token state, we can setup a promise that acts like verify had been invoked.
-            _authenticated = new Promise(function(resolve,reject){
-          	  resolve(true);            	  
-            });
-                        
+          localStorage.token = angular.toJson(_token);
+          //since we now know token is ok, we can setup a promise that acts like verify had been invoked.
+          _authenticated = new Promise(function(resolve,reject){
+        	  resolve(true);            	  
           });
-
-          // RETURNING A PROMISE
-          return q;
-        }
-        
-        /**
-         * Used during login to obtain id for user. 
-         */
-        function obtain_jwt() {
-          $log.debug('Obtain JWT for token %o', _token);
-
-          var q = $http({
-              method : 'GET',
-              url : API.JWT_URL + token,
-              cache : false
-          }).then(function(response) {
-        	  //http 200 
-              $log.debug('JWT(good) '+response.status + ' ' + response.statusText + ' ' + response.data);
-              var tmp = angular.fromJson(response.data);    
-              
-              //since we now know token state, we can setup a promise that acts like verify had been invoked.
-              _authenticated = new Promise(function(resolve,reject){
-            	  resolve(true);            	  
-              });
-              
-              _jwt = tmp.jwt;
-              localStorage.jwt = tmp.jwt;
-              
-              return tmp.jwt; // return value of the promise
-          }, function(response) {
-        	  //http error
-              $log.debug('JWT(bad) '+response.status + ' ' + response.statusText + ' ' + response.data);
-              
-              //since we now know token state, we can setup a promise that acts like verify had been invoked.
-              _authenticated = new Promise(function(resolve,reject){
-            	  resolve(false);            	  
-              });
-          });
-
-          // RETURNING A PROMISE
-          return q;
-        }
+          return true;
+        }               
 
         return {
             getAuthenticationState: function () {
@@ -143,14 +56,15 @@ angular.module('playerApp')
                     $log.debug('user already authenticated %o %o',_authenticated,_token);
                 } else {
                     $log.debug('attempting to restore session from %o',localStorage.token);
-                    var tmp = angular.fromJson(localStorage.token);
+                    var _token = angular.fromJson(localStorage.token);
                     $log.debug('session restored : %o ',tmp);
-                    _authenticated = this.validate_token(tmp);
+                    _authenticated = this.validate_jwt();
                 }
                 return _authenticated;
             },
-            validate_token: validate_token,
-            introspect_token: introspect_token,
+            remember_jwt: remember_jwt,
+            validate_jwt: validate_jwt,
+            get_public_key: get_public_key,
             token: function (){
             	$log.debug("AUTH.TOKEN returning %o ",this._token);
             	return this._token;
