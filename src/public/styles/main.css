@@ -1,3 +1,12 @@
+body {
+    font-family: 'Titillium Web', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+a {
+  color: #d74108;
+}
+a:hover {
+  color: #6d120f;
+}
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
@@ -23,14 +32,16 @@
   text-align: center;
 }
 .section {
-  border-top: 1px solid #eee;
-  padding: 3rem 0;
+  padding: 2rem 0;
   margin-bottom: 0;
 }
 .section h2 {
   text-transform: uppercase;
   font-size: 1.4rem;
   letter-spacing: .2rem;
+}
+.padded {
+  margin-top: 2rem;
 }
 .gameView .viewport {
   position: absolute;
@@ -42,7 +53,7 @@
 }
 nav.top {
   display: block;
-  background-color: #ddd;
+  background-color: #3c3232;
   border-bottom: 1px solid #aaa;
   box-sizing: border-box;
   position: fixed;
@@ -51,10 +62,9 @@ nav.top {
   height: 3rem;
   padding: .3rem 1rem;
   vertical-align: middle;
-  background-color: #13898D;
 }
 nav.bottom {
-  background-color: #ddd;
+  background-color: #3c3232;
   border-top: 1px solid #aaa;
   box-sizing: border-box;
   position: fixed;
@@ -64,7 +74,6 @@ nav.bottom {
   height: 4rem;
   padding: .2rem 0rem .2rem 0rem;
   vertical-align: middle;
-  background-color: #13898D;
 }
 nav.bottom .input-w {
   float: none; /* key */
@@ -82,6 +91,7 @@ nav .action i {
   padding: .3rem .5rem;
   color: #fff;
 }
+nav.top,
 nav.bottom .slash a,
 nav .action i,
 nav.top a {
@@ -114,40 +124,49 @@ nav.bottom .action i {
 .joinpart {
   font-size: 1rem;
   font-style: italic;
-  color: #0080ff;
+  color: #734098;
   text-align: right;
   }
+.chat {
+  color: #2d660a
+}
+.chat.me {
+    color: #325c80;
+}
 .chat:before {
   font-family: "FontAwesome";
-  content: "\f0e6 ";
-}
-.chat {
-  color: #562F72
+  content: "\f0e6\00a0 ";
 }
 .chat .username {
-  display: inline-block;
-  padding-left: .5rem;
+  display: inline;
 }
 .chat .content {
   display: block;
-  padding-left: 2rem;
+  overflow-wrap: break-word;
+  padding-left: 2.2rem;
 }
 .event {
   margin-top: .2rem;
   margin-bottom: .5rem;
 }
-li.exit {
-  list-style-type: none;
-  padding-left: 2rem;
-} 
-.exit .door {
-  font-weight: bold;
-  display: inline-block;
-  width: 3rem;
+div.exits:before {
+  font-family: "FontAwesome";
+  content: "\f278\00a0 ";
 }
-.trophy .date,
-.chat .date {
-  float: right;
+.exits dt {
+  float: left;
+  clear: left;
+  width: 3rem;
+  text-align: right;
+  font-weight: bold;
+  color: green;
+}
+.exits dt:after {
+  content: ":";
+}
+.exits dd {
+  margin: 0 0 0 3.5rem;
+  padding: 0 0 0.5rem 0;
 }
 .location .name:before {
   font-family: "FontAwesome";

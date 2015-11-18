@@ -1,0 +1,20 @@
+  <div class="row">
+    <div class="one-half column">
+      <label for="username">Username</label>
+      <input class="u-full-width" type="text" name="username" id="username" data-ng-model="user.profile.name"
+             required title="{{user.rules.nameRule}}" data-ng-pattern="user.rules.namePattern" />
+      <a class="button u-full-width" data-ng-click="user.generateName()">Generate a username</a>
+      <div ng-show="form.username.$error.required">&lt;?&gt; moves the chair.</div>
+      <div ng-hide="form.username.$error.required">{{ form.username.$viewValue }} moves the chair.</div>
+      <div ng-show="form.username.$error.pattern">{{ user.rules.nameRule }}</div>&nbsp;
+    </div>
+    <div class="one-half column">
+      <label for="favoriteColor">Favorite color</label>
+      <input class="u-full-width" type="text" name="favoriteColor" id="favoriteColor" data-ng-model="user.profile.favoriteColor"
+             required title="{{user.rules.colorRule}}" data-ng-pattern="user.rules.colorPattern">
+      <a class="button u-full-width" data-ng-click="user.generateColor()">Generate a color</a>
+      <div ng-show="form.favoriteColor.$error.required">{{ form.username.$viewValue }} loves the color &lt;?&gt;</div>
+      <div ng-hide="form.favoriteColor.$error.required">{{ form.username.$viewValue }} loves the color {{ form.favoriteColor.$viewValue }}</div>
+      <div ng-show="form.favoriteColor.$error.pattern">{{ user.rules.colorRule }}</div>&nbsp;
+    </div>
+  </div>

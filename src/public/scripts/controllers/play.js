@@ -8,37 +8,62 @@
  * Controller of the playerApp
  */
 angular.module('playerApp')
-  .controller('PlayCtrl', 
-  [          '$scope','$log','playerSocket','user','userAndAuth','$window',
-    function ($scope,  $log,  playerSocket,  user,  userAndAuth,  $window) {
+  .controller('PlayCtrl',
+  [          '$state','$log','playerSocket','user','userAndAuth','$window',
+    function ($state,  $log,  playerSocket,  user,  userAndAuth,  $window) {
       $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
-      
+
       var inputBox = $window.document.getElementById('inputbox');
-      
-      $scope.roomEvents = playerSocket.roomEvents;
-      $scope.userInput = '';
-      $scope.playerSession = playerSocket.playerSession;
-      
-      $scope.input = function(e) {
+
+      this.user = user;
+      this.userInput = '';
+      this.roomEvents = playerSocket.roomEvents;
+      this.playerSession = playerSocket.playerSession;
+
+      this.restart = function() {
+        this.sendFixed('/sos-restart');
+        $state.go('play.room');
+      };
+
+      this.logout = function() {
+        playerSocket.logout();
+        $state.go('default');
+      };
+
+      this.updateProfile = function( ) {
+          if ( this.profileForm.$invalid ) {
+            // bogus form data: don't go yet without correcting
+          } else {
+            user.update();
+            $state.go('play.room');
+          }
+      };
+
+      this.input = function(e) {
         if (e.keyCode === 13) {
-          $scope.send();
+          this.send();
         }
       };
-      
-      $scope.fillin = function(input) {
-        $scope.userInput = input;
+
+      this.append = function(input) {
+          this.userInput += ' ' + input;
+          inputBox.focus();
+      };
+
+      this.fillin = function(input) {
+        this.userInput = input;
         inputBox.focus();
       };
-      
-      $scope.send = function() {
-        var input = $scope.userInput;
-        $scope.userInput = '';
+
+      this.send = function() {
+        var input = this.userInput;
+        this.userInput = '';
         if ( input ) {
           playerSocket.send(input);
         }
       };
-      
-      $scope.sendFixed = function(input) {
+
+      this.sendFixed = function(input) {
         playerSocket.send(input);
         inputBox.focus();
       };

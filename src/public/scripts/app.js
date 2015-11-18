@@ -13,7 +13,7 @@ var baseUrl = window.location.host;
 
 angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives'])
   .run(
-  [          '$rootScope', '$state', '$stateParams', 
+  [          '$rootScope', '$state', '$stateParams',
     function ($rootScope,   $state,   $stateParams) {
       console.log("Page init starting.");
 
@@ -23,8 +23,8 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
       // From https://github.com/angular-ui/ui-router/blob/gh-pages/sample/app/app.js
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
-      
-      console.log("Page init complete");
+
+      console.log("Page init complete: " + baseUrl);
     }
   ])
   .constant("API", {
@@ -119,16 +119,15 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.profile', { // initial profile creation
           url: '^/login/profile',
-          onEnter: function($state, $stateParams, user, auth) {        	  
-            //if we're missing our auth token info.. user may have hit refresh here.. 
+          onEnter: function($state, $stateParams, user, auth) {
+            //if we're missing our auth token info.. user may have hit refresh here..
             //since we've just lost all our context, send them back to the start..
             //mebbe can make this nicer ;p
             if(typeof user.profile.name === 'undefined'){
               console.log("Missing auth info.. redirecting.. ");
               $state.go('default.login');
             }else{
-              console.log("default.profile.onEnter has this ");
-              console.log(user.profile.name);
+              console.log("default.profile.onEnter has this ", user.profile.name, auth);
             }
           }
         })
@@ -142,10 +141,10 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           url: '/play',
           templateUrl: 'templates/play.html',
           controller: 'PlayCtrl as play',
-          resolve: {   	
+          resolve: {
             // a fictional var that we'll have injected to onEntry and into the PlayCtrl.
-            // resolve will make sure we don't create PlayCtrl or enter onEntry until 
-            // the promises below are all complete. 
+            // resolve will make sure we don't create PlayCtrl or enter onEntry until
+            // the promises below are all complete.
             "userAndAuth" : function(auth,user,$state) {
               return auth.getAuthenticationState().then(function(isAuthenticated){
                 if(!isAuthenticated){
@@ -159,7 +158,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             }
           },
           onEnter: function($state, auth, user, userAndAuth){
-            console.log("In play state");
+            console.log("In play state", user, auth, userAndAuth);
           }
         })
         .state('play.room', {
@@ -171,5 +170,14 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           templateUrl: 'templates/play.me.html'
         });
     }
-  ]);
-
+  ])
+  .directive('profileCore', function() {
+    return {
+      scope: {
+        user: '=',
+        form: '='
+      },
+      restrict: 'E',
+      templateUrl: 'templates/profileCore.html'
+    };
+  });

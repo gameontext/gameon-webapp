@@ -2,7 +2,7 @@
 
 /**
  * Authentication service. Provides token validation methods.
- * 
+ *
  * @ngdoc service
  * @name playerApp.auth
  * @description
@@ -10,12 +10,12 @@
  * Factory in the playerApp.
  */
 angular.module('playerApp')
-  .factory('auth', 
+  .factory('auth',
   [          '$log','API','$http',
     function ($log,  API,  $http) {
 	    console.log("Loading AUTH");
-	  
-        var _token,            
+
+	    var _token,            
         	_publicKey,
             _authenticated = null; 
 
@@ -43,11 +43,15 @@ angular.module('playerApp')
           delete localStorage.token;
           localStorage.token = angular.toJson(_token);
           //since we now know token is ok, we can setup a promise that acts like verify had been invoked.
-          _authenticated = new Promise(function(resolve,reject){
-        	  resolve(true);            	  
-          });
+          _authenticated = new Promise.resolve(true);
           return true;
         }               
+
+        function logout() {
+          _authenticated = Promise.resolve(false);
+          delete localStorage.token;
+        }
+
 
         return {
             getAuthenticationState: function () {
@@ -62,9 +66,12 @@ angular.module('playerApp')
                 }
                 return _authenticated;
             },
+
             remember_jwt: remember_jwt,
             validate_jwt: validate_jwt,
             get_public_key: get_public_key,
+            logout: logout,
+
             token: function (){
             	$log.debug("AUTH.TOKEN returning %o ",this._token);
             	return this._token;
