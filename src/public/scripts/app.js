@@ -52,7 +52,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default', {
           url: '/',
           templateUrl: 'templates/default.html',
-          controller: 'DefaultCtrl as default'
+          controller: 'DefaultCtrl as ctrl'
         })
         .state('default.login', {
             url: '^/login',
@@ -60,9 +60,12 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default.auth', {
           url: '^/login/callback/{jwt:.*}',        
 		  // State triggered by authentication callback (only). 
-          onEnter: function($state, $stateParams,auth,user) {
+          onEnter: function($state, $stateParams,auth) {
+           		console.log("default.auth.onEnter");          
 				auth.get_public_key(
 				function(){
+				    console.log("got public cert.. proceeding to jwt validation.");
+
 					auth.remember_jwt($stateParams.jwt);
 					$state.go('default.validatejwt');
 				},
@@ -76,7 +79,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default.validatejwt', {
           url: '^/login/getpubliccert',
 		  // State triggered by auth obtaining public key
-          onEnter: function($state, $stateParams, auth, user) {
+          onEnter: function($state, $stateParams, auth) {
             // this step has to read the token from the params passed ($stateParams.token)
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
 
@@ -95,14 +98,13 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           // Triggered by default.auth state. 
           onEnter: function($state, $stateParams,auth,user) {
             console.log("building user object");
-            auth.introspect_token().then(function(tokeninfo) {
-              if(tokeninfo.valid){
+            var jwt = auth.get_jwt();
+            if(jwt!=null){
                 // Verify the returned token... 
                 console.log("cached/recovered token was valid, token info object was");
-                console.log(tokeninfo);
-
+                console.log(jwt);
                 //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
-                user.load(tokeninfo.id, tokeninfo.name).then(function(userKnownToDB){
+                user.load(jwt.id, jwt.name).then(function(userKnownToDB){
                   if(userKnownToDB){
                     $state.go('play.room');
                   }else{
@@ -114,7 +116,6 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
                 //TODO: goto a login failed page.. 
                 $state.go('default.login');
               }
-            });
           }
         })
         .state('default.profile', { // initial profile creation
