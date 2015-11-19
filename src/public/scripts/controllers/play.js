@@ -39,6 +39,18 @@ angular.module('playerApp')
           }
       };
 
+      this.doorName = function(direction) {
+          switch(direction) {
+              case 'N': return '<span class="full">(N)orth</span><span class="short">N</span>';
+              case 'S': return '<span class="full">(S)outh</span><span class="short">S</span>';
+              case 'E': return '<span class="full">(E)ast</span><span class="short">E</span>';
+              case 'W': return '<span class="full">(W)est</span><span class="short">W</span>';
+              case 'U': return '<span class="full">(U)p</span><span class="short">U</span>';
+              case 'D': return '<span class="full">(D)own</span><span class="short">D</span>';
+              default: return '';
+          }
+      };
+
       this.input = function(e) {
         if (e.keyCode === 13) {
           this.send();

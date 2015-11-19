@@ -7,7 +7,7 @@
             <div class="content">{{data.content}}</div>
         </div>
         <div data-ng-switch-when="event" class="event"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
+        <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="content"></div></div>
         <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div></div>
         <div data-ng-switch-when="exit"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
         <div data-ng-switch-when="location" class="location"><div class="name"> &nbsp;{{data.name}}</div>
@@ -18,7 +18,7 @@
           </div>
         </div>
         <div data-ng-switch-when="exits"><div data-ng-if="data.content" class="exits">Visible exits:
-          <dl class="exits"><dt class="door" ng-repeat-start="(key, value) in data.content"><a title="/go {{key}}" ng-click="play.sendFixed('/go ' + key)">{{ key }}</a></dt><dd ng-repeat-end>{{value}}</dd></dl>
+          <dl class="exits"><dt class="door" ng-repeat-start="(key, value) in data.content"><a title="/go {{key}}" ng-click="play.sendFixed('/go ' + key)" ng-bind-html="play.doorName(key)"></a></dt><dd ng-repeat-end>{{value}}</dd></dl>
         </div></div>
         <div data-ng-switch-default>{{ data }}</div>
       </div>
