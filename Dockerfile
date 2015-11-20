@@ -15,4 +15,4 @@ EXPOSE 8080
 
 CMD ["/opt/startup.sh"]
 
-ADD ./src /opt/www
+ADD ./src/public/ /opt/www/
