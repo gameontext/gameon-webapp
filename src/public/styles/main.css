@@ -31,6 +31,10 @@ a:hover {
 .center {
   text-align: center;
 }
+.intro {
+    width: 80%;
+    margin: 0 auto;
+}
 .section {
   padding: 2rem 0;
   margin-bottom: 0;
@@ -194,7 +198,13 @@ div.exits:before {
   clear: both;
 }
 
-/* Larger than phone */
+@media ( min-width : 325px) {
+    .intro {
+        width: 22rem;
+    }
+}
+
+/* Larger than phablet */
 @media ( min-width : 550px) {
   .header {
     margin-top: 18rem;

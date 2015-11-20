@@ -14,6 +14,7 @@ angular.module('playerApp')
       $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
 
       var inputBox = $window.document.getElementById('inputbox');
+      inputBox.focus();
 
       this.user = user;
       this.userInput = '';

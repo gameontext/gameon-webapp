@@ -5,10 +5,11 @@
     </h1>
   </div>
   <div class="section" data-ng-switch-when="default">
-    <div class="center">
+    <div class="intro center">
       <div>You are in a maze of little interconnected rooms, none alike.</div>
-      <div>And you aren't alone.</div>
-      <div class="padded"><a class="button" ui-sref="default.login">Login</a></div>
+      <div class="padded">And you aren't alone.</div>
+      <a class="padded button" ui-sref="default.login">Play</a>
+      <a class="button" href="https://game-on.org/docs">Learn more</a>
     </div>
   </div>
   <div class="section" data-ng-switch-when="default.login">
@@ -50,11 +51,6 @@
         <div>Something has gone wrong.</div>
         <div class="padded">Vizzini said when the job goes wrong, we should go back to the beginning.</div>
         <div class="padded"><button class="button" data-ng-click="ctrl.backToTheBeginning()">Back to the beginning</button></div>
-    </div>
-  </div>
-  <div class="section">
-    <div class="center">
-      <div><a href="http://game-on.org">All about Game On!</a></div>
     </div>
   </div>
 </div>
