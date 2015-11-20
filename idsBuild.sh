@@ -14,6 +14,7 @@ tar xzf dockerneeds.tar ; mv docker ../ ; cd .. ; chmod +x docker ; \
 	export DOCKER_HOST="tcp://$BUILD_DOCKER_HOST:2376" DOCKER_TLS_VERIFY=1 DOCKER_CONFIG=./dockercfg
 
 echo Building the docker image...
+sed -i s/PLACEHOLDER_ADMIN_PASSWORD/$ADMIN_PASSWORD/g ./Dockerfile
 ./docker build -t gameon-webapp .
 echo Stopping the existing container...
 ./docker stop -t 0 gameon-webapp || true
