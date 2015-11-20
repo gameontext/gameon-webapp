@@ -11,6 +11,7 @@ curl -X 'POST' --silent --data-binary '{"text":"A new build for the web applicat
 cd src
 npm install bower@1.5.3
 node_modules/.bin/bower install
+cd ..
 
 mkdir dockercfg ; cd dockercfg
 echo Downloading Docker requirements..
