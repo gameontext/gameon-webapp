@@ -12,8 +12,8 @@
  */
 angular.module('playerApp')
   .factory('user',
-  [          '$log','$state','API','$http',
-    function ($log,  $state,  API,  $http) {
+  [          '$log','$state','API','$http','auth',
+    function ($log,  $state,  API,  $http, auth) {
 
     var generatedNames = [];
     var generatedColors = [];
@@ -36,6 +36,8 @@ angular.module('playerApp')
       // Load needs to come from the Auth token
       var parameters = {};
       var q;
+      
+      parameters.jwt = auth.token();
 
       // Fetch data about the user
       q = $http({
@@ -68,12 +70,15 @@ angular.module('playerApp')
       $log.debug("Creating user with: %o", profile);
       // CREATE -- needs to test for ID uniqueness.. so only go on to
       // the next state if all data could validate properly.
-
+      var parameters = {};
+      parameters.jwt = auth.token();
+      
       $http({
         method : 'POST',
         url : API.PROFILE_URL,
         cache : false,
-        data : profile
+        data : profile,
+        params : parameters
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         $state.go('play.room');
@@ -89,11 +94,15 @@ angular.module('playerApp')
     var update = function() {
         $log.debug("Updating user with: %o", profile);
       // Update user
+      var parameters = {};
+      parameters.jwt = auth.token();  
+        
       $http({
         method : 'PUT',
         url : API.PROFILE_URL + profile.id,
         cache : false,
-        data : profile
+        data : profile,
+        params : parameters
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         $state.go('play.room');
@@ -108,13 +117,15 @@ angular.module('playerApp')
     var generateName = function() {
       $log.debug('generate a name: %o', generatedNames);
       var name = generatedNames.pop();
-
+      var parameters = {};
+      parameters.jwt = auth.token(); 
       if (typeof name === 'undefined') {
         // no generated names (all used up). Let's grab some more.
         $http({
           method : 'GET',
           url : API.PROFILE_URL + 'names',
-          cache : false
+          cache : false,
+          params : parameters
         }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
 
@@ -167,10 +178,13 @@ angular.module('playerApp')
 
       if (typeof color === 'undefined') {
         // no generated colors (all used up). Let's grab some more.
+        var parameters = {};
+        parameters.jwt = auth.token();     	  
         $http({
           method : 'GET',
           url : API.PROFILE_URL + 'colors',
-          cache : false
+          cache : false,
+          params : parameters
         }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
 

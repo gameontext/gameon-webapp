@@ -29,6 +29,7 @@ angular.module('playerApp')
                 }).then(function (data) {
                 	 $log.debug('Obtained certificate', data.data);
 			        _publicKey = data.data;
+			        localStorage.publicKey = _publicKey;
 			        success();
 			    }, failure);
       		}else{
@@ -46,21 +47,27 @@ angular.module('playerApp')
          * Verify if the jwt is still valid.
          */
         function validate_jwt() {
-          $log.debug('Validating jwt %o', _token);
+          $log.debug('Validating jwt');
           delete localStorage.token;
+          $log.debug("old token flushed");
           
-          var pubkey = KEYUTIL.getKey(_publicKey);
+          if(typeof _token === 'undefined'){
+        	  $log.debug("token validation failed, null token");
+        	  return false;
+          }
           
+          var pubkey = KEYUTIL.getKey(_publicKey);          
           var isValid = KJUR.jws.JWS.verifyJWT(_token,pubkey,{alg: ['RS256'] });
           
           if(isValid){
-	          localStorage.token = angular.toJson(_token);
-	          //since we now know token is ok, we can setup a promise that acts like verify had been invoked.
+	          localStorage.token = angular.toJson(_token);	          	          
+	          $log.debug("token validation passed");
 	          _authenticated = Promise.resolve(true);
 	          return true;
           }else{
+        	  $log.debug("token validation failed, invalid token");
 	          _authenticated = Promise.resolve(false);
-	          return true;
+	          return false;
           }
         }               
 
@@ -76,14 +83,14 @@ angular.module('playerApp')
                 if (_authenticated !== null) {
                     $log.debug('user already authenticated %o %o',_authenticated,_token);
                 } else {
-                    $log.debug('attempting to restore session from %o',localStorage.token);
+                    $log.debug('attempting to restore jwt from localstorage: found: %o  and %o',localStorage.token,localStorage.publicKey);
                     _token = angular.fromJson(localStorage.token);
-                    $log.debug('session restored');
-                    _authenticated = this.validate_jwt();
+                    _publicKey = localStorage.publicKey;
+                    $log.debug('jwt (hopefully) restored, validating...');
+                    _authenticated = Promise.resolve(this.validate_jwt());
                 }
                 return _authenticated;
-            },
-
+            },            
             remember_jwt: remember_jwt,
             validate_jwt: validate_jwt,   
             get_jwt: function () {
@@ -106,8 +113,8 @@ angular.module('playerApp')
             logout: logout,
 
             token: function (){
-            	$log.debug("AUTH.TOKEN returning %o ",this._token);
-            	return this._token;
+            	$log.debug("AUTH.TOKEN returning %o ",_token);
+            	return _token;
             }
         };
     }]);
