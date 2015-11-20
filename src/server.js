@@ -10,11 +10,11 @@ var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a
 app.use(morgan('combined', {stream: accessLogStream}));
 
 if (/^dev|test$/.test(app.get('env'))) {
-  app.use('/game', express.static(__dirname + '/.tmp'));
-  app.use('/game', express.static(__dirname + '/public'));
+  app.use('/', express.static(__dirname + '/.tmp'));
+  app.use('/', express.static(__dirname + '/public'));
 } else {
   // fix grunt! app.use('/game', express.static(__dirname + '/dist'));
-  app.use('/game', express.static(__dirname + '/public'));
+  app.use('/', express.static(__dirname + '/public'));
 }
 
 var server = app.listen(3000, function () {
