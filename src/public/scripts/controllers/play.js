@@ -17,26 +17,37 @@ angular.module('playerApp')
 
       this.user = user;
       this.userInput = '';
-      this.startOver = false;
       this.roomEvents = playerSocket.roomEvents;
       this.playerSession = playerSocket.playerSession;
 
-      this.me = function() {
-        if ( !$state.is('play.me') ) {
-          $state.go('play.me');
-        }
-      }
+      this.restart = function() {
+        this.sendFixed('/sos-restart');
+        $state.go('play.room');
+      };
+
+      this.logout = function() {
+        playerSocket.logout();
+        $state.go('default');
+      };
 
       this.updateProfile = function( ) {
-          $log.debug('All done with our profile: %o %o', this.startOver, this.profileForm);
-
           if ( this.profileForm.$invalid ) {
             // bogus form data: don't go yet without correcting
           } else {
-            user.update(this.startOver);
+            user.update();
+            $state.go('play.room');
+          }
+      };
 
-            this.startOver = false;
-            $state.go('play.room')
+      this.doorName = function(direction) {
+          switch(direction) {
+              case 'N': return '<span class="full">(N)orth</span><span class="short">N</span>';
+              case 'S': return '<span class="full">(S)outh</span><span class="short">S</span>';
+              case 'E': return '<span class="full">(E)ast</span><span class="short">E</span>';
+              case 'W': return '<span class="full">(W)est</span><span class="short">W</span>';
+              case 'U': return '<span class="full">(U)p</span><span class="short">U</span>';
+              case 'D': return '<span class="full">(D)own</span><span class="short">D</span>';
+              default: return '';
           }
       };
 

@@ -1,17 +1,27 @@
 <div class="viewport">
   <div class="container">
+      <div class="padded row">
+        <div class="one-half column">
+          <a class="button u-full-width" ng-click="play.restart()"><i class="fa fa-undo"></i> Restart</a>
+        </div>
+        <div class="one-half column">
+          <a class="button u-full-width" ng-click="play.logout()"><i class="fa fa-sign-out"></i> Log out</a>
+        </div>
+      </div>
+      <div class="padded row">
+          <h4>Update profile</h4>
+      </div>
       <form name="play.profileForm" ng-submit="play.updateProfile()" >
         <profile-core user="play.user" form="play.profileForm" ></profile-core>
-        <label for="startOver">
-          <input id="startOver" name="startOver" type="checkbox" data-ng-model="play.startOver" />
-          <span class="label-body">Start over</span>
-        </label>
-        <div class="center padded">
-            <input type="submit" id="submit" value="Submit" />
+        <div class="row">
+          <div class="center">
+            <button type="submit" id="submit"><i class="fa fa-floppy-o"></i> Done</button>
+          </div>
         </div>
       </form>
   </div>
 </div>
 <nav class="top">
+    <div class="action"><a ui-sref="play.room"><i class="fa fa-cube"></i></a></div>
    <div class="title">Edit profile</div>
 </nav>

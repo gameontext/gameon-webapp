@@ -1,3 +1,12 @@
+body {
+    font-family: 'Titillium Web', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+a {
+  color: #d74108;
+}
+a:hover {
+  color: #6d120f;
+}
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
@@ -44,7 +53,7 @@
 }
 nav.top {
   display: block;
-  background-color: #ddd;
+  background-color: #3c3232;
   border-bottom: 1px solid #aaa;
   box-sizing: border-box;
   position: fixed;
@@ -53,10 +62,9 @@ nav.top {
   height: 3rem;
   padding: .3rem 1rem;
   vertical-align: middle;
-  background-color: #13898D;
 }
 nav.bottom {
-  background-color: #ddd;
+  background-color: #3c3232;
   border-top: 1px solid #aaa;
   box-sizing: border-box;
   position: fixed;
@@ -64,9 +72,8 @@ nav.bottom {
   bottom: 0;
   width: 100%;
   height: 4rem;
-  padding: .2rem 0rem .2rem 0rem;
+  padding: .2rem 0 .2rem 0;
   vertical-align: middle;
-  background-color: #13898D;
 }
 nav.bottom .input-w {
   float: none; /* key */
@@ -117,41 +124,51 @@ nav.bottom .action i {
 .joinpart {
   font-size: 1rem;
   font-style: italic;
-  color: #0080ff;
+  color: #734098;
   text-align: right;
   }
+.chat {
+  color: #2d660a
+}
+.chat.me {
+    color: #325c80;
+}
 .chat:before {
   font-family: "FontAwesome";
-  content: "\f0e6 ";
-}
-.chat {
-  color: #562F72
+  content: "\f0e6\00a0 ";
 }
 .chat .username {
-  display: inline-block;
-  padding-left: .5rem;
+  display: inline;
 }
 .chat .content {
   display: block;
-  padding-left: 2rem;
+  overflow-wrap: break-word;
+  padding-left: 2.2rem;
 }
 .event {
   margin-top: .2rem;
   margin-bottom: .5rem;
 }
+div.exits:before {
+  font-family: "FontAwesome";
+  content: "\f278\00a0 ";
+}
 .exits dt {
   float: left;
   clear: left;
-  width: 3rem;
+  width: 2.5rem;
   text-align: right;
   font-weight: bold;
   color: green;
+}
+.exits dt .full {
+  display: none;
 }
 .exits dt:after {
   content: ":";
 }
 .exits dd {
-  margin: 0 0 0 3.5rem;
+  margin: 0 0 0 3.2rem;
   padding: 0 0 0.5rem 0;
 }
 .location .name:before {
@@ -181,5 +198,23 @@ nav.bottom .action i {
 @media ( min-width : 550px) {
   .header {
     margin-top: 18rem;
+  }
+  .exits dt {
+    float: left;
+    clear: left;
+    width: 5.5rem;
+    text-align: right;
+    font-weight: bold;
+    color: green;
+  }
+  .exits dt .full {
+    display: inline;
+  }
+  .exits dt .short {
+    display: none;
+  }
+  .exits dd {
+    margin: 0 0 0 6rem;
+    padding: 0 0 0.5rem 0;
   }
 }
