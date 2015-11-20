@@ -11,7 +11,7 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./startup.sh /opt/startup.sh
 COPY ./forwarder.conf /opt/forwarder.conf
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["/opt/startup.sh"]
 
