@@ -15,4 +15,4 @@ EXPOSE 80
 
 CMD ["/opt/startup.sh"]
 
-ADD ./content /opt/www
+ADD ./src /opt/www
