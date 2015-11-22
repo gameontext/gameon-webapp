@@ -20,6 +20,7 @@ angular.module('playerApp')
       this.userInput = '';
       this.roomEvents = playerSocket.roomEvents;
       this.playerSession = playerSocket.playerSession;
+      this.fixKeyboard = "";
 
       this.restart = function() {
         this.sendFixed('/sos-restart');
@@ -55,7 +56,16 @@ angular.module('playerApp')
       this.input = function(e) {
         if (e.keyCode === 13) {
           this.send();
+          inputBox.focus();
         }
+      };
+
+      this.inputFocus = function() {
+        this.fixKeyboard = "phonekeyboard";
+      };
+
+      this.inputBlur = function() {
+        this.fixKeyboard = "";
       };
 
       this.append = function(input) {
@@ -64,6 +74,8 @@ angular.module('playerApp')
       };
 
       this.fillin = function(input) {
+          $log.debug('replace value of input box ', input);
+
         this.userInput = input;
         inputBox.focus();
       };
@@ -73,11 +85,11 @@ angular.module('playerApp')
         this.userInput = '';
         if ( input ) {
           playerSocket.send(input);
+          inputBox.focus();
         }
       };
 
       this.sendFixed = function(input) {
         playerSocket.send(input);
-        inputBox.focus();
       };
   }]);
