@@ -1,35 +1,35 @@
+<header>
+  <div class="action"><a ui-sref="play.me"><i class="fa fa-user fa-fw"></i></a></div>
+  <div class="action"><a ng-click="play.sendFixed('/help')"><i class="fa fa-life-ring fa-fw"></i></a></div>
+  <div class="action"><a ng-click="play.sendFixed('/exits')"><i class="fa fa-map-signs fa-fw"></i></a></div>
+  <div class="action"><a ng-click="play.sendFixed('/inventory')"><i class="fa fa-suitcase fa-fw"></i></a></div>
+  <div class="action"><a ng-click="play.fillin('/examine ')"><i class="fa fa-eye fa-fw"></i></a></div>
+  <div class="title"><a ng-click="play.sendFixed('/look')"><i class="fa fa-cube fa-fw"></i> {{ play.playerSession.roomId }}</a></div>
+</header>
 <div class="viewport" scroll-glue>
   <div class="container">
     <div>
-      <div ng-repeat="data in play.roomEvents track by data.id" data-ng-switch="data.type" class="element">
-        <div data-ng-switch-when="chat" class="chat" ng-class="{ 'me': data.username == play.playerSession.username}">
+      <div ng-repeat="data in play.roomEvents track by data.id" data-ng-switch="data.type">
+        <div data-ng-switch-when="chat" class="element chat" ng-class="{ 'me': data.username == play.playerSession.username}">
             <div class="username">{{data.username}}</div>
             <div class="content">{{data.content}}</div>
         </div>
-        <div data-ng-switch-when="event" class="event"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
+        <div data-ng-switch-when="event" class="element event"><div ng-bind-html="data.content" class="content"></div></div>
         <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="content"></div></div>
+        <div data-ng-switch-when="exit" class="element"><div ng-bind-html="data.content" class="content"></div></div>
         <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="exit"><div ng-bind-html="data.content" class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="location" class="location"><div class="name"> &nbsp;{{data.name}}</div>
-          <div ng-bind-html="data.description" class="description">{{data.description}}</div>
-          <div ng-bind-html="data.content" class="content">{{data.content}}</div>
+        <div data-ng-switch-when="location" class="element location"><div class="name">{{data.name}}</div>
+          <div ng-bind-html="data.description" class="description"></div>
+          <div ng-bind-html="data.content" class="content"></div>
           <div data-ng-if="data.objects.length" class="objects">You notice:
               <ul><li ng-repeat="object in data.objects"><a ng-click="play.append(object)">{{ object }}</a></li></ul>
           </div>
         </div>
-        <div data-ng-switch-when="exits"><div data-ng-if="data.content" class="exits">Visible exits:
-          <dl class="exits"><dt class="door" ng-repeat-start="(key, value) in data.content"><a title="/go {{key}}" ng-click="play.sendFixed('/go ' + key)" ng-bind-html="play.doorName(key)"></a></dt><dd ng-repeat-end>{{value}}</dd></dl>
-        </div></div>
+        <div data-ng-switch-when="exits" data-ng-if="data.content" class="element exits">Visible exits:
+          <dl><dt class="door" ng-repeat-start="(key, value) in data.content"><a title="/go {{key}}" ng-click="play.sendFixed('/go ' + key)" ng-bind-html="play.doorName(key)"></a></dt><dd ng-repeat-end ng-bind-html="value"></dd></dl>
+        </div>
         <div data-ng-switch-default>{{ data }}</div>
       </div>
     </div>
   </div>
 </div>
-<nav class="top">
-  <div class="action"><a ui-sref="play.me"><i class="fa fa-user"></i></a></div>
-  <div class="action"><a ng-click="play.sendFixed('/help')"><i class="fa fa-life-ring"></i></a></div>
-  <div class="action"><a ng-click="play.sendFixed('/exits')"><i class="fa fa-map-signs"></i></a></div>
-  <div class="action"><a ng-click="play.sendFixed('/inventory')"><i class="fa fa-suitcase"></i></a></div>
-  <div class="action"><a ng-click="play.fillin('/examine ')"><i class="fa fa-eye"></i></a></div>
-  <div class="title"><a ng-click="play.sendFixed('/look')">{{ play.playerSession.roomId }}</a></div>
-</nav>
