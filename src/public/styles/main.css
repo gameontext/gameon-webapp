@@ -31,6 +31,10 @@ a:hover {
 .center {
   text-align: center;
 }
+.intro {
+    width: 80%;
+    margin: 0 auto;
+}
 .section {
   padding: 2rem 0;
   margin-bottom: 0;
@@ -45,72 +49,97 @@ a:hover {
 }
 .gameView .viewport {
   position: absolute;
-  top: 3rem;
+  top: 4rem;
   bottom: 4rem;
   margin: 0;
   width: 100%;
-  overflow-y: scroll;
+  overflow: auto;
+  -webkit-overflow:touch;
+  z-index: 1;
 }
-nav.top {
+header {
   display: block;
   background-color: #3c3232;
   border-bottom: 1px solid #aaa;
   box-sizing: border-box;
-  position: fixed;
+  position: absolute;
   top: 0;
   width: 100%;
-  height: 3rem;
-  padding: .3rem 1rem;
+  height: 4rem;
+  padding: .3rem .5rem;
   vertical-align: middle;
 }
-nav.bottom {
+nav {
   background-color: #3c3232;
   border-top: 1px solid #aaa;
   box-sizing: border-box;
-  position: fixed;
+  position: absolute;
   display: block;
   bottom: 0;
   width: 100%;
   height: 4rem;
-  padding: .2rem 0rem .2rem 0rem;
+  padding: .2rem 0 .2rem 0;
   vertical-align: middle;
 }
-nav.bottom .input-w {
+nav .input-w {
   float: none; /* key */
   width: auto; /* key */
   height: 100%;
   overflow: hidden; /* key */
 }
-nav.bottom .input-w input {
+nav .input-w input {
   width: 100%;
   height: 100%;
 }
-nav .action i {
-  float: right;
-  font-size: 2rem;
-  padding: .3rem .5rem;
-  color: #fff;
+nav .clear {
+  position: absolute;
+  display: block;
+  cursor: pointer;
+  z-index: 100;
+  top: .7rem;
+  right: 3.6rem;
+  padding: 0 .6rem;
+  z-index: 100;
 }
-nav.top,
-nav.bottom .slash a,
+nav .clear a {
+    color: #aaa;
+}
+nav .slash a,
 nav .action i,
-nav.top a {
+header,
+header a {
   color: #fff;
 }
-nav.bottom .slash a:hover,
-nav.top a:hover,
+header .action,
+nav .action {
+  font-size: 2rem;
+  color: #fff;
+  box-sizing: border-box;
+  float: right;
+}
+header .action {
+  padding: .2rem .3rem .3rem .2rem;
+}
+nav .action {
+  padding: .2rem .6rem .3rem .6rem;
+}
+header a:hover,
+nav .slash a:hover,
 nav .action i:hover {
   color: #ddd;
 }
-nav.bottom .slash {
+header .title {
+  padding-top: .5rem;
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+nav .slash {
   font-size: 2rem;
   padding: .3rem 1.2rem;
   float: left;
   box-sizing: border-box;
-}
-nav.bottom .action i {
-  box-sizing: border-box;
-  padding: .8rem 1rem .3rem 1rem;
 }
 .element {
   margin-top: 1rem;
@@ -126,7 +155,7 @@ nav.bottom .action i {
   font-style: italic;
   color: #734098;
   text-align: right;
-  }
+}
 .chat {
   color: #2d660a
 }
@@ -151,26 +180,32 @@ nav.bottom .action i {
 }
 div.exits:before {
   font-family: "FontAwesome";
-  content: "\f278\00a0 ";
+  content: "\f277\00a0 ";
 }
 .exits dt {
   float: left;
   clear: left;
-  width: 3rem;
+  width: 2.5rem;
   text-align: right;
   font-weight: bold;
   color: green;
+}
+.exits dl {
+  margin-top: 0;
+}
+.exits dt .full {
+  display: none;
 }
 .exits dt:after {
   content: ":";
 }
 .exits dd {
-  margin: 0 0 0 3.5rem;
-  padding: 0 0 0.5rem 0;
+  margin: 0 0 0 3.2rem;
+  padding: 0 0 0.1rem 0;
 }
 .location .name:before {
   font-family: "FontAwesome";
-  content: "\f277 ";
+  content: "\f1b2\00a0 ";
 }
 .location .name {
   font-weight: bold;
@@ -185,15 +220,39 @@ div.exits:before {
 .location .objects ul>li {
   margin: 0;
 }
-.event:after, nav.top:after, nav.bottom:after {
+.event:after, nav.top:after, nav:after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* Larger than phone */
+@media ( min-width : 325px) {
+  .intro {
+    width: 22rem;
+  }
+}
+
+/* Larger than phablet */
 @media ( min-width : 550px) {
   .header {
     margin-top: 18rem;
+  }
+  .exits dt {
+    float: left;
+    clear: left;
+    width: 5.5rem;
+    text-align: right;
+    font-weight: bold;
+    color: green;
+  }
+  .exits dt .full {
+    display: inline;
+  }
+  .exits dt .short {
+    display: none;
+  }
+  .exits dd {
+    margin: 0 0 0 6rem;
+    padding: 0 0 0.5rem 0;
   }
 }

@@ -1,20 +1,18 @@
-FROM    node:0.10
+FROM nginx
 
-MAINTAINER Ben Smith (benjsmi@us.ibm.com)
+MAINTAINER Ben Smith
 
 ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_linux_amd64 /opt/forwarder
-ADD http://game-on.org:8081/logstashneeds.tar /opt/logstashneeds.tar
+ADD https://admin:PLACEHOLDER_ADMIN_PASSWORD@game-on.org:8443/logstashneeds.tar /opt/logstashneeds.tar
 
-RUN mkdir -p /opt/frontend
-COPY ./src/ /opt/frontend/
+RUN cd /opt ; chmod +x ./forwarder ; tar xvzf logstashneeds.tar ; rm logstashneeds.tar
 
-RUN cd /opt ; chmod +x ./forwarder ; tar xvzf logstashneeds.tar ; rm logstashneeds.tar ; \
-	echo "Installing Node modules..." ; cd /opt/frontend ; npm install ; \
-	echo "Installing Bower modules..." ; node_modules/.bin/bower install --allow-root 
-
-COPY ./forwarder.conf /opt/forwarder.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./startup.sh /opt/startup.sh
+COPY ./forwarder.conf /opt/forwarder.conf
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["/opt/startup.sh"]
+
+ADD ./src/public/ /opt/www/

@@ -171,14 +171,4 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           templateUrl: 'templates/play.me.html'
         });
     }
-  ])
-  .directive('profileCore', function() {
-    return {
-      scope: {
-        user: '=',
-        form: '='
-      },
-      restrict: 'E',
-      templateUrl: 'templates/profileCore.html'
-    };
-  });
+  ]);
