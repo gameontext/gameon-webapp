@@ -30,25 +30,23 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
   .constant("API", {
     "PROFILE_URL": "https://"+baseUrl+"/play/players/",
     "WS_URL": "wss://"+baseUrl+"/play/ws1/",
-    "VERIFY_URL": "https://"+baseUrl+"/play/auth/verify/",
-    "INTROSPECT_URL": "https://"+baseUrl+"/play/auth/introspect/",
-    "JWT_URL": "https://"+baseUrl+"/play/auth/jwt/",
+    "CERT_URL": "https://"+baseUrl+"/play/PublicCertificate",
     "DUMMYGOOGLE": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousGoogleUser",
     "DUMMYLINKEDIN": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousLinkedinUser",
     "TWITTER": "https://"+baseUrl+"/play/TwitterAuth",
     "FACEBOOK": "https://"+baseUrl+"/play/FacebookAuth",
   })
   .config(
-  [          '$stateProvider','$urlRouterProvider',
+  [          '$stateProvider','$urlRouterProvider', 
     function ($stateProvider,  $urlRouterProvider) {
-
+    
       // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
       // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
       $urlRouterProvider
         .otherwise('/');
-
+          
       //////////////////////////
-      // State Configurations
+      // State Configurations 
 
       $stateProvider
         .state('default', {
@@ -60,50 +58,64 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             url: '^/login',
         })
         .state('default.auth', {
-          url: '^/login/callback/{token:.*}',
+          url: '^/login/callback/{jwt:.*}',        
+		  // State triggered by authentication callback (only). 
+          onEnter: function($state, $stateParams,auth) {
+           		console.log("default.auth.onEnter");          
+				auth.get_public_key(
+				function(){
+				    console.log("got public cert.. proceeding to jwt validation.");
 
-          // State triggered by authentication callback (only).
-          onEnter: function($state, $stateParams, auth, user) {
+					auth.remember_jwt($stateParams.jwt);
+					$state.go('default.validatejwt');
+				},
+				function(){
+					//TODO: handle failure to obtain public key.
+					//      can't do much without it.
+					$state.go('default.yuk');
+				});          		
+           }
+        })
+        .state('default.validatejwt', {
+          url: '^/login/getpubliccert',
+		  // State triggered by auth obtaining public key
+          onEnter: function($state, $stateParams, auth) {
             // this step has to read the token from the params passed ($stateParams.token)
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
-            console.log("default.auth.onEnter - calling auth.validate_token", auth, user);
 
-            auth.validate_token($stateParams.token).then(function(isValid) {
-              // Verify the returned token...
-              if(isValid){
+            console.log("default.validatejwt.onEnter");
+            if(auth.validate_jwt()){            
                 console.log("token callback from auth service was valid");
                 $state.go('default.usersetup');
-              }else{
-                //TODO: goto a login failed page..
+            }else{
+                //TODO: goto a login failed page.. 
                 $state.go('default.login');
-              }
-            });
+            }
           }
         })
-        .state('default.usersetup', {
+        .state('default.usersetup', { 
           url: '^/login/usersetup',
-          // Triggered by default.auth state.
+          // Triggered by default.auth state. 
           onEnter: function($state, $stateParams,auth,user) {
             console.log("building user object");
-            auth.introspect_token().then(function(tokeninfo) {
-              if(tokeninfo.valid){
-                // Verify the returned token...
-                console.log("cached/recovered token was valid, token info object was", tokeninfo);
-
-                //user.load returns a promise that resolves to true if the user was found.. false otherwise.
-                user.load(tokeninfo.id, tokeninfo.name).then(function(userKnownToDB){
+            var jwt = auth.get_jwt();
+            if(jwt!=null){
+                // Verify the returned token... 
+                console.log("cached/recovered token was valid, token info object was");
+                console.log(jwt);
+                //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
+                user.load(jwt.id, jwt.name).then(function(userKnownToDB){
                   if(userKnownToDB){
                     $state.go('play.room');
                   }else{
-                    $state.go('default.profile');
+                    $state.go('default.profile');  
                   }
                 });
               }else{
-                //cached / recovered token was invalid.
-                //TODO: goto a login failed page..
+                //cached / recovered token was invalid. 
+                //TODO: goto a login failed page.. 
                 $state.go('default.login');
               }
-            });
           }
         })
         .state('default.profile', { // initial profile creation

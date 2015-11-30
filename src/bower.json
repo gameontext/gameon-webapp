@@ -11,6 +11,7 @@
     "font-awesome-bower": "~4.4.0",
     "angular-websocket": "~1.0.14",
     "angular-scroll-glue": "~2.0.6",
+    "jsrsasign": "^4.8.0",
     "angular-ios9-uiwebview-patch": "~1.1.1"
   },
   "devDependencies": {

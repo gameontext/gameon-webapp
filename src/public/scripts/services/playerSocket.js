@@ -20,7 +20,7 @@ angular.module('playerApp')
     function ($websocket,  $log,  user,  auth,  API) {
 
       var ws;
-      var websocketURL = API.WS_URL + user.profile.id;
+      var websocketURL = API.WS_URL + user.profile.id + "?jwt="+auth.token();
       var id = 0;
 
       // Collection for holding data: play.room.html displays
