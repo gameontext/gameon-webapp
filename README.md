@@ -15,13 +15,13 @@ docker build -t gameon-webapp
 ### Interactive Run
 
 ```
-docker run -it -p 3000:3000 --env-file=./dockerrc --name gameon-webapp gameon-webapp bash
+docker run -it -P --name gameon-webapp gameon-webapp bash
 ```
 
 ### Daemon Run
 
 ```
-docker run -d -p 3:9443 --env-file=./dockerrc --name gameon-webapp gameon-webapp
+docker run -d -P --name gameon-webapp gameon-webapp
 ```
 
 ### Stop
@@ -33,7 +33,9 @@ docker stop gameon-player ; docker rm gameon-player
 ### Restart Daemon
 
 ```
-docker stop gameon-player ; docker rm gameon-player; docker run -d -p 9443:9443 --env-file=./dockerrc --name gameon-player gameon-player
+docker stop gameon-player ; docker rm gameon-player ; docker run -d -P --name gameon-webapp gameon-webapp
 ```
 
+### Usage
 
+Web Application is then available from `http://DOCKER_HOST:8080`.
