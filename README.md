@@ -9,7 +9,7 @@ This project contains just the JavaScript web application (no services).
 ### Building
 
 ```
-docker build -t gameon-webapp
+docker build -t gameon-webapp .
 ```
 
 ### Interactive Run
