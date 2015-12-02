@@ -7,12 +7,6 @@
 echo Informing slack...
 curl -X 'POST' --silent --data-binary '{"text":"A new build for the web application has started."}' $WEBHOOK > /dev/null
 
-echo Installing bower and its dependencies...
-cd src
-npm install bower@1.5.3
-node_modules/.bin/bower install
-cd ..
-
 mkdir dockercfg ; cd dockercfg
 echo Downloading Docker requirements..
 wget --user=admin --password=$ADMIN_PASSWORD https://$BUILD_DOCKER_HOST:8443/dockerneeds.tar -q
