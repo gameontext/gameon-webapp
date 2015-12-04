@@ -6,6 +6,10 @@ This project contains just the JavaScript web application (no services).
 
 ## Docker
 
+### Environment Variables
+
+* `LOGSTASH_ENDPOINT`: The Logstash Lumberjack endpoint to forward logs to. 
+
 ### Building
 
 ```
@@ -15,25 +19,25 @@ docker build -t gameon-webapp .
 ### Interactive Run
 
 ```
-docker run -it -P --name gameon-webapp gameon-webapp bash
+docker run -it -p 8080:8080 --name gameon-webapp gameon-webapp bash
 ```
 
 ### Daemon Run
 
 ```
-docker run -d -P --name gameon-webapp gameon-webapp
+docker run -d -p 8080:8080 --name gameon-webapp gameon-webapp
 ```
 
 ### Stop
 
 ```
-docker stop gameon-player ; docker rm gameon-player
+docker stop gameon-webapp ; docker rm gameon-webapp
 ```
 
 ### Restart Daemon
 
 ```
-docker stop gameon-player ; docker rm gameon-player ; docker run -d -P --name gameon-webapp gameon-webapp
+docker stop gameon-webapp ; docker rm gameon-webapp ; docker run -d -p 8080:8080 --name gameon-webapp gameon-webapp
 ```
 
 ### Usage
