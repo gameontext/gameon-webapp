@@ -9,6 +9,7 @@ if [ "$LOGSTASH_ENDPOINT" != "" ]; then
   chmod +x ./forwarder
   echo -e $LOGSTASH_CERT > logstash-forwarder.crt
   echo -e $LOGSTASH_KEY > logstash-forwarder.key
+  sleep 0.5
   ./forwarder --config ./forwarder.conf
 else
   echo No logging host set. Running nginx to standard out...
