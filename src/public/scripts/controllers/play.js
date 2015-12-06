@@ -19,7 +19,7 @@ angular.module('playerApp')
       this.user = user;
       this.userInput = '';
       this.roomEvents = playerSocket.roomEvents;
-      this.playerSession = playerSocket.playerSession;
+      this.clientState = playerSocket.clientState;
       this.fixKeyboard = "";
 
       this.restart = function() {
@@ -79,6 +79,10 @@ angular.module('playerApp')
         this.userInput = input;
         inputBox.focus();
       };
+
+      this.listExits = function() {
+        playerSocket.listExits();
+      }
 
       this.send = function() {
         var input = this.userInput;

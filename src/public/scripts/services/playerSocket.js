@@ -16,8 +16,8 @@
  */
 angular.module('playerApp')
   .factory('playerSocket',
-  [          '$websocket','$log','user','auth','API',
-    function ($websocket,  $log,  user,  auth,  API) {
+  [          '$websocket','$log','user','auth','API','playerSession',
+    function ($websocket,  $log,  user,  auth,  API,  playerSession) {
 
       var ws;
       var websocketURL = API.WS_URL + user.profile.id + "?jwt="+auth.token();
@@ -34,14 +34,18 @@ angular.module('playerApp')
       var canSend = false;
 
       // Restore some information from the session, like the bookmark (last seen message)
-      var playerSession = angular.extend({}, angular.fromJson(localStorage.playerSession));
+      var clientState = angular.extend({}, playerSession.get('clientState'));
+
+      // More cached data: exits, inventory, etc.
+      var gameData = angular.extend({}, playerSession.get('gameData'));
 
       // Clear the bookmark if the DB says we're in a different room than the local session does.
-      if ( user.profile.location !== playerSession.roomId ) {
-        delete playerSession.bookmark;
-        playerSession.roomId = user.profile.location;
+      if ( user.profile.location !== clientState.roomId ) {
+        gameData = {}; // start over
+        delete clientState.bookmark;
+        clientState.roomId = user.profile.location;
       }
-      playerSession.username = user.profile.name;
+      clientState.username = user.profile.name;
 
       // Create a v1 websocket
       $log.debug("Opening player socket %o for %o",websocketURL, user.profile);
@@ -53,7 +57,7 @@ angular.module('playerApp')
       // On open, check in with the concierge
       ws.onOpen(function() {
         console.log('connection open');
-        ws.send('ready,' + angular.toJson(playerSession, 0));
+        ws.send('ready,' + angular.toJson(clientState, 0));
       });
 
       // On received message, push to the correct collection
@@ -67,9 +71,9 @@ angular.module('playerApp')
 
         if ( "ack" === command ) {
           res = parseJson(payload);
-          playerSession.mediatorId = res.mediatorId;
-          playerSession.roomId = res.roomId;
-          playerSession.roomName = res.roomName;
+          clientState.mediatorId = res.mediatorId;
+          clientState.roomId = res.roomId;
+          clientState.roomName = res.roomName;
 
           if ( !canSend ) {
             // indicate we can send again, and catch up with anything
@@ -83,8 +87,20 @@ angular.module('playerApp')
           payload = payload.slice(comma+1);
 
           res = parseJson(payload);
-          playerSession.bookmark = res.bookmark;
+          clientState.bookmark = res.bookmark;
           res.id = id++; // this prevents element re-rendering in the UI
+
+          if ( res.exits ) {
+            gameData.exits = res.exits;
+            $log.debug('exits updated', gameData);
+          }
+          if ( res.objects ) {
+            res.roomInventory = res.objects;
+          }
+          if ( res.roomInventory ) {
+            gameData.roomInventory = res.roomInventory;
+            $log.debug('room inventory updated', gameData);
+          }
 
           switch (res.type) {
             case 'event':
@@ -108,23 +124,23 @@ angular.module('playerApp')
         $log.debug('connection Error', event);
       });
 
-      // On close, close gracefully
+      // On close, update the player session,
+      // and indicate that we can no longer send outbound messages
       ws.onClose(function(event) {
         $log.debug('connection closed', event);
 
-        if ( playerSession.length > 0 ) {
-          localStorage.playerSession = angular.toJson(playerSession);
-        }
+        playerSession.set('clientState', clientState);
+        playerSession.set('gameData', gameData);
 
         canSend = false;
       });
 
       var logout = function() {
-        playerSession = {};
-        delete localStorage.playerSession;
-
+        clientState = {};
+        gameData = {};
         ws.close();
-        auth.logout();
+
+        auth.logout(); // will also reset the session
       };
 
       var parseJson = function(message) {
@@ -161,6 +177,23 @@ angular.module('playerApp')
         pendingSend.splice(0, howfar.i);
       };
 
+      var listExits = function() {
+        // echo command to user's screen
+        roomEvents.push({
+          type: 'command',
+          content: '/exits',
+          id: id++
+        });
+
+        $log.debug('show cached exits: %o', gameData.exits);
+        roomEvents.push({
+          type: 'exits',
+          content: gameData.exits,
+          id: id++
+        });
+
+      };
+
       var send = function(message) {
         if ( canSend ) {
           var sendMsg;
@@ -188,10 +221,20 @@ angular.module('playerApp')
               // DONE/SENT!, return whether or not we can still send,
               // which is updated via onClose
               return canSend;
+            } else if ( message.indexOf('/exits') === 0 ) {
+              $log.debug('show cached exits: %o', gameData.exits);
+              roomEvents.push({
+                type: 'exits',
+                content: gameData.exits,
+                id: id++
+                });
+              // DONE/SENT!, return whether or not we can still send,
+              // which is updated via onClose
+              return canSend;
             }
           }
 
-          sendMsg = "room,"+playerSession.roomId+","+angular.toJson(output);
+          sendMsg = "room,"+clientState.roomId+","+angular.toJson(output);
 
           $log.debug('sending message: %o', sendMsg);
           ws.send(sendMsg);
@@ -207,8 +250,10 @@ angular.module('playerApp')
       // Available methods and structures
       var sharedApi = {
         roomEvents: roomEvents,
-        playerSession: playerSession,
+        clientState: clientState,
+        gameData: gameData,
         logout: logout,
+        listExits: listExits,
         send: send
       };
 
