@@ -29,7 +29,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
   ])
   .constant("API", {
     "PROFILE_URL": "https://"+baseUrl+"/play/players/",
-    "WS_URL": "wss://"+baseUrl+"/play/ws1/",
+    "WS_URL": "wss://"+baseUrl+"/mediator/ws/",
     "CERT_URL": "https://"+baseUrl+"/play/PublicCertificate",
     "DUMMYGOOGLE": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousGoogleUser",
     "DUMMYLINKEDIN": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousLinkedinUser",
@@ -37,16 +37,16 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "FACEBOOK": "https://"+baseUrl+"/play/FacebookAuth",
   })
   .config(
-  [          '$stateProvider','$urlRouterProvider', 
+  [          '$stateProvider','$urlRouterProvider',
     function ($stateProvider,  $urlRouterProvider) {
-    
+
       // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
       // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
       $urlRouterProvider
         .otherwise('/');
-          
+
       //////////////////////////
-      // State Configurations 
+      // State Configurations
 
       $stateProvider
         .state('default', {
@@ -58,10 +58,10 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             url: '^/login',
         })
         .state('default.auth', {
-          url: '^/login/callback/{jwt:.*}',        
-		  // State triggered by authentication callback (only). 
+          url: '^/login/callback/{jwt:.*}',
+		  // State triggered by authentication callback (only).
           onEnter: function($state, $stateParams,auth) {
-           		console.log("default.auth.onEnter");          
+           		console.log("default.auth.onEnter");
 				auth.get_public_key(
 				function(){
 				    console.log("got public cert.. proceeding to jwt validation.");
@@ -73,7 +73,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
 					//TODO: handle failure to obtain public key.
 					//      can't do much without it.
 					$state.go('default.yuk');
-				});          		
+				});
            }
         })
         .state('default.validatejwt', {
@@ -84,36 +84,36 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
 
             console.log("default.validatejwt.onEnter");
-            if(auth.validate_jwt()){            
+            if(auth.validate_jwt()){
                 console.log("token callback from auth service was valid");
                 $state.go('default.usersetup');
             }else{
-                //TODO: goto a login failed page.. 
+                //TODO: goto a login failed page..
                 $state.go('default.login');
             }
           }
         })
-        .state('default.usersetup', { 
+        .state('default.usersetup', {
           url: '^/login/usersetup',
-          // Triggered by default.auth state. 
+          // Triggered by default.auth state.
           onEnter: function($state, $stateParams,auth,user) {
             console.log("building user object");
             var jwt = auth.get_jwt();
-            if(jwt!=null){
-                // Verify the returned token... 
+            if (jwt !== null){
+                // Verify the returned token...
                 console.log("cached/recovered token was valid, token info object was");
                 console.log(jwt);
-                //user.load returns a promise that resolves to true if the user was found.. false otherwise. 
+                //user.load returns a promise that resolves to true if the user was found.. false otherwise.
                 user.load(jwt.id, jwt.name).then(function(userKnownToDB){
                   if(userKnownToDB){
                     $state.go('play.room');
                   }else{
-                    $state.go('default.profile');  
+                    $state.go('default.profile');
                   }
                 });
               }else{
-                //cached / recovered token was invalid. 
-                //TODO: goto a login failed page.. 
+                //cached / recovered token was invalid.
+                //TODO: goto a login failed page..
                 $state.go('default.login');
               }
           }
