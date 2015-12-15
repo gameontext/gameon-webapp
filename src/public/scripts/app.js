@@ -31,7 +31,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "PROFILE_URL": "https://"+baseUrl+"/play/players/",
     "WS_URL": "wss://"+baseUrl+"/mediator/ws/",
     "CERT_URL": "https://"+baseUrl+"/play/PublicCertificate",
-    "DUMMYGOOGLE": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousGoogleUser",
+    "GOOGLE": "https://"+baseUrl+"/play/GoogleAuth",
     "DUMMYLINKEDIN": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousLinkedinUser",
     "TWITTER": "https://"+baseUrl+"/play/TwitterAuth",
     "FACEBOOK": "https://"+baseUrl+"/play/FacebookAuth",
