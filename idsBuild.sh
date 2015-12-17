@@ -7,14 +7,17 @@
 echo Informing slack...
 curl -X 'POST' --silent --data-binary '{"text":"A new build for the web application has started."}' $WEBHOOK > /dev/null
 
-mkdir dockercfg ; cd dockercfg
-echo Downloading Docker requirements..
-wget --user=admin --password=$ADMIN_PASSWORD https://$BUILD_DOCKER_HOST:8443/dockerneeds.tar -q
 echo Setting up Docker...
+mkdir dockercfg ; cd dockercfg
+echo -e $KEY > key.pem
+echo -e $CA_CERT > ca.pem
+echo -e $CERT > cert.pem
+cd ..
 wget http://security.ubuntu.com/ubuntu/pool/main/a/apparmor/libapparmor1_2.8.95~2430-0ubuntu5.3_amd64.deb -O libapparmor.deb
 sudo dpkg -i libapparmor.deb
-tar xzf dockerneeds.tar ; mv docker ../ ; cd .. ; chmod +x docker ; \
-	export DOCKER_HOST="tcp://$BUILD_DOCKER_HOST:2376" DOCKER_TLS_VERIFY=1 DOCKER_CONFIG=./dockercfg
+rm libapparmor.deb
+wget https://get.docker.com/builds/Linux/x86_64/docker-1.9.1 --quiet -O docker
+chmod +x docker
 
 echo Building the docker image...
 ./docker build -t gameon-webapp .
@@ -24,4 +27,5 @@ echo Stopping the existing container...
 echo Starting the new container...
 ./docker run -d -p 8080:8080 -e LOGSTASH_ENDPOINT=$LOGSTASH_ENDPOINT -e LOGSTASH_KEY="$LOGSTASH_KEY" -e LOGSTASH_CERT="$LOGSTASH_CERT" --name=gameon-webapp gameon-webapp
 echo Removing non-artifacts...
+
 rm docker ; rm -rf dockercfg
