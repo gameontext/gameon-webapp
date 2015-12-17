@@ -129,10 +129,13 @@ angular.module('playerApp')
       ws.onClose(function(event) {
         $log.debug('connection closed', event);
 
+        if ( canSend && !event.wasClean ) {
+          $log.debug('error shut down');
+        }
+        canSend = false;
+
         playerSession.set('clientState', clientState);
         playerSession.set('gameData', gameData);
-
-        canSend = false;
       });
 
       var logout = function() {
@@ -199,9 +202,9 @@ angular.module('playerApp')
           var sendMsg;
 
           var output = {
-              username: user.profile.name,
-              userId: user.profile.id,
-              content: message
+            username: user.profile.name,
+            userId: user.profile.id,
+            content: message
           };
 
           if ( message.charAt(0) === '/') {
@@ -258,8 +261,5 @@ angular.module('playerApp')
       };
 
       return sharedApi;
-  }
-
-
-
+    }
   ]);

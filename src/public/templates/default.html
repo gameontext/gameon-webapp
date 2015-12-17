@@ -5,30 +5,54 @@
     </h1>
   </div>
   <div class="section" data-ng-switch-when="default">
-    <div class="intro center">
-      <div>You are in a maze of little interconnected rooms, none alike.</div>
-      <div class="padded">And you aren't alone.</div>
-      <a class="padded button" ui-sref="default.login">Play</a>
-      <a class="button" href="https://gameontext.gitbooks.io/gameon-gitbook/content/">Learn more</a>
-      <a class="button" href="/swagger/">Swagger APIs</a>
-      <a class="button" href="https://github.com/gameontext/">GitHub Projects</a>
-    </div>
+      <div class="intro center">
+          <div>You are in a maze of little interconnected rooms, none alike.</div>
+          <div class="padded">And you aren't alone.</div>
+      </div>
+      <div class="padded row">
+          <div class="offset-by-three six columns">
+              <a class="button u-full-width play" ui-sref="default.login"><i class="fa fa-play"></i> Play</a>
+          </div>
+      </div>
+      <div class="row">
+          <div class="offset-by-three six columns">
+              <a class="button u-full-width" href="https://gameontext.gitbooks.io/gameon-gitbook/content/"><i class="fa fa-book"></i> Learn more</a>
+          </div>
+      </div>
+      <div class="row">
+          <div class="offset-by-three six columns">
+              <a class="button u-full-width" href="/swagger/"><i class="fa fa-map-o"></i> Swagger APIs</a>
+          </div>
+      </div>
+      <div class="row">
+          <div class="offset-by-three six columns">
+              <a class="button u-full-width" href="https://github.com/gameontext/"><i class="fa fa-github"></i> GitHub Projects</a>
+          </div>
+      </div>
   </div>
-  <div class="section" data-ng-switch-when="default.login">
+  <div class="section login" data-ng-switch-when="default.login">
     <div class="row">
       <div class="one-half column">
-        <a class="button u-full-width" ng-href="{{ctrl.api.TWITTER}}">Sign in with Twitter</a>
+        <a class="button u-full-width" ng-href="{{ctrl.api.TWITTER}}"><i class="fa fa-twitter"></i> Sign in with Twitter</a>
       </div>
       <div class="one-half column">
-        <a class="button u-full-width" ng-href="{{ctrl.api.GOOGLE}}">Sign in with Google</a>
+        <a class="button u-full-width" ng-href="{{ctrl.api.GOOGLE}}"><i class="fa fa-google"></i> Sign in with Google</a>
       </div>
     </div>
     <div class="row">
       <div class="one-half column">
-        <a class="button u-full-width" ng-href="{{ctrl.api.FACEBOOK}}">Sign in with Facebook</a>
+        <a class="button u-full-width" ng-href="{{ctrl.api.FACEBOOK}}"><i class="fa fa-facebook"></i> Sign in with Facebook</a>
       </div>
       <div class="one-half column">
-        <a class="button u-full-width" ng-href="{{ctrl.api.DUMMYLINKEDIN}}">Sign in with LinkedIn</a>
+        <a class="button u-full-width" ng-href="{{ctrl.api.DUMMYLINKEDIN}}"><i class="fa fa-linkedin"></i> Sign in with LinkedIn</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="one-half column" ng-class="(window.location.host !== 'game-on.org')? '' : 'offset-by-three'">
+        <a class="button u-full-width" ng-href="{{ctrl.api.GITHUB}}"><i class="fa fa-github"></i> Sign in with GitHub</a>
+      </div>
+      <div class="one-half column" ng-if="(window.location.host !== 'game-on.org')">
+        <a class="button u-full-width" ng-href="{{ctrl.api.DUMMY}}"><i class="fa fa-user"></i> Anonymous user</a>
       </div>
     </div>
   </div>

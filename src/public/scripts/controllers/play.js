@@ -82,7 +82,7 @@ angular.module('playerApp')
 
       this.listExits = function() {
         playerSocket.listExits();
-      }
+      };
 
       this.send = function() {
         var input = this.userInput;

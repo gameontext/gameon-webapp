@@ -32,9 +32,11 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "WS_URL": "wss://"+baseUrl+"/mediator/ws/",
     "CERT_URL": "https://"+baseUrl+"/play/PublicCertificate",
     "GOOGLE": "https://"+baseUrl+"/play/GoogleAuth",
-    "DUMMYLINKEDIN": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousLinkedinUser",
+    "LINKEDIN": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousLinkedinUser",
     "TWITTER": "https://"+baseUrl+"/play/TwitterAuth",
     "FACEBOOK": "https://"+baseUrl+"/play/FacebookAuth",
+    "GITHUB": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousGithubUser",
+    "DUMMY": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=DevUser"
   })
   .config(
   [          '$stateProvider','$urlRouterProvider',
