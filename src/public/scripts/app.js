@@ -28,6 +28,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     }
   ])
   .constant("API", {
+    "HOST": baseUrl,
     "PROFILE_URL": "https://"+baseUrl+"/play/players/",
     "WS_URL": "wss://"+baseUrl+"/mediator/ws/",
     "CERT_URL": "https://"+baseUrl+"/play/PublicCertificate",

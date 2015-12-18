@@ -48,10 +48,10 @@
       </div>
     </div>
     <div class="row">
-      <div class="one-half column" ng-class="(window.location.host !== 'game-on.org')? '' : 'offset-by-three'">
+      <div class="one-half column" ng-class="(ctrl.api.HOST !== 'game-on.org')? '' : 'offset-by-three'">
         <a class="button u-full-width" ng-href="{{ctrl.api.GITHUB}}"><i class="fa fa-github"></i> Sign in with GitHub</a>
       </div>
-      <div class="one-half column" ng-if="(window.location.host !== 'game-on.org')">
+      <div class="one-half column" ng-if="(ctrl.api.HOST !== 'game-on.org')">
         <a class="button u-full-width" ng-href="{{ctrl.api.DUMMY}}"><i class="fa fa-user"></i> Anonymous user</a>
       </div>
     </div>
