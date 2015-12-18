@@ -2,10 +2,18 @@ body {
     font-family: 'Titillium Web', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 a {
-  color: #d74108;
+  color: #9855d4;
 }
 a:hover {
-  color: #6d120f;
+  color: #412356;
+}
+.button.play {
+  background-color: #eefadd;
+}
+.login .button i {
+  padding-right: 3px;
+  color: #504646;
+  font-size: 1.2rem;
 }
 .browsehappy {
   margin: 0.2em 0;
