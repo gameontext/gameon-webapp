@@ -1,3 +1,0 @@
-LOGSTASH_ENDPOINT=127.0.0.1.xip.io
-LOGSTASH_CERT=-----BEGIN CERTIFICATE-----\nlines\n\lines\n\n-----END CERTIFICATE-----
-LOGSTASH_KEY=-----BEGIN PRIVATE KEY-----\nlines\nlines\n-----END PRIVATE KEY-----\n
