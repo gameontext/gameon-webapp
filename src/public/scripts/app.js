@@ -33,10 +33,9 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "WS_URL": "wss://"+baseUrl+"/mediator/ws/",
     "CERT_URL": "https://"+baseUrl+"/play/PublicCertificate",
     "GOOGLE": "https://"+baseUrl+"/play/GoogleAuth",
-    "LINKEDIN": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousLinkedinUser",
     "TWITTER": "https://"+baseUrl+"/play/TwitterAuth",
     "FACEBOOK": "https://"+baseUrl+"/play/FacebookAuth",
-    "GITHUB": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=AnonymousGithubUser",
+    "GITHUB": "https://"+baseUrl+"/play/GitHubAuth",
     "DUMMY": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=DevUser"
   })
   .config(
