@@ -44,13 +44,10 @@
         <a class="button u-full-width" ng-href="{{ctrl.api.FACEBOOK}}"><i class="fa fa-facebook"></i> Sign in with Facebook</a>
       </div>
       <div class="one-half column">
-        <a class="button u-full-width" ng-href="{{ctrl.api.DUMMYLINKEDIN}}"><i class="fa fa-linkedin"></i> Sign in with LinkedIn</a>
+        <a class="button u-full-width" ng-href="{{ctrl.api.GITHUB}}"><i class="fa fa-github"></i> Sign in with GitHub</a>
       </div>
     </div>
     <div class="row">
-      <div class="one-half column" ng-class="(ctrl.api.HOST !== 'game-on.org')? '' : 'offset-by-three'">
-        <a class="button u-full-width" ng-href="{{ctrl.api.GITHUB}}"><i class="fa fa-github"></i> Sign in with GitHub</a>
-      </div>
       <div class="one-half column" ng-if="(ctrl.api.HOST !== 'game-on.org')">
         <a class="button u-full-width" ng-href="{{ctrl.api.DUMMY}}"><i class="fa fa-user"></i> Anonymous user</a>
       </div>
