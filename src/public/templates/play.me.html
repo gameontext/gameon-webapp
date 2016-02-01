@@ -22,7 +22,9 @@
             <button type="submit" id="submit"><i class="fa fa-floppy-o"></i> Done</button>
           </div>
         </div>
-        <div class="padded row">
+      </form> 
+      <form name="play.apikeyForm" ng-submit="play.updateApiKey()" >
+          <div class="padded row">
 	        <div class="one-half column">
 	          <label for="id">Id</label><div id="id">{{play.user.profile._id}}</div>
 	        </div>
@@ -30,7 +32,11 @@
 	          <label for="apikey">ApiKey</label><div id="apikey">{{play.user.profile.apiKey}}</div>
 	        </div>
 	      </div>
-      </form>      
-     
+	      <div class="row">
+	          <div class="center">
+	            <button type="submit" id="submit"><i class="fa fa-key"></i>Regenerate ApiKey</button>
+	          </div>
+          </div>
+	  </form>     
   </div>
 </div>
