@@ -153,7 +153,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
                 if(!isAuthenticated){
                   $state.go('default.login');
                 }else{
-                  if(typeof user.profile.id === 'undefined'){
+                  if(typeof user.profile._id === 'undefined'){
                     $state.go('default.usersetup');
                   }
                 }

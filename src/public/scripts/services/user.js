@@ -30,7 +30,7 @@ angular.module('playerApp')
       $log.debug('quering token %o',auth.token());
 
       //we're using the id from the token introspect as our player db id.
-      profile.id = id;
+      profile._id = id;
 
       // Load the user's information from the DB and/or session
       // Load needs to come from the Auth token
@@ -42,7 +42,7 @@ angular.module('playerApp')
       // Fetch data about the user
       q = $http({
         method : 'GET',
-        url : API.PROFILE_URL + profile.id,
+        url : API.PROFILE_URL + profile._id,
         cache : false,
         params : parameters
       }).then(function(response) {
@@ -99,7 +99,7 @@ angular.module('playerApp')
 
       $http({
         method : 'PUT',
-        url : API.PROFILE_URL + profile.id,
+        url : API.PROFILE_URL + profile._id,
         cache : false,
         data : profile,
         params : parameters

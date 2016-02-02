@@ -20,7 +20,7 @@ angular.module('playerApp')
     function ($websocket,  $log,  user,  auth,  API,  playerSession) {
 
       var ws;
-      var websocketURL = API.WS_URL + user.profile.id + "?jwt="+auth.token();
+      var websocketURL = API.WS_URL + user.profile._id + "?jwt="+auth.token();
       var id = 0;
 
       // Collection for holding data: play.room.html displays
@@ -104,8 +104,8 @@ angular.module('playerApp')
 
           switch (res.type) {
             case 'event':
-              if ( res.content[user.profile.id] ) {
-                res.content = res.content[user.profile.id];
+              if ( res.content[user.profile._id] ) {
+                res.content = res.content[user.profile._id];
               } else {
                 res.content = res.content['*'];
               }
@@ -203,7 +203,7 @@ angular.module('playerApp')
 
           var output = {
             username: user.profile.name,
-            userId: user.profile.id,
+            userId: user.profile._id,
             content: message
           };
 
