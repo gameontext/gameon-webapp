@@ -113,6 +113,32 @@ angular.module('playerApp')
         $state.go('default.yuk');
       }).catch(console.log.bind(console));
     };
+    
+    var updateApiKey = function() {
+        $log.debug("Updating user apikey for profile : %o", profile);
+      // Update user
+      var parameters = {};
+      parameters.jwt = auth.token();
+      
+      delete profile.apiKey;
+
+      $http({
+        method : 'PUT',
+        url : API.PROFILE_URL + profile._id,
+        cache : false,
+        data : profile,
+        params : parameters
+      }).then(function(response) {
+        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+        $state.go('play.room');
+
+      }, function(response) {
+        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+        // go to the sad state.. (Can't find the player information, and can't save it either)
+        $state.go('default.yuk');
+      }).catch(console.log.bind(console));
+      
+    };
 
     var generateName = function() {
       $log.debug('generate a name: %o', generatedNames);
@@ -208,6 +234,7 @@ angular.module('playerApp')
         load: load,
         create: create,
         update: update,
+        updateApiKey: updateApiKey,
         generateName: generateName,
         generateColor: generateColor
     };

@@ -40,6 +40,12 @@ angular.module('playerApp')
             $state.go('play.room');
           }
       };
+      
+      this.updateApiKey = function( ) {
+        user.updateApiKey();
+        user.load(user.profile._id, user.profile.name);
+        $state.go('play.room');
+      };
 
       this.doorName = function(direction) {
           switch(direction) {
