@@ -106,7 +106,7 @@ angular.module('playerApp')
           switch (res.type) {
             case 'event':
               if ( res.content[user.profile._id] ) {
-                res.content = res.content[user.profile._id];
+                res.content = marked(res.content[user.profile._id] || '');
               } else {
                 res.content = marked(res.content['*'] || '');
               }
