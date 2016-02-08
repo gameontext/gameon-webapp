@@ -16,8 +16,8 @@
  */
 angular.module('playerApp')
   .factory('playerSocket',
-  [          '$websocket','$log','user','auth','API','playerSession',
-    function ($websocket,  $log,  user,  auth,  API,  playerSession) {
+  [          '$websocket','$log','user','auth','API','playerSession', 'marked',
+    function ($websocket,  $log,  user,  auth,  API,  playerSession, marked) {
 
       var ws;
       var websocketURL = API.WS_URL + user.profile._id + "?jwt="+auth.token();
@@ -108,11 +108,12 @@ angular.module('playerApp')
               if ( res.content[user.profile._id] ) {
                 res.content = res.content[user.profile._id];
               } else {
-                res.content = res.content['*'];
+                res.content = marked(res.content['*'] || '');
               }
               roomEvents.push(res);
               break;
             default:
+              res.description = marked(res.description || '');
               roomEvents.push(res);
               break;
           }

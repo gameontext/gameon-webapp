@@ -40,7 +40,7 @@ angular.module('playerApp')
             $state.go('play.room');
           }
       };
-      
+
       this.updateApiKey = function( ) {
         user.updateApiKey();
         user.load(user.profile._id, user.profile.name);
@@ -75,12 +75,12 @@ angular.module('playerApp')
       };
 
       this.append = function(input) {
-          this.userInput += ' ' + input;
-          inputBox.focus();
+        this.userInput += ' ' + input;
+        inputBox.focus();
       };
 
       this.fillin = function(input) {
-          $log.debug('replace value of input box ', input);
+        $log.debug('replace value of input box ', input);
 
         this.userInput = input;
         inputBox.focus();

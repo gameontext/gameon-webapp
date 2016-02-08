@@ -11,7 +11,7 @@
 
 var baseUrl = window.location.host;
 
-angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives'])
+angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives', 'hc.marked'])
   .run(
   [          '$rootScope', '$state', '$stateParams',
     function ($rootScope,   $state,   $stateParams) {
@@ -38,6 +38,9 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "GITHUB": "https://"+baseUrl+"/play/GitHubAuth",
     "DUMMY": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=DevUser"
   })
+  .config(['markedProvider', function (markedProvider) {
+    markedProvider.setOptions({sanitize: true});
+  }])
   .config(
   [          '$stateProvider','$urlRouterProvider',
     function ($stateProvider,  $urlRouterProvider) {
