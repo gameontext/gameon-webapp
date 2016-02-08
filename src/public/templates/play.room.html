@@ -4,7 +4,7 @@
   <div class="action"><a ng-click="play.listExits()"><i class="fa fa-map-signs fa-fw"></i></a></div>
   <div class="action"><a ng-click="play.sendFixed('/inventory')"><i class="fa fa-suitcase fa-fw"></i></a></div>
   <div class="action"><a ng-click="play.fillin('/examine ')"><i class="fa fa-eye fa-fw"></i></a></div>
-  <div class="title"><a ng-click="play.sendFixed('/look')"><i class="fa fa-cube fa-fw"></i> {{ play.clientState.roomId }}</a></div>
+  <div class="title"><a ng-click="play.sendFixed('/look')"><i class="fa fa-cube fa-fw"></i> {{ play.clientState.fullName }}</a></div>
 </header>
 <div class="viewport" scroll-glue>
   <div class="container">
@@ -18,7 +18,7 @@
         <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="content"></div></div>
         <div data-ng-switch-when="exit" class="element"><div ng-bind-html="data.content" class="content"></div></div>
         <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="location" class="element location"><div class="name">{{data.name}}</div>
+        <div data-ng-switch-when="location" class="element location"><div class="name">{{data.fullName}}</div>
           <div ng-bind-html="data.description" class="description"></div>
           <div ng-bind-html="data.content" class="content"></div>
           <div data-ng-if="data.roomInventory.length" class="objects">You notice:

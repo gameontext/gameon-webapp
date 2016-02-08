@@ -88,6 +88,7 @@ angular.module('playerApp')
 
           res = parseJson(payload);
           clientState.bookmark = res.bookmark;
+          clientState.fullName = res.fullName;
           res.id = id++; // this prevents element re-rendering in the UI
 
           if ( res.exits ) {
