@@ -130,8 +130,8 @@ angular.module('playerApp')
         params : parameters
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-        $state.go('play.room');
-
+        //update succeeded, now refresh the profile from the server to pull the new key.
+        load(profile._id, profile.name);
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         // go to the sad state.. (Can't find the player information, and can't save it either)

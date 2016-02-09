@@ -43,8 +43,6 @@ angular.module('playerApp')
 
       this.updateApiKey = function( ) {
         user.updateApiKey();
-        user.load(user.profile._id, user.profile.name);
-        $state.go('play.room');
       };
 
       this.doorName = function(direction) {

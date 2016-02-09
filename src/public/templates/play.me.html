@@ -26,7 +26,7 @@
       <form name="play.apikeyForm" ng-submit="play.updateApiKey()" >
           <div class="padded row">
 	        <div class="one-half column">
-	          <label for="id">Id</label><div id="id">{{play.user.profile._id}}</div>
+	          <label for="id">Game On! Id</label><div id="id">{{play.user.profile._id}}</div>
 	        </div>
 	        <div class="one-half column">
 	          <label for="apikey">Shared Secret</label><div id="apikey">{{play.user.profile.apiKey}}</div>
@@ -34,8 +34,13 @@
 	      </div>
 	      <div class="row">
 	          <div class="center">
-	            <button type="submit" id="submit"><i class="fa fa-key"></i>Regenerate ApiKey</button>
+	            <button type="submit" id="submit"><i class="fa fa-key"></i>Regenerate Shared Secret</button>
 	          </div>
+          </div>
+          <div class="row">
+	        <div class="center">
+	          <label for="jwt">Player ApiKey</label><div id="jwt">{{play.auth.token()}}</div>
+	        </div>
           </div>
 	  </form>
   </div>
