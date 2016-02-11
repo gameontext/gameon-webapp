@@ -221,7 +221,7 @@ angular.module('playerApp')
       var listCommands = function() {
         roomEvents.push({
           type: 'command',
-          content: '/helps',
+          content: '/help',
           id: id++
         });
 
@@ -273,7 +273,7 @@ angular.module('playerApp')
             } else if (message.indexOf('/help') === 0 ) {
               $log.debug('show cached commands: %o', gameData.commands);
               roomEvents.push({
-                type: 'wtf',
+                type: 'commands',
                 content: gameData.commands,
                 id: id++
               });
