@@ -41,6 +41,7 @@ angular.module('playerApp')
 
       // Clear the bookmark if the DB says we're in a different room than the local session does.
       if ( user.profile.location !== clientState.roomId ) {
+        $log.debug('cache cleared');
         gameData = {}; // start over
         delete clientState.bookmark;
         clientState.roomId = user.profile.location;
@@ -74,6 +75,9 @@ angular.module('playerApp')
           clientState.mediatorId = res.mediatorId;
           clientState.roomId = res.roomId;
           clientState.roomName = res.roomName;
+          if (res.fullName){
+            clientState.fullName = res.fullName;
+          }
 
           if ( !canSend ) {
             // indicate we can send again, and catch up with anything
@@ -88,7 +92,6 @@ angular.module('playerApp')
 
           res = parseJson(payload);
           clientState.bookmark = res.bookmark;
-          clientState.fullName = res.fullName;
           res.id = id++; // this prevents element re-rendering in the UI
 
           if ( res.exits ) {
@@ -97,6 +100,9 @@ angular.module('playerApp')
           }
           if ( res.objects ) {
             res.roomInventory = res.objects;
+          }
+          if ( res.fullName ) {
+            clientState.fullName = res.fullName;
           }
           if ( res.roomInventory ) {
             gameData.roomInventory = res.roomInventory;
