@@ -72,11 +72,16 @@ angular.module('playerApp')
 
         if ( "ack" === command ) {
           res = parseJson(payload);
+          $log.debug('ack received', res);
           clientState.mediatorId = res.mediatorId;
           clientState.roomId = res.roomId;
           clientState.roomName = res.roomName;
           if (res.fullName){
             clientState.fullName = res.fullName;
+          }
+
+          if ( res.commands ){
+            gameData.commands = res.commands;
           }
 
           if ( !canSend ) {
@@ -98,12 +103,20 @@ angular.module('playerApp')
             gameData.exits = res.exits;
             $log.debug('exits updated', gameData);
           }
+
+          if ( res.commands ) {
+            gameData.commands = angular.extend({}, gameData.commands, res.commands);
+            $log.debug('commands updated', gameData);
+          }
+
           if ( res.objects ) {
             res.roomInventory = res.objects;
           }
+
           if ( res.fullName ) {
             clientState.fullName = res.fullName;
           }
+
           if ( res.roomInventory ) {
             gameData.roomInventory = res.roomInventory;
             $log.debug('room inventory updated', gameData);
@@ -205,6 +218,21 @@ angular.module('playerApp')
 
       };
 
+      var listCommands = function() {
+        roomEvents.push({
+          type: 'command',
+          content: '/helps',
+          id: id++
+        });
+
+        $log.debug('show cached commands: %o', gameData.commands);
+        roomEvents.push({
+          type: 'wtf',
+          content: gameData.commands,
+          id: id++
+        });
+      };
+
       var send = function(message) {
         if ( canSend ) {
           var sendMsg;
@@ -242,6 +270,14 @@ angular.module('playerApp')
               // DONE/SENT!, return whether or not we can still send,
               // which is updated via onClose
               return canSend;
+            } else if (message.indexOf('/help') === 0 ) {
+              $log.debug('show cached commands: %o', gameData.commands);
+              roomEvents.push({
+                type: 'wtf',
+                content: gameData.commands,
+                id: id++
+              });
+              return canSend;
             }
           }
 
@@ -265,6 +301,7 @@ angular.module('playerApp')
         gameData: gameData,
         logout: logout,
         listExits: listExits,
+        listCommands: listCommands,
         send: send
       };
 
