@@ -227,7 +227,7 @@ angular.module('playerApp')
 
         $log.debug('show cached commands: %o', gameData.commands);
         roomEvents.push({
-          type: 'wtf',
+          type: 'commands',
           content: gameData.commands,
           id: id++
         });

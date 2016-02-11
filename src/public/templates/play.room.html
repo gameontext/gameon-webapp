@@ -37,7 +37,7 @@
         </div>
 
 
-        <div data-ng-switch-when="wtf" data-ng-if="data.content" class="element commands">Available Commands:
+        <div data-ng-switch-when="commands" data-ng-if="data.content" class="element commands">Available Commands:
           <dl>
             <dt class="door" ng-repeat-start="(key, value) in data.content"><a title="{{key}}" ng-click="play.fillin(key)" ng-bind-html="key"></a></dt>
             <dd marked="value" ng-repeat-end></dd>
