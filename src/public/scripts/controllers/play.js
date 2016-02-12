@@ -9,8 +9,8 @@
  */
 angular.module('playerApp')
   .controller('PlayCtrl',
-  [          '$state','$log','playerSocket','user','userAndAuth','$window',
-    function ($state,  $log,  playerSocket,  user,  userAndAuth,  $window) {
+  [          '$state','$log','playerSocket','user','userAndAuth','$window', 'marked',
+    function ($state,  $log,  playerSocket,  user,  userAndAuth,  $window, marked) {
       $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
 
       var inputBox = $window.document.getElementById('inputbox');
@@ -88,6 +88,10 @@ angular.module('playerApp')
         playerSocket.listExits();
       };
 
+      this.listCommands = function() {
+        playerSocket.listCommands();
+      };
+
       this.send = function() {
         var input = this.userInput;
         this.userInput = '';
@@ -99,5 +103,9 @@ angular.module('playerApp')
 
       this.sendFixed = function(input) {
         playerSocket.send(input);
+      };
+
+      this.marked = function(input){
+        return marked(input || '');
       };
   }]);
