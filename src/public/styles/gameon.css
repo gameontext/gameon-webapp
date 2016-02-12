@@ -1,0 +1,121 @@
+body {
+  font-family: 'Titillium Web', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+header {
+  background-color: white;
+  width: 100%;
+  height: 6rem;
+  padding: .3rem .5rem;
+  display: inline-flex;
+}
+
+header .logo-container,
+header .room-icon-container {
+  padding: 1rem 0;
+  margin-right: 0;
+  margin-left: 2rem;
+  color: black;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+header .room-icon-container a {
+  color: black;
+}
+
+header .logo-container:before {
+  content: 'Game On';
+}
+
+header .title a {
+  border-left: 1px solid black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 1rem;
+  align-items: center;
+  display: flex;
+  color: black;
+  font-weight: bold;
+  font-size: 1.5em;
+  padding-left: 1rem;
+}
+
+header .right-items {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 0;
+  position: absolute;
+  right: 2.5rem;
+}
+
+header .top-nav-item {
+  color: black;
+}
+
+header .top-nav-item a {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: black;
+  text-decoration: none;
+  padding-left: 1rem;
+}
+
+header .top-nav-item a .username {
+  border-left: 1px solid black;
+  padding-left: 1rem;
+}
+
+
+
+/*--------------------------------*/
+/*      header media queries      */
+/*--------------------------------*/
+
+@media (max-width : 650px) {
+  header .logo-container:before {
+    content: 'GO';
+  }
+
+  header .right-items .help {
+    display: none;
+  }
+
+  header .right-items {
+    padding-right: 1rem;
+  }
+
+  header .top-nav-item {
+    padding-right: 0;
+  }
+
+  header .top-nav-item a .caption,
+  header .top-nav-item a .username {
+    display: none;
+  }
+
+  header .top-nav-item a .user-icon:before {
+    font-family: "FontAwesome";
+    content: "\f007\00a0 ";
+    color: black;
+  }
+
+
+
+}
+
+
+.gameView .viewport {
+  position: absolute;
+  top: 6rem;
+  bottom: 4rem;
+  margin: 0;
+  width: 100%;
+  overflow: auto;
+  -webkit-overflow: touch;
+  /*z-index: 1;*/
+  background-color: lightgrey;
+}
+
+

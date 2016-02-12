@@ -1,6 +1,13 @@
-body {
-    font-family: 'Titillium Web', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
+@import 'gameon.css';
+
+
+
+
+
+
+
+
+
 a {
   color: #9855d4;
 }
@@ -55,27 +62,13 @@ a:hover {
 .padded {
   margin-top: 2rem;
 }
-.gameView .viewport {
-  position: absolute;
-  top: 4rem;
-  bottom: 4rem;
-  margin: 0;
-  width: 100%;
-  overflow: auto;
-  -webkit-overflow:touch;
-  z-index: 1;
-}
-header {
-  display: block;
-  background-color: #3c3232;
-  border-bottom: 1px solid #aaa;
-  box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 4rem;
-  padding: .3rem .5rem;
-}
+
+/*header {*/
+  /*display: block;*/
+  /*box-sizing: border-box;*/
+  /*top: 0;*/
+
+/*}*/
 nav {
   background-color: #3c3232;
   border-top: 1px solid #aaa;
@@ -109,37 +102,35 @@ nav .clear {
 nav .clear a {
     color: #aaa;
 }
-nav .slash a,
-nav .action i,
-header,
-header a {
+nav .slash a{
   color: #fff;
 }
-header .action,
+
 nav .action {
   font-size: 2rem;
   color: #fff;
   box-sizing: border-box;
   float: right;
 }
-header .action {
-  padding: .2rem .3rem .3rem .2rem;
-}
+
 nav .action {
   padding: .2rem .6rem .3rem .6rem;
 }
-header a:hover,
+
+nav .action i {
+  color: white;
+}
 nav .slash a:hover,
 nav .action i:hover {
   color: #ddd;
 }
-header .title {
-  padding-top: .5rem;
-  width: auto;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+/*header .title {*/
+  /*padding-top: .5rem;*/
+  /*width: auto;*/
+  /*white-space: nowrap;*/
+  /*overflow: hidden;*/
+  /*text-overflow: ellipsis;*/
+/*}*/
 nav .slash {
   font-size: 2rem;
   padding: .3rem 1.2rem;
@@ -239,9 +230,7 @@ div.exits:before {
 
 /* Larger than phablet */
 @media (min-width : 550px) {
-  .header {
-    margin-top: 18rem;
-  }
+
   .exits dt {
     float: left;
     clear: left;
