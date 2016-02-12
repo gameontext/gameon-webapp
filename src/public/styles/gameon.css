@@ -2,12 +2,41 @@ body {
   font-family: 'Titillium Web', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+/*-----------------------------------*/
+/*           Header Rules            */
+/*-----------------------------------*/
+
 header {
-  background-color: white;
   width: 100%;
   height: 6rem;
   padding: .3rem .5rem;
   display: inline-flex;
+  /*border-top: 0;*/
+  /*border-left: 0;*/
+  /*border-right: 0;*/
+  z-index: 3;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+
+  /*background-image:*/
+    /*-webkit-gradient(linear, 0 0, 0 100%, from(#35566B), to(#7FD6DE));*/
+  /*background-image:*/
+    /*-webkit-linear-gradient(180deg, #35566B, #7FD6DE),*/
+    /*-webkit-linear-gradient(180deg, #35566B, #7FD6DE)*/
+/*;*/
+  /*background-image:*/
+    /*-moz-linear-gradient(180deg, #35566B, #7FD6DE),*/
+    /*-moz-linear-gradient(180deg, #35566B, #7FD6DE)*/
+/*;*/
+  /*background-image:*/
+    /*-o-linear-gradient(180deg, #35566B, #7FD6DE),*/
+    /*-o-linear-gradient(180deg, #35566B, #7FD6DE)*/
+/*;*/
+
+  background-image: linear-gradient(90deg, #35566B, #7FD6DE);
+  /*-moz-background-size: 100% 0.5rem; !* This get flipped. *!*/
+  background-size: 100% 0.5rem;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
 }
 
 header .logo-container,
@@ -16,7 +45,6 @@ header .room-icon-container {
   margin-right: 0;
   margin-left: 2rem;
   color: black;
-  font-weight: bold;
   font-size: 1.5em;
 }
 
@@ -37,7 +65,6 @@ header .title a {
   align-items: center;
   display: flex;
   color: black;
-  font-weight: bold;
   font-size: 1.5em;
   padding-left: 1rem;
 }
@@ -55,7 +82,6 @@ header .top-nav-item {
 }
 
 header .top-nav-item a {
-  font-weight: bold;
   font-size: 1.5em;
   color: black;
   text-decoration: none;
@@ -101,21 +127,201 @@ header .top-nav-item a .username {
     color: black;
   }
 
+}
 
+/*-----------------------------------*/
+/*             Nav Rules             */
+/*-----------------------------------*/
+
+nav {
+  background-color: #323232;
+  box-sizing: border-box;
+  position: absolute;
+  display: block;
+  bottom: 0;
+  width: 100%;
+  height: 6rem;
+  padding: 0.2rem 0;
+  padding-bottom: 2.2rem;
+}
+
+nav .slash {
+  font-size: 2rem;
+  padding: .2rem 1.2rem;
+  position: absolute;
+  left: 23.5rem;
+  background-color: #5EBDC9;
+  margin-bottom: 0.2rem;
+}
+
+nav .slash a{
+  color: #fff;
+}
+
+nav .input-w {
+  margin: 0 23rem;
+  float: none; /* key */
+  width: auto; /* key */
+  height: 100%;
+  overflow: hidden; /* key */
+  background-color: #323232;
+  border-radius: 0;
+}
+
+nav .input-w input {
+  width: 100%;
+  height: 100%;
+  margin-left: 5rem;
+  background-color: white;
+  border: none;
+  border-radius: 0;
+}
+
+nav .input-w input:focus {
+  border: none;
+}
+
+nav .clear {
+  position: absolute;
+  display: block;
+  cursor: pointer;
+  z-index: 100;
+  top: .7rem;
+  right: 23.5rem;
+  padding: 0 .6rem;
+}
+
+nav .clear a {
+  color: #5EBDC9;
+}
+
+nav .action {
+  font-size: 2rem;
+  background-color: #5EBDC9;
+  color: #fff;
+  box-sizing: border-box;
+  float: right;
+}
+
+nav .action {
+  padding: .2rem .6rem .3rem .6rem;
+}
+
+nav .action i {
+  color: white;
+}
+
+@media (max-width : 650px) {
 
 }
 
+/*-----------------------------------*/
+/*        Central Body Rules         */
+/*-----------------------------------*/
 
 .gameView .viewport {
+  font-family: 'Terminus', 'Menlo', 'Andale Mono';
+  font-weight: 200;
+  font-size: 0.9em;
   position: absolute;
-  top: 6rem;
+  top: 6.6rem;
   bottom: 4rem;
   margin: 0;
   width: 100%;
   overflow: auto;
   -webkit-overflow: touch;
   /*z-index: 1;*/
-  background-color: lightgrey;
+  background-color: #323232;
+  color: white;
 }
 
+.content {
+  margin-top: 5rem;
+}
+
+.location .name {
+  font-weight: bold;
+  border-bottom: 1px solid white;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.location .objects {
+  margin: 1em 0;
+}
+.location .objects ul {
+  margin: 0;
+  padding-left: 1em;
+}
+.location .objects ul>li {
+  margin: 0;
+}
+
+code {
+  color: #c5c5c5;
+  background-color: #292929;
+  border: none;
+}
+
+dd {
+  dislay: inline;
+  margin-left: 0;
+}
+
+dt a{
+  color: #EA6F56;
+}
+
+div.exits:before {
+  font-family: "FontAwesome";
+  content: "\f277\00a0";
+  margin-left: -7rem;
+  color: #EA6F56;
+}
+
+.list-item {
+  padding: 0.1rem 0;
+}
+
+.key {
+  display: inline;
+}
+
+.key a {
+  color: #EA6F56;
+}
+
+.exits .value {
+  left: 10rem;
+}
+
+.value {
+  display: inline;
+  position: absolute;
+  left: 12rem;
+}
+
+
+.value p {
+  display: inline;
+}
+
+.chat {
+  color: #2d660a
+}
+.chat.me {
+  color: #5EBDC9;
+}
+
+.short {
+  display: none;
+}
+
+@media (max-width : 650px) {
+  .short {
+    display: inline;
+  }
+  .full {
+    display: none;
+  }
+}
 
