@@ -11,6 +11,10 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx-nolog.conf /etc/nginx/nginx-nolog.conf
 COPY ./startup.sh /opt/startup.sh
 COPY ./forwarder.conf /opt/forwarder.conf
+RUN wget https://github.com/coreos/etcd/releases/download/v2.2.2/etcd-v2.2.2-linux-amd64.tar.gz -q ; \
+    tar xzf etcd-v2.2.2-linux-amd64.tar.gz etcd-v2.2.2-linux-amd64/etcdctl --strip-components=1 ; \
+    rm etcd-v2.2.2-linux-amd64.tar.gz ; \
+    mv etcdctl /usr/local/bin/etcdctl
 
 EXPOSE 8080
 
