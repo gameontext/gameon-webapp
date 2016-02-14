@@ -10,6 +10,7 @@
  */
 
 var baseUrl = window.location.host;
+console.log('BASEURL', baseUrl);
 
 angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives', 'hc.marked'])
   .run(

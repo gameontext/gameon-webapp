@@ -47,18 +47,7 @@
   margin-bottom: .6rem;
 }
 
-.chat:before {
-  font-family: "FontAwesome";
-  content: "\f0e6\00a0 ";
-}
-.chat .username {
-  display: inline;
-}
-.chat .content {
-  display: block;
-  overflow-wrap: break-word;
-  padding-left: 2.2rem;
-}
+
 .event {
   margin-top: .2rem;
   margin-bottom: .5rem;

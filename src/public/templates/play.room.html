@@ -29,7 +29,7 @@
       <div ng-repeat="data in play.roomEvents track by data.id" data-ng-switch="data.type">
         <div data-ng-switch-when="chat" class="element chat" ng-class="{ 'me': data.username == play.clientState.username}">
             <div class="username">{{data.username}}</div>
-            <div class="content">"{{data.content}}"</div>
+            <div class="content message">"{{data.content}}"</div>
         </div>
         <div data-ng-switch-when="event" class="element event"><div ng-bind-html="data.content" class="little-text"></div></div>
         <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="little-text"></div></div>

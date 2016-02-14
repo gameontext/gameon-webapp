@@ -11,29 +11,9 @@ header {
   height: 6rem;
   padding: .3rem .5rem;
   display: inline-flex;
-  /*border-top: 0;*/
-  /*border-left: 0;*/
-  /*border-right: 0;*/
   z-index: 3;
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
-
-  /*background-image:*/
-    /*-webkit-gradient(linear, 0 0, 0 100%, from(#35566B), to(#7FD6DE));*/
-  /*background-image:*/
-    /*-webkit-linear-gradient(180deg, #35566B, #7FD6DE),*/
-    /*-webkit-linear-gradient(180deg, #35566B, #7FD6DE)*/
-/*;*/
-  /*background-image:*/
-    /*-moz-linear-gradient(180deg, #35566B, #7FD6DE),*/
-    /*-moz-linear-gradient(180deg, #35566B, #7FD6DE)*/
-/*;*/
-  /*background-image:*/
-    /*-o-linear-gradient(180deg, #35566B, #7FD6DE),*/
-    /*-o-linear-gradient(180deg, #35566B, #7FD6DE)*/
-/*;*/
-
   background-image: linear-gradient(90deg, #35566B, #7FD6DE);
-  /*-moz-background-size: 100% 0.5rem; !* This get flipped. *!*/
   background-size: 100% 0.5rem;
   background-position: 0 100%;
   background-repeat: no-repeat;
@@ -363,6 +343,20 @@ div.exits:before {
 
 .short {
   display: none;
+}
+
+.chat:before {
+  font-family: "FontAwesome";
+  content: "\f0e6\00a0 ";
+}
+.chat .username {
+  display: inline;
+}
+.chat .content {
+  margin-top: 0;
+  display: block;
+  overflow-wrap: break-word;
+  padding-left: 2.2rem;
 }
 
 @media (max-width : 650px) {
