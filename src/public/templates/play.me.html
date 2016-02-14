@@ -1,48 +1,56 @@
 <header>
-   <div class="room-icon-container"><a ui-sref="play.room" title="Back to room"><i class="fa fa-cube fa-fw"></i></a></div>
-   <div class="title"><a><i class="fa fa-user fa-fw"></i> Edit profile</a></div>
+  <div class="room-icon-container"><a ui-sref="play.room" title="Back to room"><i class="fa fa-cube fa-fw"></i></a>
+  </div>
+  <div class="title"><a><i class="fa fa-user fa-fw"></i> Edit profile</a></div>
 </header>
 
 <div class="viewport">
-  <div class="container">
-      <div class="padded row">
-        <div class="one-half column">
-          <a class="button u-full-width" ng-click="play.restart()"><i class="fa fa-undo"></i> Restart</a>
-        </div>
-        <div class="one-half column">
-          <a class="button u-full-width" ng-click="play.logout()"><i class="fa fa-sign-out"></i> Log out</a>
+  <div class="container profile">
+    <div class="padded row operations">
+      <div class="one-half column">
+        <a class="button u-full-width" ng-click="play.restart()"><i class="fa fa-undo"></i> Restart</a>
+      </div>
+      <div class="one-half column">
+        <a class="button u-full-width" ng-click="play.logout()"><i class="fa fa-sign-out"></i> Log out</a>
+      </div>
+    </div>
+    <div class="padded row">
+      <h4>Update profile</h4>
+    </div>
+    <form name="play.profileForm" ng-submit="play.updateProfile()">
+      <profile-core user="play.user" form="play.profileForm"></profile-core>
+      <div class="row">
+        <div class="center">
+          <button type="submit" id="submit">
+            <i class="fa fa-floppy-o"></i> Done
+          </button>
         </div>
       </div>
+    </form>
+    <form name="play.apikeyForm" ng-submit="play.updateApiKey()">
       <div class="padded row">
-          <h4>Update profile</h4>
-      </div>
-      <form name="play.profileForm" ng-submit="play.updateProfile()" >
-        <profile-core user="play.user" form="play.profileForm" ></profile-core>
-        <div class="row">
-          <div class="center">
-            <button type="submit" id="submit"><i class="fa fa-floppy-o"></i> Done</button>
-          </div>
+        <div class="one-half column">
+          <label for="id">Game On! Id</label>
+          <div id="id">{{play.user.profile._id}}</div>
         </div>
-      </form>
-      <form name="play.apikeyForm" ng-submit="play.updateApiKey()" >
-          <div class="padded row">
-	        <div class="one-half column">
-	          <label for="id">Game On! Id</label><div id="id">{{play.user.profile._id}}</div>
-	        </div>
-	        <div class="one-half column">
-	          <label for="apikey">Shared Secret</label><div id="apikey">{{play.user.profile.apiKey}}</div>
-	        </div>
-	      </div>
-	      <div class="row">
-	          <div class="center">
-	            <button type="submit" id="submit"><i class="fa fa-key"></i>Regenerate Shared Secret</button>
-	          </div>
-          </div>
-          <div class="row">
-	        <div class="center">
-	          <label for="jwt">Player ApiKey</label><div id="jwt">{{play.auth.token()}}</div>
-	        </div>
-          </div>
-	  </form>
+        <div class="one-half column">
+          <label for="apikey">Shared Secret</label>
+          <div id="apikey">{{play.user.profile.apiKey}}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="center">
+          <button type="submit" id="submit">
+            <i class="fa fa-key"></i>Regenerate Shared Secret
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="center">
+          <label for="jwt">Player ApiKey</label>
+          <div id="jwt">{{play.auth.token()}}</div>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

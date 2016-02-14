@@ -1,27 +1,6 @@
 @import 'gameon.css';
+@import 'profile.css';
 
-
-
-
-
-
-
-
-
-a {
-  color: #9855d4;
-}
-a:hover {
-  color: #412356;
-}
-.button.play {
-  background-color: #eefadd;
-}
-.login .button i {
-  padding-right: 3px;
-  color: #504646;
-  font-size: 1.2rem;
-}
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
@@ -63,84 +42,9 @@ a:hover {
   margin-top: 2rem;
 }
 
-/*header {*/
-  /*display: block;*/
-  /*box-sizing: border-box;*/
-  /*top: 0;*/
-
-/*}*/
-/*nav {*/
-  /*background-color: #3c3232;*/
-  /*border-top: 1px solid #aaa;*/
-  /*box-sizing: border-box;*/
-  /*position: absolute;*/
-  /*display: block;*/
-  /*bottom: 0;*/
-  /*width: 100%;*/
-  /*height: 4rem;*/
-  /*padding: .2rem 0 .2rem 0;*/
-/*}*/
-/*nav .input-w {*/
-  /*float: none; !* key *!*/
-  /*width: auto; !* key *!*/
-  /*height: 100%;*/
-  /*overflow: hidden; !* key *!*/
-/*}*/
-/*nav .input-w input {*/
-  /*width: 100%;*/
-  /*height: 100%;*/
-/*}*/
-/*nav .clear {*/
-  /*position: absolute;*/
-  /*display: block;*/
-  /*cursor: pointer;*/
-  /*z-index: 100;*/
-  /*top: .7rem;*/
-  /*right: 3.6rem;*/
-  /*padding: 0 .6rem;*/
-/*}*/
-
-
-/*nav .action {*/
-  /*font-size: 2rem;*/
-  /*color: #fff;*/
-  /*box-sizing: border-box;*/
-  /*float: right;*/
-/*}*/
-
-/*nav .action {*/
-  /*padding: .2rem .6rem .3rem .6rem;*/
-/*}*/
-
-/*nav .action i {*/
-  /*color: white;*/
-/*}*/
-nav .slash a:hover,
-nav .action i:hover {
-  color: #ddd;
-}
-/*header .title {*/
-  /*padding-top: .5rem;*/
-  /*width: auto;*/
-  /*white-space: nowrap;*/
-  /*overflow: hidden;*/
-  /*text-overflow: ellipsis;*/
-/*}*/
-
 .element {
   margin-top: 1rem;
   margin-bottom: .6rem;
-}
-.command {
-  font-size: 1rem;
-  font-style: italic;
-  color: #999;
-}
-.joinpart {
-  font-size: 1rem;
-  font-style: italic;
-  color: #734098;
-  text-align: right;
 }
 
 .chat:before {
@@ -159,47 +63,7 @@ nav .action i:hover {
   margin-top: .2rem;
   margin-bottom: .5rem;
 }
-/*div.exits:before {*/
-  /*font-family: "FontAwesome";*/
-  /*content: "\f277\00a0 . . . . .   ";*/
-  /*margin-left: -7rem;*/
-  /*color: #EA6F56;*/
-/*}*/
-/*.exits dt {*/
-  /*float: left;*/
-  /*clear: left;*/
-  /*width: 2.5rem;*/
-  /*text-align: right;*/
-  /*font-weight: bold;*/
-  /*color: green;*/
-/*}*/
-/*.exits dl {*/
-  /*margin-top: 0;*/
-/*}*/
-/*.exits dt .full {*/
-  /*display: none;*/
-/*}*/
-/*.exits dt:after {*/
-  /*content: ":";*/
-/*}*/
-/*.exits dd {*/
-  /*margin: 0 0 0 3.2rem;*/
-  /*padding: 0 0 0.1rem 0;*/
-/*}*/
 
-/*.location .name {*/
-  /*font-weight: bold;*/
-/*}*/
-/*.location .objects {*/
-  /*margin: 1em 0;*/
-/*}*/
-/*.location .objects ul {*/
-  /*margin: 0;*/
-  /*padding-left: 1em;*/
-/*}*/
-/*.location .objects ul>li {*/
-  /*margin: 0;*/
-/*}*/
 .event:after, .top:after, nav:after {
   content: "";
   display: table;
@@ -210,27 +74,4 @@ nav .action i:hover {
   .intro {
     width: 22rem;
   }
-}
-
-/* Larger than phablet */
-@media (min-width : 550px) {
-
-  /*.exits dt {*/
-    /*float: left;*/
-    /*clear: left;*/
-    /*width: 5.5rem;*/
-    /*text-align: right;*/
-    /*font-weight: bold;*/
-    /*color: green;*/
-  /*}*/
-  /*.exits dt .full {*/
-    /*display: inline;*/
-  /*}*/
-  /*.exits dt .short {*/
-    /*display: none;*/
-  /*}*/
-  /*.exits dd {*/
-    /*margin: 0 0 0 6rem;*/
-    /*padding: 0 0 0.5rem 0;*/
-  /*}*/
 }

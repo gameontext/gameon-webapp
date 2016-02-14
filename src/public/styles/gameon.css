@@ -149,7 +149,7 @@ nav .slash {
   font-size: 2rem;
   padding: .2rem 1.2rem;
   position: absolute;
-  left: 23.5rem;
+  left: 0rem;
   background-color: #5EBDC9;
   margin-bottom: 0.2rem;
 }
@@ -158,8 +158,13 @@ nav .slash a{
   color: #fff;
 }
 
+nav .slash a:hover,
+nav .action i:hover {
+  color: #ddd;
+}
+
 nav .input-w {
-  margin: 0 23rem;
+  margin: 0;
   float: none; /* key */
   width: auto; /* key */
   height: 100%;
@@ -171,7 +176,7 @@ nav .input-w {
 nav .input-w input {
   width: 100%;
   height: 100%;
-  margin-left: 5rem;
+  margin-left: 4rem;
   background-color: white;
   border: none;
   border-radius: 0;
@@ -187,7 +192,7 @@ nav .clear {
   cursor: pointer;
   z-index: 100;
   top: .7rem;
-  right: 23.5rem;
+  right: 2rem;
   padding: 0 .6rem;
 }
 
@@ -212,7 +217,33 @@ nav .action i {
 }
 
 @media (max-width : 650px) {
+  nav {
+    padding-bottom: 0;
+    padding-top: 0;
+    height: 4.2rem;
+  }
 
+  nav .container {
+    padding-right: 0;
+  }
+
+  nav .input-w {
+    margin: 0;
+  }
+
+  nav .input-w input {
+    margin-left: 2rem;
+  }
+
+  nav .slash {
+    margin-bottom: 0;
+    left: 0;
+  }
+
+  nav .clear {
+    right: 1rem;
+    padding: 0 0.6rem;
+  }
 }
 
 /*-----------------------------------*/
@@ -225,7 +256,7 @@ nav .action i {
   font-size: 0.9em;
   position: absolute;
   top: 6.6rem;
-  bottom: 4rem;
+  bottom: 6rem;
   margin: 0;
   width: 100%;
   overflow: auto;
@@ -256,30 +287,45 @@ nav .action i {
   margin: 0;
 }
 
+.command {
+  font-size: 1rem;
+  font-style: italic;
+  color: #999;
+}
+
+.objects li a {
+  color: #EA6F56;
+}
+
+.objects li a:hover {
+  color: #aa503e;
+}
+
 code {
   color: #c5c5c5;
   background-color: #292929;
   border: none;
 }
 
-dd {
-  dislay: inline;
-  margin-left: 0;
-}
-
-dt a{
-  color: #EA6F56;
-}
-
 div.exits:before {
   font-family: "FontAwesome";
   content: "\f277\00a0";
-  margin-left: -7rem;
+  /*margin-left: -7rem;*/
   color: #EA6F56;
 }
 
 .list-item {
   padding: 0.1rem 0;
+}
+
+.joinpart {
+  font-size: 1rem;
+  font-style: italic;
+  text-align: right;
+}
+
+.little-text {
+  color: #999;
 }
 
 .key {
@@ -288,6 +334,10 @@ div.exits:before {
 
 .key a {
   color: #EA6F56;
+}
+
+.key a:hover {
+  color: #aa503e;
 }
 
 .exits .value {
@@ -300,13 +350,12 @@ div.exits:before {
   left: 12rem;
 }
 
-
 .value p {
   display: inline;
 }
 
 .chat {
-  color: #2d660a
+  color: #32822e
 }
 .chat.me {
   color: #5EBDC9;
@@ -322,6 +371,10 @@ div.exits:before {
   }
   .full {
     display: none;
+  }
+
+  .gameView .viewport{
+    bottom: 4rem;
   }
 }
 

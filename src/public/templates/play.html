@@ -1,6 +1,8 @@
 <div class="gameView" ng-class="play.fixKeyboard">
     <div ui-view></div>
+
     <nav>
+      <div class="container">
       <div class="slash"><a ng-click="play.fillin('/')"><i class="fa fa-code"></i></a></div>
       <div class="clear"><a ng-click="play.fillin('')"><i class="fa fa-times-circle"></i></a></div>
       <div class="input-w">
@@ -8,7 +10,8 @@
           ng-keypress="play.input($event)"  ng-click="play.inputFocus($event)"
           ng-focus="play.inputFocus($event)" ng-blur="play.inputBlur($event)"/>
       </div>
-      <div class="action"><a ng-click="play.send()"><i class="fa fa-send-o"></i></a></div>
+      </div>
+      <!--<div class="action"><a ng-click="play.send()"><i class="fa fa-send-o"></i></a></div>-->
 
     </nav>
 </div>
