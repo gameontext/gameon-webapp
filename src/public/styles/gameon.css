@@ -1,0 +1,374 @@
+body {
+  font-family: 'Titillium Web', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/*-----------------------------------*/
+/*           Header Rules            */
+/*-----------------------------------*/
+
+header {
+  width: 100%;
+  height: 6rem;
+  padding: .3rem .5rem;
+  display: inline-flex;
+  z-index: 3;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  background-image: linear-gradient(90deg, #35566B, #7FD6DE);
+  background-size: 100% 0.5rem;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+}
+
+header .logo-container,
+header .room-icon-container {
+  padding: 1rem 0;
+  margin-right: 0;
+  margin-left: 2rem;
+  color: black;
+  font-size: 1.5em;
+}
+
+header .room-icon-container a {
+  color: black;
+}
+
+header .logo-container:before {
+  content: 'Game On';
+}
+
+header .title a {
+  border-left: 1px solid black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 1rem;
+  align-items: center;
+  display: flex;
+  color: black;
+  font-size: 1.5em;
+  padding-left: 1rem;
+}
+
+header .right-items {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 0;
+  position: absolute;
+  right: 2.5rem;
+}
+
+header .top-nav-item {
+  color: black;
+}
+
+header .top-nav-item a {
+  font-size: 1.5em;
+  color: black;
+  text-decoration: none;
+  padding-left: 1rem;
+}
+
+header .top-nav-item a .username {
+  border-left: 1px solid black;
+  padding-left: 1rem;
+}
+
+
+
+/*--------------------------------*/
+/*      header media queries      */
+/*--------------------------------*/
+
+@media (max-width : 650px) {
+  header .logo-container:before {
+    content: 'GO';
+  }
+
+  header .right-items .help {
+    display: none;
+  }
+
+  header .right-items {
+    padding-right: 1rem;
+  }
+
+  header .top-nav-item {
+    padding-right: 0;
+  }
+
+  header .top-nav-item a .caption,
+  header .top-nav-item a .username {
+    display: none;
+  }
+
+  header .top-nav-item a .user-icon:before {
+    font-family: "FontAwesome";
+    content: "\f007\00a0 ";
+    color: black;
+  }
+
+}
+
+/*-----------------------------------*/
+/*             Nav Rules             */
+/*-----------------------------------*/
+
+nav {
+  background-color: #323232;
+  box-sizing: border-box;
+  position: absolute;
+  display: block;
+  bottom: 0;
+  width: 100%;
+  height: 6rem;
+  padding: 0.2rem 0;
+  padding-bottom: 2.2rem;
+}
+
+nav .slash {
+  font-size: 2rem;
+  padding: .2rem 1.2rem;
+  position: absolute;
+  left: 0rem;
+  background-color: #5EBDC9;
+  margin-bottom: 0.2rem;
+}
+
+nav .slash a{
+  color: #fff;
+}
+
+nav .slash a:hover,
+nav .action i:hover {
+  color: #ddd;
+}
+
+nav .input-w {
+  margin: 0;
+  float: none; /* key */
+  width: auto; /* key */
+  height: 100%;
+  overflow: hidden; /* key */
+  background-color: #323232;
+  border-radius: 0;
+}
+
+nav .input-w input {
+  width: 100%;
+  height: 100%;
+  margin-left: 4rem;
+  background-color: white;
+  border: none;
+  border-radius: 0;
+}
+
+nav .input-w input:focus {
+  border: none;
+}
+
+nav .clear {
+  position: absolute;
+  display: block;
+  cursor: pointer;
+  z-index: 100;
+  top: .7rem;
+  right: 2rem;
+  padding: 0 .6rem;
+}
+
+nav .clear a {
+  color: #5EBDC9;
+}
+
+nav .action {
+  font-size: 2rem;
+  background-color: #5EBDC9;
+  color: #fff;
+  box-sizing: border-box;
+  float: right;
+}
+
+nav .action {
+  padding: .2rem .6rem .3rem .6rem;
+}
+
+nav .action i {
+  color: white;
+}
+
+@media (max-width : 650px) {
+  nav {
+    padding-bottom: 0;
+    padding-top: 0;
+    height: 4.2rem;
+  }
+
+  nav .container {
+    padding-right: 0;
+  }
+
+  nav .input-w {
+    margin: 0;
+  }
+
+  nav .input-w input {
+    margin-left: 2rem;
+  }
+
+  nav .slash {
+    margin-bottom: 0;
+    left: 0;
+  }
+
+  nav .clear {
+    right: 1rem;
+    padding: 0 0.6rem;
+  }
+}
+
+/*-----------------------------------*/
+/*        Central Body Rules         */
+/*-----------------------------------*/
+
+.gameView .viewport {
+  font-family: 'Terminus', 'Menlo', 'Andale Mono';
+  font-weight: 200;
+  font-size: 0.9em;
+  position: absolute;
+  top: 6.6rem;
+  bottom: 6rem;
+  margin: 0;
+  width: 100%;
+  overflow: auto;
+  -webkit-overflow: touch;
+  /*z-index: 1;*/
+  background-color: #323232;
+  color: white;
+}
+
+.content {
+  margin-top: 5rem;
+}
+
+.location .name {
+  font-weight: bold;
+  border-bottom: 1px solid white;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.location .objects {
+  margin: 1em 0;
+}
+.location .objects ul {
+  margin: 0;
+  padding-left: 1em;
+}
+.location .objects ul>li {
+  margin: 0;
+}
+
+.command {
+  font-size: 1rem;
+  font-style: italic;
+  color: #999;
+}
+
+.objects li a {
+  color: #EA6F56;
+}
+
+.objects li a:hover {
+  color: #aa503e;
+}
+
+code {
+  color: #c5c5c5;
+  background-color: #292929;
+  border: none;
+}
+
+div.exits:before {
+  font-family: "FontAwesome";
+  content: "\f277\00a0";
+  /*margin-left: -7rem;*/
+  color: #EA6F56;
+}
+
+.list-item {
+  padding: 0.1rem 0;
+}
+
+.joinpart {
+  font-size: 1rem;
+  font-style: italic;
+  text-align: right;
+}
+
+.little-text {
+  color: #999;
+}
+
+.key {
+  display: inline;
+}
+
+.key a {
+  color: #EA6F56;
+}
+
+.key a:hover {
+  color: #aa503e;
+}
+
+.exits .value {
+  left: 10rem;
+}
+
+.value {
+  display: inline;
+  position: absolute;
+  left: 12rem;
+}
+
+.value p {
+  display: inline;
+}
+
+.chat {
+  color: #32822e
+}
+.chat.me {
+  color: #5EBDC9;
+}
+
+.short {
+  display: none;
+}
+
+.chat:before {
+  font-family: "FontAwesome";
+  content: "\f0e6\00a0 ";
+}
+.chat .username {
+  display: inline;
+}
+.chat .content {
+  margin-top: 0;
+  display: block;
+  overflow-wrap: break-word;
+  padding-left: 2.2rem;
+}
+
+@media (max-width : 650px) {
+  .short {
+    display: inline;
+  }
+  .full {
+    display: none;
+  }
+
+  .gameView .viewport{
+    bottom: 4rem;
+  }
+}
+

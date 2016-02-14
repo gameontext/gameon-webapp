@@ -1,21 +1,38 @@
 <header>
-  <div class="action"><a ui-sref="play.me"><i class="fa fa-user fa-fw"></i></a></div>
-  <div class="action"><a ng-click="play.listCommands()"><i class="fa fa-life-ring fa-fw"></i></a></div>
-  <div class="action"><a ng-click="play.listExits()"><i class="fa fa-map-signs fa-fw"></i></a></div>
-  <div class="action"><a ng-click="play.sendFixed('/inventory')"><i class="fa fa-suitcase fa-fw"></i></a></div>
-  <div class="action"><a ng-click="play.fillin('/examine ')"><i class="fa fa-eye fa-fw"></i></a></div>
-  <div class="title"><a ng-click="play.sendFixed('/look')"><i class="fa fa-cube fa-fw"></i> {{ play.clientState.fullName }}</a></div>
+  <div class="logo-container"></div>
+  <div class="title">
+    <a ng-click="play.sendFixed('/look')">{{ play.clientState.fullName }}</a>
+  </div>
+
+  <div class="right-items">
+
+    <div class="help top-nav-item">
+      <a ng-click="play.listCommands()">
+        <span class="caption">Help</span>
+      </a>
+    </div>
+
+    <div class="top-nav-item">
+      <a ui-sref="play.me">
+        <span class="user-icon"></span>
+        <span class="username">{{play.clientState.username}}</span>
+      </a>
+    </div>
+
+  </div>
 </header>
+
+
 <div class="viewport" scroll-glue>
   <div class="container">
     <div>
       <div ng-repeat="data in play.roomEvents track by data.id" data-ng-switch="data.type">
         <div data-ng-switch-when="chat" class="element chat" ng-class="{ 'me': data.username == play.clientState.username}">
             <div class="username">{{data.username}}</div>
-            <div class="content">{{data.content}}</div>
+            <div class="content message">"{{data.content}}"</div>
         </div>
-        <div data-ng-switch-when="event" class="element event"><div ng-bind-html="data.content" class="content"></div></div>
-        <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="content"></div></div>
+        <div data-ng-switch-when="event" class="element event"><div ng-bind-html="data.content" class="little-text"></div></div>
+        <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="little-text"></div></div>
         <div data-ng-switch-when="exit" class="element"><div ng-bind-html="data.content" class="content"></div></div>
         <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div></div>
         <div data-ng-switch-when="location" class="element location"><div class="name">{{data.fullName}}</div>
@@ -30,18 +47,26 @@
         </div>
 
         <div data-ng-switch-when="exits" data-ng-if="data.content" class="element exits">Visible exits:
-          <dl>
-            <dt class="door" ng-repeat-start="(key, value) in data.content"><a title="/go {{key}}" ng-click="play.sendFixed('/go ' + key)" ng-bind-html="play.doorName(key)"></a></dt>
-            <dd ng-repeat-end ng-bind-html="value"></dd>
-          </dl>
+          <br>
+
+          <div class="list-item" ng-repeat="(key, value) in data.content">
+            <span class="key">
+              <a title="/go {{key}}" ng-click="play.sendFixed('/go ' + key)" ng-bind-html="play.doorName(key)"></a>
+            </span>
+            <span class="value" ng-bind-html="value"></span>
+          </div>
         </div>
 
 
-        <div data-ng-switch-when="commands" data-ng-if="data.content" class="element commands">Available Commands:
-          <dl>
-            <dt class="door" ng-repeat-start="(key, value) in data.content"><a title="{{key}}" ng-click="play.fillin(key)" ng-bind-html="key"></a></dt>
-            <dd marked="value" ng-repeat-end></dd>
-          </dl>
+        <div data-ng-switch-when="commands" data-ng-if="data.content" class="element commands listiness">Available Commands:
+          <br>
+
+          <div class="list-item" ng-repeat="(key, value) in data.content">
+            <span class="key" >
+              <a title="{{key}}" ng-click="play.fillin(key)" ng-bind-html="key"></a>
+            </span>
+            <span class="value" marked="value"></span>
+          </div>
         </div>
 
         <div data-ng-switch-default>{{ data }}</div>
@@ -49,3 +74,5 @@
     </div>
   </div>
 </div>
+
+
