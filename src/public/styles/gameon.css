@@ -1,5 +1,5 @@
 body {
-  font-family: 'Titillium Web', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /*-----------------------------------*/
@@ -227,7 +227,7 @@ nav .action i {
 /*-----------------------------------*/
 
 .gameView .viewport {
-  font-family: 'Terminus', 'Menlo', 'Andale Mono';
+  font-family: 'PT Mono', 'Terminus', 'Menlo', 'Andale Mono';
   font-weight: 200;
   font-size: 0.9em;
   position: absolute;
