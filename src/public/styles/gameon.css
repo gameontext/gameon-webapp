@@ -160,6 +160,7 @@ nav .input-w input {
   background-color: white;
   border: none;
   border-radius: 0;
+  line-height: inherit;
 }
 
 nav .input-w input:focus {
@@ -227,7 +228,7 @@ nav .action i {
 /*-----------------------------------*/
 
 .gameView .viewport {
-  font-family: 'PT Mono', 'Terminus', 'Menlo', 'Andale Mono';
+  font-family: Courier, 'PT Mono', 'Menlo', 'Andale Mono';
   font-weight: 200;
   font-size: 0.9em;
   position: absolute;
