@@ -80,8 +80,14 @@ angular.module('playerApp')
             clientState.fullName = res.fullName;
           }
 
+          if ( res.exits ) {
+            gameData.exits = res.exits;
+            $log.debug('exits updated', gameData);
+          }
+
           if ( res.commands ){
             gameData.commands = res.commands;
+            $log.debug('commands updated', gameData);
           }
 
           if ( !canSend ) {
