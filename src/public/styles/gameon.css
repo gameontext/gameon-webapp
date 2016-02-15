@@ -204,15 +204,11 @@ nav .action i {
   }
 
   nav .container {
-    padding-right: 0;
+    padding: 0;
   }
 
   nav .input-w {
     margin: 0;
-  }
-
-  nav .input-w input {
-    margin-left: 2rem;
   }
 
   nav .slash {
