@@ -48,25 +48,27 @@
 
         <div data-ng-switch-when="exits" data-ng-if="data.content" class="element exits">Visible exits:
           <br>
-
-          <div class="list-item" ng-repeat="(key, value) in data.content">
-            <span class="key">
+          <table>
+          <tr class="list-item" ng-repeat="(key, value) in data.content">
+            <td class="key">
               <a title="/go {{key}}" ng-click="play.sendFixed('/go ' + key)" ng-bind-html="play.doorName(key)"></a>
-            </span>
-            <span class="value" ng-bind-html="value"></span>
-          </div>
+            </td>
+            <td class="value" ng-bind-html="value"></td>
+          </tr>
+          </table>
         </div>
 
 
         <div data-ng-switch-when="commands" data-ng-if="data.content" class="element commands listiness">Available Commands:
           <br>
-
-          <div class="list-item" ng-repeat="(key, value) in data.content">
-            <span class="key" >
+          <table>
+          <tr class="list-item" ng-repeat="(key, value) in data.content">
+            <td class="key" >
               <a title="{{key}}" ng-click="play.fillin(key)" ng-bind-html="key"></a>
-            </span>
-            <span class="value" marked="value"></span>
-          </div>
+            </td>
+            <td class="value" marked="value"></td>
+          </tr>
+          </table>
         </div>
 
         <div data-ng-switch-default>{{ data }}</div>

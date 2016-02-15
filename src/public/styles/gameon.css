@@ -304,9 +304,25 @@ div.exits:before {
 .little-text {
   color: #999;
 }
+.exits table,
+.exits table tr,
+.exits table tr td,
+.commands table,
+.commands table tr,
+.commands table tr td {
+  border: none;
+  vertical-align: top;
+  padding: 0;
+}
 
-.key {
-  display: inline;
+.exits table tr td p,
+.commands table tr td p {
+  margin-bottom: 0.1em;
+}
+
+.exits table tr td.key a,
+.commands table tr td.key a {
+  padding-right: 1em;
 }
 
 .key a {
@@ -315,20 +331,6 @@ div.exits:before {
 
 .key a:hover {
   color: #aa503e;
-}
-
-.exits .value {
-  left: 10rem;
-}
-
-.value {
-  display: inline;
-  position: absolute;
-  left: 12rem;
-}
-
-.value p {
-  display: inline;
 }
 
 .chat {
@@ -366,6 +368,10 @@ div.exits:before {
 
   .gameView .viewport{
     bottom: 4rem;
+  }
+
+  .commands table tr td p {
+    margin-bottom: 1em;
   }
 }
 
