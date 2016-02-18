@@ -238,6 +238,21 @@ module.exports = function (grunt) {
       }
     },
 
+    svgstore: {
+      options: {
+        prefix : 'shape-', // This will prefix each <g> ID
+        svg: {
+          style: 'display: none;'
+        },
+        includedemo: true
+      },
+      default : {
+        files: {
+          'public/icons/svg-defs.svg': ['public/icons/icons/*.svg']
+        }
+      }
+    },
+
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       lint: [

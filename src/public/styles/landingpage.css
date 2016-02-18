@@ -1,0 +1,299 @@
+
+
+.outer-container {
+  display: flex;
+  /*height: 100%;*/
+  align-items: stretch;
+  background-image: url(../images/background.png);
+  background-size: cover;
+  flex-shrink: 0;
+}
+
+body .darkblue {
+  background-image: none;
+  background-color: #1E3341;
+  height: 100% !important;
+}
+
+.outer-container .left {
+  background-color: rgb(255, 255, 255);
+  /*flex: 2 0 40%;*/
+  text-align: left;
+  color: #35566B;
+  height: 100%;
+}
+
+.outer-container .left .go-logo {
+  height: 5rem;
+  margin: 2rem;
+}
+
+.outer-container .left .middle {
+  margin: 0 7rem;
+  border-bottom: 1px solid #35566B;
+  padding-bottom: 5rem;
+  margin-bottom: 5rem;
+}
+
+.outer-container .left .play {
+  background-color: #EA6F56;
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  margin-top: 2rem;
+}
+
+.header {
+  margin-top: 6rem;
+}
+
+.header h1 {
+  font-size: 8rem;
+  margin-bottom: 0;
+}
+
+.header h1 .on {
+  font-weight: bold;
+  color: #65CFD9;
+}
+
+.lead {
+  display: block;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.intro {
+  font-family: Courier, 'PT Mono', 'Menlo', 'Andale Mono';
+  padding-right: 10rem;
+  padding-top: 2rem;
+  font-size: 0.8em;
+  line-height: 1em;
+}
+
+.outer-container .right {
+  flex: 3 0 60%;
+  display: flex;
+  margin-left: 10rem;
+  justify-content: space-between;
+}
+
+.outer-container .right .gameplay-ss {
+  height: 70%;
+  width: 70%;
+  margin-top: 7rem;
+}
+
+.outer-container .right .button,
+.outer-container .right .button i {
+  color: white;
+  border: none;
+}
+
+.outer-container .right .right-left {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.outer-container .right .right-left .row {
+  padding: 2rem 0;
+  width: 30rem;
+  flex-shrink: 1;
+}
+
+.outer-container .right .right-left .row a{
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  margin-top: 2.8rem;
+  padding-right: 0;
+
+}
+
+.outer-container .right .right-left .row .subtext {
+  display: table-cell;
+  vertical-align: top;
+  width: 100%;
+  height: auto;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.outer-container .right .right-left .row .subtext {
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.3rem;
+  margin-left: 4rem;
+
+}
+
+.outer-container .right .right-left .ibm-font {
+  font-size: 2rem;
+  color: #1E3341;
+  padding-right: 1rem;
+}
+
+.outer-container .right .right-left .button {
+  text-transform: none;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+  white-space: normal;
+
+}
+
+.outer-container .right .right-left .button .icon{
+  height: 3rem;
+  width: 3rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+}
+
+.outer-container .right .right-left .button .icon use {
+  fill: #1E3341;
+
+}
+
+
+.outer-container .right-right {
+  display: flex;
+  justify-content: flex-end;
+  align-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+
+body .outer-container .login {
+  background-color: #1E3341;
+  color: white;
+  display: block;
+}
+
+.login .buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.login .buttons .button {
+  border: 1px solid white;
+  border-radius: 0;
+  width: 30rem;
+  margin: 1rem;
+
+}
+
+.login .close-login {
+  font-weight: 100;
+  font-size: 9rem;
+  position: absolute;
+  right: 1rem;
+  padding: 0;
+}
+
+@media (min-height: 550px){
+  .outer-container {
+    height: 100% !important;
+  }
+}
+
+@media (max-height : 900px) {
+  .outer-container {
+    height: auto;
+  }
+}
+
+@media (min-height: 900px){
+  .outer-container {
+    height: auto;
+  }
+
+  html, body, .ng-scope{
+    /*height: inherit;*/
+  }
+}
+
+
+@media (max-width : 800px) {
+
+  .mobilehide {
+    display: none;
+  }
+
+  .outer-container {
+    flex-direction: column;
+    background-image: none;
+    background-color: #35566B;
+  }
+
+  .outer-container .left {
+    text-align: center;
+    flex: 2 0 auto;
+  }
+
+  .outer-container .left .intro{
+    padding-right: 5rem;
+    padding-left: 5rem;
+    text-align: justify;
+    line-height: 2rem;
+  }
+
+  .outer-container .left .middle {
+    margin: 0 auto;
+    border: none;
+  }
+
+
+  .outer-container .right {
+    margin: 2rem 0;
+    flex: 2 0 auto;
+    background-color: #35566B;
+    padding: 0 2rem;
+    overflow-x: hidden;
+  }
+
+  .outer-container .right .right-left .row .subtext {
+    width: 100%;
+    height: auto;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+
+  .outer-container .right .right-left .row a {
+    padding: 0;
+    margin-top: 2.5rem;
+  }
+
+  .header h1 {
+    font-size: 6.5rem;
+  }
+
+  .login .buttons {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    height: 100%;
+  }
+
+  .login .buttons .button {
+    height: auto;
+  }
+}
+
+/*@media (max-width : 800px) {*/
+  /*.outer-container .right {*/
+    /*flex: 1 1 50%;*/
+  /*}*/
+
+  /*.outer-container .left {*/
+    /*flex: 1 1 50%;*/
+  /*}*/
+/*}*/
+
+@media (max-width: 1200px) {
+  .outer-container .right .right-right {
+    display: none;
+  }
+}
