@@ -246,6 +246,7 @@ nav .action i {
   /*z-index: 1;*/
   background-color: #323232;
   color: white;
+  height: auto;
 }
 
 .content {
