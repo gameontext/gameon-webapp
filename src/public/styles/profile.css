@@ -5,14 +5,10 @@
 .gameView .viewport .profile .operations a,
 .gameView .viewport .profile a,
 .gameView .viewport .profile button,
-.gameView .viewport .profile button i
-{
+.gameView .viewport .profile button i {
   color: white;
 }
 
-.button.play {
-  background-color: #eefadd;
-}
 .login .button i {
   padding-right: 3px;
   color: white;

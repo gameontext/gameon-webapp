@@ -2,11 +2,16 @@ body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+html, body, .ng-scope {
+  height: 100%;
+}
+
 /*-----------------------------------*/
 /*           Header Rules            */
 /*-----------------------------------*/
 
-header {
+body div header.topnav {
+  position: fixed;
   width: 100%;
   height: 6rem;
   padding: .3rem .5rem;
@@ -241,6 +246,7 @@ nav .action i {
   /*z-index: 1;*/
   background-color: #323232;
   color: white;
+  height: auto;
 }
 
 .content {
