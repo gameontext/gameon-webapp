@@ -4,7 +4,7 @@
   display: flex;
   /*height: 100%;*/
   align-items: stretch;
-  background-image: url(../images/background.png);
+  background-image: url(../images/background2.png);
   background-size: cover;
   flex-shrink: 0;
 }
@@ -193,6 +193,10 @@ body .outer-container .login {
   padding: 0;
 }
 
+@media (min-width: 800px) {
+
+}
+
 @media (min-height: 550px){
   .outer-container {
     height: 100% !important;
@@ -295,5 +299,9 @@ body .outer-container .login {
 @media (max-width: 1200px) {
   .outer-container .right .right-right {
     display: none;
+  }
+
+  .outer-container {
+    background-image: url(../images/background.png);
   }
 }
