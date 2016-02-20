@@ -1,3 +1,18 @@
-h2 {
-  color: red;
+@import 'skeleton';
+
+$turquoise: #65CFD9;
+$darkblue: #35566B;
+
+body {
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+.left {
+  color: $darkblue;
+
+  h1 {
+    .on {
+      color: $turquoise;
+    }
+  }
 }

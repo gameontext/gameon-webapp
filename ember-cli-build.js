@@ -4,8 +4,19 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
-    // Add options here
+    sassOptions: {
+      includePaths: [
+        'bower_components/Skeleton-Sass/scss',
+        'bower_components/Skeleton-Sass/scss/modules',
+        'bower_components/Skeleton-Sass/scss/base'
+
+      ]
+    }
   });
+
+  app.import('bower_components/Skeleton-Sass/scss/skeleton.scss');
+
+
 
   // Use `app.import` to add additional libraries to the generated
   // output files.

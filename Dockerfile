@@ -20,7 +20,7 @@ EXPOSE 8080
 
 CMD ["/opt/startup.sh"]
 
-ADD ./src/ /opt/www
+ADD ./dist/ /opt/www
 
 #
 # And in fact, we do need to build the bower components into the image and not build them locally, so
