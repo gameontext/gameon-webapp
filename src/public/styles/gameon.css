@@ -233,7 +233,7 @@ nav .action i {
 /*-----------------------------------*/
 
 .gameView .viewport {
-  font-family: Courier, 'PT Mono', 'Menlo', 'Andale Mono';
+  font-family: 'PT Mono', Courier, 'Menlo', 'Andale Mono';
   font-weight: 200;
   font-size: 0.9em;
   position: absolute;

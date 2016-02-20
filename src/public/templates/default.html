@@ -15,7 +15,7 @@
           <p>You are in a maze of little interconnected rooms, none alike. And you aren't alone...</p>
         </div>
 
-        <a class="button play" ui-sref="default.login">Enter</a>
+        <a class="button play" ng-class="{disabled: $state.current.name !='default'}" ui-sref="default.login">Enter</a>
       </div>
     </div>
 
