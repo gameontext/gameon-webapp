@@ -43,6 +43,12 @@ body .darkblue {
   margin-top: 2rem;
 }
 
+.outer-container .left .disabled {
+  background-color: rgba(234, 111, 86, 0.55);
+  pointer-events: none;
+  cursor: default;
+}
+
 .header {
   margin-top: 6rem;
 }
