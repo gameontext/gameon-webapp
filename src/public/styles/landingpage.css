@@ -194,7 +194,12 @@ body .outer-container .login {
 }
 
 @media (min-width: 800px) {
-
+ .outer-container .paddedright {
+   margin-left: 0;
+   padding-left: 10rem;
+   padding-top: 20rem;
+   font-size: 2rem;
+ }
 }
 
 @media (min-height: 550px){
