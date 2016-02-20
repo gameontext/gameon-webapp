@@ -90,6 +90,14 @@ body .darkblue {
   border: none;
 }
 
+.outer-container .right .login-profile .button {
+  border: 1px solid white;
+}
+
+.outer-container .right .login-profile input {
+  color: black;
+}
+
 .outer-container .right .right-left {
   margin: auto 0;
   display: flex;
@@ -199,6 +207,7 @@ body .outer-container .login {
    padding-left: 10rem;
    padding-top: 20rem;
    font-size: 2rem;
+   padding-right: 10rem;
  }
 }
 
