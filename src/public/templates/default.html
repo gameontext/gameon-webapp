@@ -20,16 +20,6 @@
     </div>
 
 
-
-    <!--   spinners   -->
-    <div class="section" data-ng-switch-when="default.auth">
-      <div>Authenticating ... <i class="fa fa-cog fa-spin"></i></div>
-    </div>
-    <div class="section" data-ng-switch-when="default.usersetup">
-      <div>Scrying user details ... <i class="fa fa-cog fa-spin"></i></div>
-    </div>
-
-
     <!--  profile   -->
     <div class="section" data-ng-switch-when="default.profile">
       <form name="ctrl.profileForm">
@@ -40,18 +30,6 @@
           </div>
         </div>
       </form>
-    </div>
-
-
-    <!--  error messages -->
-    <div class="section" data-ng-switch-default>
-      <div class="center">
-        <div>Something has gone wrong.</div>
-        <div class="padded">Vizzini said when the job goes wrong, we should go back to the beginning.</div>
-        <div class="padded">
-          <button class="button" data-ng-click="ctrl.backToTheBeginning()">Back to the beginning</button>
-        </div>
-      </div>
     </div>
 
 
@@ -120,19 +98,41 @@
     </div>
 
     <!--  LOGIN BUTTONS    -->
-    <div class="right login" data-ng-switch-when="default.login">
-      <span class="close-login button" data-ng-click="ctrl.backToTheBeginning()">&times;</span>
-      <h4 class="signin">Sign in with</h4>
-      <br>
-      <div class="buttons">
-          <a class="button" ng-href="{{ctrl.api.TWITTER}}">Twitter</a>
-          <a class="button" ng-href="{{ctrl.api.GOOGLE}}">Google</a>
-          <a class="button" ng-href="{{ctrl.api.FACEBOOK}}">Facebook</a>
-          <a class="button" ng-href="{{ctrl.api.GITHUB}}">GitHub</a>
-          <a ng-if="(ctrl.api.HOST !== 'game-on.org')" class="button" ng-href="{{ctrl.api.DUMMY}}">Anonymous user</a>
+    <div class="right login" ng-class="{paddedright: $state.current.name=='default.auth' || $state.current.name=='default.usersetup'}">
+      <div data-ng-switch-when="default.login">
+        <span class="close-login button" data-ng-click="ctrl.backToTheBeginning()">&times;</span>
+        <h4 class="signin">Sign in with</h4>
+        <br>
+        <div class="buttons">
+            <a class="button" ng-href="{{ctrl.api.TWITTER}}">Twitter</a>
+            <a class="button" ng-href="{{ctrl.api.GOOGLE}}">Google</a>
+            <a class="button" ng-href="{{ctrl.api.FACEBOOK}}">Facebook</a>
+            <a class="button" ng-href="{{ctrl.api.GITHUB}}">GitHub</a>
+            <a ng-if="(ctrl.api.HOST !== 'game-on.org')" class="button" ng-href="{{ctrl.api.DUMMY}}">Anonymous user</a>
+        </div>
       </div>
 
-  </div>
+      <!--   spinners   -->
+      <div class="section" data-ng-switch-when="default.auth">
+        <div>Authenticating ... <i class="fa fa-cog fa-spin"></i></div>
+      </div>
+      <div class="section" data-ng-switch-when="default.usersetup">
+        <div>Scrying user details ... <i class="fa fa-cog fa-spin"></i></div>
+      </div>
+
+      <!--  error messages -->
+      <div class="section" data-ng-switch-default>
+        <div class="center">
+          <div>Something has gone wrong.</div>
+          <div class="padded">Vizzini said when the job goes wrong, we should go back to the beginning.</div>
+          <div class="padded">
+            <button class="button" data-ng-click="ctrl.backToTheBeginning()">Back to the beginning</button>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
 
 </div>
 
