@@ -90,12 +90,19 @@ body .darkblue {
   border: none;
 }
 
+.outer-container .right .login-profile {
+  font-weight: normal;
+  font-size: 1rem;
+}
+
 .outer-container .right .login-profile .button {
   border: 1px solid white;
+  border-radius: 0;
 }
 
 .outer-container .right .login-profile input {
   color: black;
+  border-radius: 0;
 }
 
 .outer-container .right .right-left {
