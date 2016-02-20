@@ -17,7 +17,7 @@ body .darkblue {
 
 .outer-container .left {
   background-color: rgb(255, 255, 255);
-  /*flex: 2 0 40%;*/
+  flex: 2 0 40%;
   text-align: left;
   color: #35566B;
   height: 100%;
