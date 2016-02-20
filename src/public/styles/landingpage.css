@@ -103,6 +103,11 @@ body .darkblue {
 .outer-container .right .login-profile input {
   color: black;
   border-radius: 0;
+  font-size: 2rem;
+}
+
+.outer-container .right .login-profile label {
+  font-size: 1.5rem;
 }
 
 .outer-container .right .right-left {
