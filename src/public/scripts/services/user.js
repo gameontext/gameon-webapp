@@ -34,17 +34,15 @@ angular.module('playerApp')
 
       // Load the user's information from the DB and/or session
       // Load needs to come from the Auth token
-      var parameters = {};
+      var gameonHeaders = {'gameon-jwt': auth.token()};
       var q;
-
-      parameters.jwt = auth.token();
 
       // Fetch data about the user
       q = $http({
         method : 'GET',
         url : API.PROFILE_URL + profile._id,
         cache : false,
-        params : parameters
+        headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
 
@@ -70,15 +68,14 @@ angular.module('playerApp')
       $log.debug("Creating user with: %o", profile);
       // CREATE -- needs to test for ID uniqueness.. so only go on to
       // the next state if all data could validate properly.
-      var parameters = {};
-      parameters.jwt = auth.token();
+      var gameonHeaders = {'gameon-jwt': auth.token()};
 
       $http({
         method : 'POST',
         url : API.PROFILE_URL,
         cache : false,
         data : profile,
-        params : parameters
+        headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         $state.go('play.room');
@@ -94,15 +91,14 @@ angular.module('playerApp')
     var update = function() {
         $log.debug("Updating user with: %o", profile);
       // Update user
-      var parameters = {};
-      parameters.jwt = auth.token();
+      var gameonHeaders = {'gameon-jwt': auth.token()};
 
       $http({
         method : 'PUT',
         url : API.PROFILE_URL + profile._id,
         cache : false,
         data : profile,
-        params : parameters
+        headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         $state.go('play.room');
@@ -117,8 +113,7 @@ angular.module('playerApp')
     var updateApiKey = function() {
         $log.debug("Updating user apikey for profile : %o", profile);
       // Update user
-      var parameters = {};
-      parameters.jwt = auth.token();
+      var gameonHeaders = {'gameon-jwt': auth.token()};
       
       delete profile.apiKey;
 
@@ -127,7 +122,7 @@ angular.module('playerApp')
         url : API.PROFILE_URL + profile._id,
         cache : false,
         data : profile,
-        params : parameters
+        headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         //update succeeded, now refresh the profile from the server to pull the new key.
@@ -143,15 +138,15 @@ angular.module('playerApp')
     var generateName = function() {
       $log.debug('generate a name: %o', generatedNames);
       var name = generatedNames.pop();
-      var parameters = {};
-      parameters.jwt = auth.token();
+      var gameonHeaders = {'gameon-jwt': auth.token()};
+      
       if (typeof name === 'undefined') {
         // no generated names (all used up). Let's grab some more.
         $http({
           method : 'GET',
           url : API.PROFILE_URL + 'names',
           cache : false,
-          params : parameters
+          headers : gameonHeaders
         }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
 
@@ -204,13 +199,12 @@ angular.module('playerApp')
 
       if (typeof color === 'undefined') {
         // no generated colors (all used up). Let's grab some more.
-        var parameters = {};
-        parameters.jwt = auth.token();
+    	var gameonHeaders = {'gameon-jwt': auth.token()};
         $http({
           method : 'GET',
           url : API.PROFILE_URL + 'colors',
           cache : false,
-          params : parameters
+          headers : gameonHeaders
         }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
 
