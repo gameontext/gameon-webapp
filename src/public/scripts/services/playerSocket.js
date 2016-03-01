@@ -20,7 +20,7 @@ angular.module('playerApp')
     function ($websocket,  $log,  user,  auth,  API,  playerSession, marked) {
 
       var ws;
-      var websocketURL = API.WS_URL + user.profile._id + "?jwt="+auth.token();
+      var websocketURL = API.WS_URL + user.profile._id;
       var id = 0;
 
       // Collection for holding data: play.room.html displays
@@ -47,6 +47,7 @@ angular.module('playerApp')
         clientState.roomId = user.profile.location;
       }
       clientState.username = user.profile.name;
+      clientState.jwt = auth.token();
 
       // Create a v1 websocket
       $log.debug("Opening player socket %o for %o",websocketURL, user.profile);
