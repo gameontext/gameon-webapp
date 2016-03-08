@@ -20,8 +20,11 @@ angular.module('playerApp')
     function ($websocket,  $log,  user,  auth,  API,  playerSession, marked) {
 
       var ws;
-      var websocketURL = API.WS_URL + user.profile._id;
       var id = 0;
+
+      // There is no way to add additional HTTP headers to the outbound
+      // WebSocket -- the token needs to remain in the query string.
+      var websocketURL = API.WS_URL + user.profile._id  + "?jwt=" + auth.token();
 
       // Collection for holding data: play.room.html displays
       // this scrolling collection.
@@ -47,7 +50,6 @@ angular.module('playerApp')
         clientState.roomId = user.profile.location;
       }
       clientState.username = user.profile.name;
-      clientState.jwt = auth.token();
 
       // Create a v1 websocket
       $log.debug("Opening player socket %o for %o",websocketURL, user.profile);
