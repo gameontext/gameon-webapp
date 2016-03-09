@@ -93,6 +93,10 @@ angular.module('playerApp')
             $log.debug('commands updated', gameData);
           }
 
+          // Update saved session data
+          playerSession.set('clientState', clientState);
+          playerSession.set('gameData', gameData);
+
           if ( !canSend ) {
             // indicate we can send again, and catch up with anything
             // we queued while the connection was re-establishing itself
@@ -130,6 +134,8 @@ angular.module('playerApp')
             gameData.roomInventory = res.roomInventory;
             $log.debug('room inventory updated', gameData);
           }
+
+          playerSession.set('gameData', gameData);
 
           switch (res.type) {
             case 'event':
