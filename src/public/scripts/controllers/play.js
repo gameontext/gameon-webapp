@@ -37,6 +37,7 @@ angular.module('playerApp')
             // bogus form data: don't go yet without correcting
           } else {
             user.update();
+            this.clientState.username = user.profile.name;
             $state.go('play.room');
           }
       };
