@@ -9,14 +9,15 @@
  */
 angular.module('playerApp')
   .controller('PlayCtrl',
-  [          '$state','$log','playerSocket','user','userAndAuth','$window', 'marked',
-    function ($state,  $log,  playerSocket,  user,  userAndAuth,  $window, marked) {
+  [          '$state','$log','playerSocket','user','auth', 'userAndAuth','$window', 'marked',
+    function ($state,  $log,  playerSocket,  user,  auth, userAndAuth,  $window, marked) {
       $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
 
       var inputBox = $window.document.getElementById('inputbox');
       inputBox.focus();
 
       this.user = user;
+      this.auth = auth;
       this.userInput = '';
       this.roomEvents = playerSocket.roomEvents;
       this.clientState = playerSocket.clientState;
