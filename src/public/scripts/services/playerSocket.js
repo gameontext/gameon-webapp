@@ -46,9 +46,12 @@ angular.module('playerApp')
       if ( user.profile.location !== clientState.roomId ) {
         $log.debug('cache cleared');
         gameData = {}; // start over
-        delete clientState.bookmark;
+        clientState.fullName = "Unknown";
         clientState.roomId = user.profile.location;
+        delete clientState.bookmark;
+        delete clientState.roomName;
       }
+
       clientState.username = user.profile.name;
 
       // Create a v1 websocket
@@ -60,7 +63,7 @@ angular.module('playerApp')
 
       // On open, check in with the concierge
       ws.onOpen(function() {
-        console.log('connection open');
+        console.log('CONNECTED: sending %o', clientState);
         ws.send('ready,' + angular.toJson(clientState, 0));
       });
 
@@ -74,11 +77,13 @@ angular.module('playerApp')
         var target, res;
 
         if ( "ack" === command ) {
+          // ack,{json}
+
           res = parseJson(payload);
           $log.debug('ack received', res);
           clientState.mediatorId = res.mediatorId;
           clientState.roomId = res.roomId;
-          clientState.roomName = res.roomName;
+          clientState.roomName = res.name;
           if (res.fullName){
             clientState.fullName = res.fullName;
           }
@@ -104,6 +109,8 @@ angular.module('playerApp')
             sendPending();
           }
         } else {
+          // player,id,{json}
+
           comma = payload.indexOf(',');
           target = payload.slice(0,comma);
           payload = payload.slice(comma+1);
