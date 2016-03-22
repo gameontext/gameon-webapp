@@ -17,13 +17,8 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
     }
-  };
 
-  ENV['ember-simple-auth'] = {
-    authorizer: 'authorizer:token',
-    serverTokenEndpoint: '/play/PublicCertificate',
-    timeFactor: 1000,
-    refreshLeeway: 5
+
   };
 
   if (environment === 'development') {

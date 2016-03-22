@@ -11,4 +11,10 @@ export default Ember.Controller.extend({
   //     this.get('session').authenticate(authenticator, credentials);
   //   }
   // }
+  showLogin: false,
+  actions: {
+    openLogin(){
+      this.toggleProperty('showLogin');
+    }
+  }
 });

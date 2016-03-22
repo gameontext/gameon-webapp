@@ -2,17 +2,98 @@
 
 $turquoise: #65CFD9;
 $darkblue: #35566B;
+$orange: #EA6F56;
 
-body {
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
-}
+html {
+  height: 100%;
+  body {
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    height: 100vh;
 
-.left {
-  color: $darkblue;
+    .front-page {
+      background-image: url('images/background3.png');
+      background-size: cover;
+      height: 100vh;
+      display: flex;
 
-  h1 {
-    .on {
-      color: $turquoise;
+      .left {
+        color: $darkblue;
+        background-color: white;
+        flex: 2 0 40%;
+        height: 100%;
+
+        .logo {
+          max-width: 100px;
+        }
+
+        .center {
+          text-align: left;
+          border-bottom: 1px solid $darkblue;
+
+          h1 {
+            font-size: 8rem;
+
+            .on {
+              color: $turquoise;
+              font-weight: bold;
+            }
+          }
+
+          h4 {
+            font-weight: 400;
+            font-size: 2.3rem;
+          }
+
+          button {
+            border-radius: 10rem;
+            border: none;
+            color: white;
+            background-color: $orange;
+          }
+        }
+      }
+
+      .right {
+        height: 100%;
+        flex: 3 0 60%;
+        background: transparent;
+      }
+
+      .login {
+        background-color: $darkblue;
+        color: white;
+
+        button {
+          border-radius: 0;
+          border: 1px solid white;
+          margin: 2px;
+          color: white;
+        }
+      }
+    }
+
+    @media(max-width: 800px) {
+      .front-page {
+        flex-direction: column;
+        background-image: none;
+        background-color: $darkblue;
+        height: auto;
+
+        .left {
+          height: 100vh;
+          min-height: 100vh;
+          width: 100vw;
+
+          .center {
+            text-align: center;
+
+            h1 {
+              font-size: 6rem;
+            }
+          }
+        }
+      }
+
     }
   }
 }
