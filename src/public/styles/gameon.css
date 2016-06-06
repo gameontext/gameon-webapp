@@ -290,6 +290,12 @@ code {
   border: none;
 }
 
+pre code {
+  font-size: .25em;
+  background-color: inherit;
+}
+
+
 div.exits:before {
   font-family: "FontAwesome";
   content: "\f277\00a0";
