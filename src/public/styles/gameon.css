@@ -364,6 +364,10 @@ div.exits:before {
   padding-left: 2.2rem;
 }
 
+pre {
+  font-size: .25em;
+}
+
 @media (max-width : 650px) {
   .short {
     display: inline;
