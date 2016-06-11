@@ -184,8 +184,8 @@ angular.module('playerApp')
         } else if ( !event.wasClean ) {
           retryCount++;
 
-          if ( retryCount > 15 ) {
-            pause("Paused after 15 attempts. Press the button when ready to try again", false);
+          if ( retryCount > 5 ) {
+            pause("Paused after 5 attempts. Press the button when ready to try again", false);
             $rootScope.$apply(); // process addition to array, not a usual render loop
 
           } else {
