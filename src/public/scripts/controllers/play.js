@@ -23,6 +23,16 @@ angular.module('playerApp')
       this.clientState = playerSocket.clientState;
       this.fixKeyboard = "";
 
+      this.pause = function() {
+        $log.debug('PAUSE!!');
+        playerSocket.pause('This session has been paused', true);
+      };
+
+      this.resume = function(id) {
+        $log.debug('RESUME!! %o', id);
+        playerSocket.resume(id);
+      };
+
       this.restart = function() {
         this.sendFixed('/sos-restart');
         $state.go('play.room');

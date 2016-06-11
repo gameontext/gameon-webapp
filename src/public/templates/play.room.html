@@ -27,19 +27,20 @@
   <div class="container">
     <div>
       <div ng-repeat="data in play.roomEvents track by data.id" data-ng-switch="data.type">
+
         <div data-ng-switch-when="chat" class="element chat" ng-class="{ 'me': data.username == play.clientState.username}">
             <div class="username">{{data.username}}</div>
             <div class="content message">"{{data.content}}"</div>
         </div>
+
         <div data-ng-switch-when="event" class="element event"><div ng-bind-html="data.content" class="little-text"></div></div>
         <div data-ng-switch-when="joinpart" class="joinpart"><div ng-bind-html="data.content" class="little-text"></div></div>
         <div data-ng-switch-when="status" class="joinpart"><div ng-bind-html="data.content" class="little-text"></div></div>
         <div data-ng-switch-when="exit" class="element"><div marked="data.content" class="content"></div></div>
         <div data-ng-switch-when="command" class="command"><div class="content">{{data.content}}</div></div>
-        <div data-ng-switch-when="location" class="element location"><div class="name">{{data.fullName}}</div>
 
-
-
+        <div data-ng-switch-when="location" class="element location">
+          <div class="name">{{data.fullName}}</div>
           <div ng-bind-html="data.description" class="description"></div>
           <div ng-bind-html="data.content" class="content"></div>
           <div data-ng-if="data.roomInventory.length" class="objects">You notice:
@@ -59,7 +60,6 @@
           </table>
         </div>
 
-
         <div data-ng-switch-when="commands" data-ng-if="data.content" class="element commands listiness">Available Commands:
           <br>
           <table>
@@ -72,10 +72,14 @@
           </table>
         </div>
 
+        <div data-ng-switch-when="paused" class="element paused">
+            <div class="content"><span marked="data.content"></span>
+              <a ng-if="data.button" class="button" ng-click="play.resume(data.id)"><i class="fa fa-play-circle-o" aria-hidden="true"></i> Resume</a>
+            </div>
+        </div>
+
         <div data-ng-switch-default>{{ data }}</div>
       </div>
     </div>
   </div>
 </div>
-
-

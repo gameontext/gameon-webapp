@@ -109,12 +109,12 @@ angular.module('playerApp')
         $state.go('default.yuk');
       }).catch(console.log.bind(console));
     };
-    
+
     var updateApiKey = function() {
         $log.debug("Updating user apikey for profile : %o", profile);
       // Update user
       var gameonHeaders = {'gameon-jwt': auth.token()};
-      
+
       delete profile.apiKey;
 
       $http({
@@ -132,14 +132,14 @@ angular.module('playerApp')
         // go to the sad state.. (Can't find the player information, and can't save it either)
         $state.go('default.yuk');
       }).catch(console.log.bind(console));
-      
+
     };
 
     var generateName = function() {
       $log.debug('generate a name: %o', generatedNames);
       var name = generatedNames.pop();
       var gameonHeaders = {'gameon-jwt': auth.token()};
-      
+
       if (typeof name === 'undefined') {
         // no generated names (all used up). Let's grab some more.
         $http({

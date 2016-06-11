@@ -265,6 +265,13 @@ nav .clear {
   color: #aa503e;
 }
 
+.paused a {
+  color: white;
+}
+.paused a:hover {
+  color: #aa503e;;
+}
+
 code {
   color: #c5c5c5;
   background-color: #292929;
@@ -366,4 +373,3 @@ div.exits:before {
     margin-bottom: 1em;
   }
 }
-
