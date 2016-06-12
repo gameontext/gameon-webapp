@@ -181,7 +181,7 @@ angular.module('playerApp')
           pause("Paused due to expired session. Please [log in again](/#/login) to play.", false);
           $rootScope.$apply(); // process addition to array, not a usual render loop
 
-        } else if ( !event.wasClean ) {
+        } else if ( event.code != 1000 ) {
           retryCount++;
 
           if ( retryCount > 5 ) {
