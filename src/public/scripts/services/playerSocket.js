@@ -342,7 +342,7 @@ angular.module('playerApp')
               // which is updated via onClose
               return canSend;
             } else if (message.indexOf('/pause') === 0 ) {
-              this.pause();
+              this.pause('This session has been paused', true);
               return canSend;
             }
           }
