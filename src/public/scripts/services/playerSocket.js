@@ -16,11 +16,12 @@
  */
 angular.module('playerApp')
   .factory('playerSocket',
-  [          '$websocket','$log','user','auth','API','playerSession', 'marked',
-    function ($websocket,  $log,  user,  auth,  API,  playerSession, marked) {
+  [          '$rootScope','$websocket','$log','user','auth','API','playerSession','marked',
+    function ($rootScope,  $websocket,  $log,  user,  auth,  API,  playerSession,  marked) {
 
       var ws;
       var id = 0;
+      var retryCount = 0;
 
       // There is no way to add additional HTTP headers to the outbound
       // WebSocket -- the token needs to remain in the query string.
@@ -57,13 +58,13 @@ angular.module('playerApp')
       // Create a v1 websocket
       $log.debug("Opening player socket %o for %o",websocketURL, user.profile);
       ws = $websocket(websocketURL, {
-             useApplyAsync: true,
-             reconnectIfNotNormalClose: true
+             useApplyAsync: true
            });
 
       // On open, check in with the concierge
       ws.onOpen(function() {
         console.log('CONNECTED: sending %o', clientState);
+        retryCount = 0;
         ws.send('ready,' + angular.toJson(clientState, 0));
       });
 
@@ -161,8 +162,7 @@ angular.module('playerApp')
         }
       });
 
-      // On error, report the error, and close the connection
-      // (try to reconnect)
+      // On error, report the error, and close or retry the connection
       ws.onError(function(event) {
         $log.debug('connection Error', event);
       });
@@ -171,14 +171,28 @@ angular.module('playerApp')
       // and indicate that we can no longer send outbound messages
       ws.onClose(function(event) {
         $log.debug('connection closed', event);
-
-        if ( canSend && !event.wasClean ) {
-          $log.debug('error shut down');
-        }
         canSend = false;
 
         playerSession.set('clientState', clientState);
         playerSession.set('gameData', gameData);
+
+        if ( event.code === 1008 ) {
+          $log.debug('WEBSOCKET POLICY CLOSE', event);
+          pause("Paused due to expired session. Please [log in again](/#/login) to play.", false);
+          $rootScope.$apply(); // process addition to array, not a usual render loop
+
+        } else if ( event.code != 1000 ) {
+          retryCount++;
+
+          if ( retryCount > 5 ) {
+            pause("Paused after 5 attempts. Press the button when ready to try again", false);
+            $rootScope.$apply(); // process addition to array, not a usual render loop
+
+          } else {
+            $log.debug('error shut down, retry %o', retryCount);
+            ws.reconnect();
+          }
+        }
       });
 
       var logout = function() {
@@ -188,6 +202,32 @@ angular.module('playerApp')
 
         auth.logout(); // will also reset the session
       };
+
+      var pause = function(message, button) {
+        roomEvents.push({
+          type: 'paused',
+          content: message,
+          button: button,
+          id: id++
+        });
+
+        $log.debug('PAUSE %o', message);
+        ws.close();
+      }
+
+      var resume = function(id) {
+        retryCount = 0;
+        ws.reconnect();
+        for (var i = roomEvents.length - 1; i >= 0; --i) {
+          $log.debug('i %o: %o', i, roomEvents[i]);
+          if ( roomEvents[i].id === id ) {
+            $log.debug('RESULT: %o', roomEvents[i]);
+            roomEvents[i].button = false;
+            roomEvents[i].content = 'Session resumed.'
+            break;
+          }
+        }
+      }
 
       var parseJson = function(message) {
         var res;
@@ -276,7 +316,6 @@ angular.module('playerApp')
             // Handle special case for commands here while we have the pieces
             if ( message.indexOf('/sos') === 0 ) {
               sendMsg = "sos,*," + angular.toJson(output);
-
               $log.debug('sending message: %o', sendMsg);
               ws.send(sendMsg);
               // DONE/SENT!, return whether or not we can still send,
@@ -299,6 +338,11 @@ angular.module('playerApp')
                 content: gameData.commands,
                 id: id++
               });
+              // DONE/SENT!, return whether or not we can still send,
+              // which is updated via onClose
+              return canSend;
+            } else if (message.indexOf('/pause') === 0 ) {
+              this.pause('This session has been paused', true);
               return canSend;
             }
           }
@@ -324,7 +368,9 @@ angular.module('playerApp')
         logout: logout,
         listExits: listExits,
         listCommands: listCommands,
-        send: send
+        send: send,
+        pause: pause,
+        resume: resume
       };
 
       return sharedApi;
