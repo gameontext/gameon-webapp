@@ -22,6 +22,7 @@ angular.module('playerApp')
       var ws;
       var id = 0;
       var retryCount = 0;
+      var userActive = false;
 
       // There is no way to add additional HTTP headers to the outbound
       // WebSocket -- the token needs to remain in the query string.
@@ -63,9 +64,18 @@ angular.module('playerApp')
 
       // On open, check in with the concierge
       ws.onOpen(function() {
-        console.log('CONNECTED: sending %o', clientState);
-        retryCount = 0;
+        console.log('CONNECTED / READY: sending %o', clientState);
         ws.send('ready,' + angular.toJson(clientState, 0));
+
+        // If the user was active in the previous session, clear the
+        // retry count:
+        if ( userActive )
+          retryCount = 0;
+
+        // mark user as inactive -- control reconnects for inactive sessions
+        // this flag is reset in the send() method...
+        userActive = false;
+        console.log('open session state: retryCount=%o userActive=%o', retryCount, userActive);
       });
 
       // On received message, push to the correct collection
@@ -184,8 +194,8 @@ angular.module('playerApp')
         } else if ( event.code != 1000 ) {
           retryCount++;
 
-          if ( retryCount > 5 ) {
-            pause("Paused after 5 attempts. Press the button when ready to try again", false);
+          if ( retryCount > 5 && !userActive ) {
+            pause("Paused after 5 attempts. Press the button when ready to try again", true);
             $rootScope.$apply(); // process addition to array, not a usual render loop
 
           } else {
@@ -348,6 +358,7 @@ angular.module('playerApp')
           }
 
           sendMsg = "room,"+clientState.roomId+","+angular.toJson(output);
+          userActive = true; // user sending something
 
           $log.debug('sending message: %o', sendMsg);
           ws.send(sendMsg);
