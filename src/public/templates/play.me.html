@@ -30,15 +30,15 @@
     <div class="padded row">
       <h4>Shared secret (Room registration)</h4>
     </div>
-    <form name="play.apikeyForm" ng-submit="play.updateApiKey()">
+    <form name="play.sharedsecretForm" ng-submit="play.updateSharedSecret()">
       <div class="padded row">
         <div class="one-half column">
           <label for="id">Game On! Id</label>
           <div id="id">{{play.user.profile._id}}</div>
         </div>
         <div class="one-half column">
-          <label for="apikey">Shared Secret</label>
-          <div id="apikey">{{play.user.profile.apiKey}}</div>
+          <label for="sharedSecret">Shared Secret</label>
+          <div id="sharedSecret">{{play.user.profile.credentials.sharedSecret}}</div>
         </div>
       </div>
       <div class="padded row">

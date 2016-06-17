@@ -40,7 +40,7 @@ angular.module('playerApp')
       // Fetch data about the user
       q = $http({
         method : 'GET',
-        url : API.PROFILE_URL + profile._id,
+        url : API.PROFILE_URL + 'accounts/' + profile._id,
         cache : false,
         headers : gameonHeaders
       }).then(function(response) {
@@ -72,7 +72,7 @@ angular.module('playerApp')
 
       $http({
         method : 'POST',
-        url : API.PROFILE_URL,
+        url : API.PROFILE_URL + 'accounts/',
         cache : false,
         data : profile,
         headers : gameonHeaders
@@ -95,7 +95,7 @@ angular.module('playerApp')
 
       $http({
         method : 'PUT',
-        url : API.PROFILE_URL + profile._id,
+        url : API.PROFILE_URL + 'accounts/' + profile._id,
         cache : false,
         data : profile,
         headers : gameonHeaders
@@ -110,21 +110,19 @@ angular.module('playerApp')
       }).catch(console.log.bind(console));
     };
 
-    var updateApiKey = function() {
-        $log.debug("Updating user apikey for profile : %o", profile);
+    var updateSharedSecret = function() {
+        $log.debug("Updating user sharedSecret for profile : %o", profile);
       // Update user
       var gameonHeaders = {'gameon-jwt': auth.token()};
 
-      delete profile.apiKey;
-
       $http({
         method : 'PUT',
-        url : API.PROFILE_URL + profile._id,
+        url : API.PROFILE_URL + 'accounts/' + profile._id + '/credentials/sharedSecret',
         cache : false,
-        data : profile,
         headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+
         //update succeeded, now refresh the profile from the server to pull the new key.
         load(profile._id, profile.name);
       }, function(response) {
@@ -144,49 +142,20 @@ angular.module('playerApp')
         // no generated names (all used up). Let's grab some more.
         $http({
           method : 'GET',
-          url : API.PROFILE_URL + 'names',
+          url : API.PROFILE_URL + 'name',
           cache : false,
           headers : gameonHeaders
         }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
 
           var tmp = angular.fromJson(response.data);
-          profile.name = tmp.names.pop();
-          generatedNames = tmp.names;
+          profile.name = tmp.pop();
+          generatedNames = tmp;
 
         }, function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
-          //fallback name generation.
-
-			var size = ['Tiny','Small','Large','Gigantic','Enormous'];
-			var composition = ['Chocolate','Fruit','GlutenFree','Sticky'];
-			var extra = ['Iced','Frosted','CreamFilled','JamFilled','MapleSyrupSoaked','SprinkleCovered'];
-			var form = ['FairyCake','CupCake','Muffin','PastrySlice','Doughnut'];
-			var variant = Math.floor((Math.random() * 5) );
-			var name = "FrostedCupcake";
-			switch(variant){
-				case 0:
-					name = size[Math.floor((Math.random() * size.length))]+composition[Math.floor((Math.random() * composition.length))]+form[Math.floor((Math.random() * form.length))];
-					break;
-				case 1:
-					name = composition[Math.floor((Math.random() * composition.length))]+extra[Math.floor((Math.random() * extra.length))]+form[Math.floor((Math.random() * form.length))];
-					break;
-				case 2:
-					name = size[Math.floor((Math.random() * size.length))]+extra[Math.floor((Math.random() * extra.length))]+form[Math.floor((Math.random() * form.length))];
-					break;
-				case 3:
-					name = extra[Math.floor((Math.random() * extra.length))]+form[Math.floor((Math.random() * form.length))];
-					break;
-				case 4:
-					name = size[Math.floor((Math.random() * size.length))]+form[Math.floor((Math.random() * form.length))];
-					break;
-				case 5:
-					name = composition[Math.floor((Math.random() * composition.length))]+form[Math.floor((Math.random() * form.length))];
-					break;
-			}
-
-          profile.name = name;
+          //error block, we failed to get any names, better use a placeholder.
+          profile.name = 'MagicalSparkleUnicorn';
         }).catch(console.log.bind(console));
       } else {
         profile.name = name;
@@ -202,19 +171,19 @@ angular.module('playerApp')
     	var gameonHeaders = {'gameon-jwt': auth.token()};
         $http({
           method : 'GET',
-          url : API.PROFILE_URL + 'colors',
+          url : API.PROFILE_URL + 'color',
           cache : false,
           headers : gameonHeaders
         }).then(function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
 
           var tmp = angular.fromJson(response.data);
-          profile.favoriteColor = tmp.colors.pop();
-          generatedColors = tmp.colors;
+          profile.favoriteColor = tmp.pop();
+          generatedColors = tmp;
 
         }, function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
+          //error block, we failed to get any colors, better use a placeholder.
           profile.favoriteColor = 'Tangerine';
         }).catch(console.log.bind(console));
       } else {
@@ -228,7 +197,7 @@ angular.module('playerApp')
         load: load,
         create: create,
         update: update,
-        updateApiKey: updateApiKey,
+        updateSharedSecret: updateSharedSecret,
         generateName: generateName,
         generateColor: generateColor
     };

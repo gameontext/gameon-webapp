@@ -44,11 +44,15 @@ angular.module('playerApp')
       var gameData = angular.extend({}, playerSession.get('gameData'));
 
       // Clear the bookmark if the DB says we're in a different room than the local session does.
-      if ( user.profile.location !== clientState.roomId ) {
+      if ( user.profile.location.location !== clientState.roomId ) {
         $log.debug('cache cleared');
         gameData = {}; // start over
         clientState.fullName = "Unknown";
-        clientState.roomId = user.profile.location;
+        if(user.profile.location.location === null){
+          delete clientState.roomId;
+        }else{
+          clientState.roomId = user.profile.location.location;
+        }
         delete clientState.bookmark;
         delete clientState.roomName;
       }
