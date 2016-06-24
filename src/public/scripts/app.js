@@ -29,14 +29,14 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
   ])
   .constant("API", {
     "HOST": baseUrl,
-    "PROFILE_URL": "https://"+baseUrl+"/play/players/",
+    "PROFILE_URL": "https://"+baseUrl+"/players/v1/",
     "WS_URL": "wss://"+baseUrl+"/mediator/ws/",
-    "CERT_URL": "https://"+baseUrl+"/play/PublicCertificate",
-    "GOOGLE": "https://"+baseUrl+"/play/GoogleAuth",
-    "TWITTER": "https://"+baseUrl+"/play/TwitterAuth",
-    "FACEBOOK": "https://"+baseUrl+"/play/FacebookAuth",
-    "GITHUB": "https://"+baseUrl+"/play/GitHubAuth",
-    "DUMMY": "https://"+baseUrl+"/play/DummyAuth?dummyUserName=DevUser"
+    "CERT_URL": "https://"+baseUrl+"/auth/PublicCertificate",
+    "GOOGLE": "https://"+baseUrl+"/auth/GoogleAuth",
+    "TWITTER": "https://"+baseUrl+"/auth/TwitterAuth",
+    "FACEBOOK": "https://"+baseUrl+"/auth/FacebookAuth",
+    "GITHUB": "https://"+baseUrl+"/auth/GitHubAuth",
+    "DUMMY": "https://"+baseUrl+"/auth/DummyAuth?dummyUserName=DevUser"
   })
   .config(['markedProvider', function (markedProvider) {
     markedProvider.setOptions({sanitize: true});

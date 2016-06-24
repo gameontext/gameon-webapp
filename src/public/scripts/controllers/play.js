@@ -53,8 +53,8 @@ angular.module('playerApp')
           }
       };
 
-      this.updateApiKey = function( ) {
-        user.updateApiKey();
+      this.updateSharedSecret = function( ) {
+        user.updateSharedSecret();
       };
 
       this.doorName = function(direction) {
