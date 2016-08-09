@@ -37,6 +37,13 @@ if [ "$ETCDCTL_ENDPOINT" != "" ]; then
     nginx -c /etc/nginx/nginx-nolog.conf
   fi
 else
+  echo -n "Checking if bower has run yet.. "
+  if [ ! -d /opt/www/public/bower_components ]; then
+    echo "..bower has not run, running bower" 
+    cd /opt/www ; npm install -g bower@1.5.3 ; bower install --allow-root
+  else
+    echo "..bower has run."
+  fi 
   echo No logging host set. Running nginx to standard out...
   nginx -c /etc/nginx/nginx-nolog.conf
 fi
