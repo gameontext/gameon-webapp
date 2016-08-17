@@ -40,7 +40,7 @@ else
   echo -n "Checking if bower has run yet.. "
   if [ ! -d /opt/www/public/bower_components ]; then
     echo "..bower has not run, running bower" 
-    cd /opt/www ; npm install -g bower@1.5.3 ; bower install --allow-root
+    cd /opt/www && npm install -g bower@1.5.3 && bower install --allow-root
   else
     echo "..bower has run."
   fi 

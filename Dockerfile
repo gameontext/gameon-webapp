@@ -6,14 +6,14 @@ ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_l
 #
 # npm and git needed for bower; see below.
 #
-RUN apt-get update ; apt-get install -y wget npm git ; ln -s /usr/bin/nodejs /usr/bin/node
+RUN apt-get update && apt-get install -y wget npm git && ln -s /usr/bin/nodejs /usr/bin/node
 COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx-nolog.conf /etc/nginx/nginx-nolog.conf
 COPY ./startup.sh /opt/startup.sh
 COPY ./forwarder.conf /opt/forwarder.conf
-RUN wget https://github.com/coreos/etcd/releases/download/v2.2.2/etcd-v2.2.2-linux-amd64.tar.gz -q ; \
-    tar xzf etcd-v2.2.2-linux-amd64.tar.gz etcd-v2.2.2-linux-amd64/etcdctl --strip-components=1 ; \
-    rm etcd-v2.2.2-linux-amd64.tar.gz ; \
+RUN wget https://github.com/coreos/etcd/releases/download/v2.2.2/etcd-v2.2.2-linux-amd64.tar.gz -q && \
+    tar xzf etcd-v2.2.2-linux-amd64.tar.gz etcd-v2.2.2-linux-amd64/etcdctl --strip-components=1 && \
+    rm etcd-v2.2.2-linux-amd64.tar.gz && \
     mv etcdctl /usr/local/bin/etcdctl
 
 EXPOSE 8080
