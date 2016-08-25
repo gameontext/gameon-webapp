@@ -32,7 +32,8 @@ angular.module('playerApp')
      console.log("Loading MAP");
 
      var mapurl = '/map/v1/sites';  //where to get the data from
-     var rooms = [{info:{name:'test'}}]; //list of rooms registered to this ID
+     var sites = []; //list of rooms registered to this ID
+     var activeSite = undefined;
 
      getRoomsForUser();   //initial population of rooms
 
@@ -44,21 +45,18 @@ angular.module('playerApp')
        }).success(function(data) {
          //need to filter out rooms that are not associated with this user
          console.log("MAP : filtering registered rooms");
-         var roomSet = {};
+         var siteSet = {};
          angular.forEach(data, function(site) {
-           console.log("MAP : checking " + site.owner);
+           sites = [];
+           console.log("MAP : checking " + JSON.stringify(site.owner));
            if(site.owner == user.profile._id) {
              console.log("MAP : found room - " + site._id);
-             roomSet[site._id] = site;
+             sites.push(site);
+             if(!activeSite) {
+               activeSite = site; //set the active site to the first one if not already set
+             }
            }
          });
-         //now convert set to an array so that angular can monitor that it's changed
-         rooms = [];
-         angular.forEach(Object.keys(roomSet), function(key) {
-           console.log("MAP : converting to array.");
-           rooms.push(roomSet[key]);
-         });
-         console.log("MAP : " + JSON.stringify(rooms));
        });
      }
 
@@ -197,6 +195,7 @@ angular.module('playerApp')
        var room = adaptToRoom(data);
        console.log("MAP : registering room - " + JSON.stringify(room));
        registerOrUpdate(room);
+       getRoomsForUser();
      }
 
      function update() {
@@ -204,14 +203,14 @@ angular.module('playerApp')
      }
 
      function remove() {
-       var roomid = document.getElementById("roomInfo_id").value;
+       var siteid = document.getElementById("roomInfo_id").value;
        var gid = user.profile._id;
        var secret = user.profile.credentials.sharedSecret;
-       console.log("MAP : deleting room " + roomid);
+       console.log("MAP : deleting room " + siteid);
        var date = now();
         var sig = hmac(gid, secret, date, '');
         $http({
-          url: mapurl + '/' + roomid,
+          url: mapurl + '/' + siteid,
           method: 'DELETE',
           headers: {  'gameon-id': gid,
                       'gameon-date': date,
@@ -221,12 +220,12 @@ angular.module('playerApp')
           }}).then(function (response) {
                         alert('Room successfully deleted : response from server : ' + response.status);
                         //remove from the array of rooms
-                        for(var i = 0; i < rooms.length; i++) {
-                          if(rooms[i] == roomid) {
-                            rooms.splice(i, 1);
+                        for(var i = 0; i < sites.length; i++) {
+                          if(sites[i] == siteid) {
+                            sites.splice(i, 1);
                           }
                         }
-                        consolelog("MAP : rooms afer delete - " + JSON.stringify(rooms));
+                        consolelog("MAP : rooms afer delete - " + JSON.stringify(sites));
                     },
                   function (response) {
                         alert('Unable to delete room : response from server : ' + response.data + ':' + response.status);
@@ -236,11 +235,12 @@ angular.module('playerApp')
 
      return {
          mapurl: mapurl,
-         rooms: rooms,
+         sites: sites,
          add: add,
          update: update,
          remove: remove,
-         test: remove
+         test: remove,
+         activeSite : activeSite
      };
 
    }

@@ -60,37 +60,23 @@
     </div>
 
     <div class="row">
-      <h4>Work with your room(s)</h4>
+      <h4>Work with your room(s) yes</h4>
       <!--
       <button type="button" class="btn" ng-click="play.map.test('roomInfo_', 'unknown')">Test</button> <br/>
     -->
     <button type="button" class="btn" ng-click="play.map.test()">Test</button> <br/>
-      <span class="nullable">
-        <select id="roomInfo_Rooms" ng-model="roomID" ng-options="room.info.name for room in play.map.rooms track by room._id">
-          <option value="">-- create new room --</option>
-        </select>
-      </span>
+      <select id="roomInfo_Rooms" ng-model="play.map.activeSite._id">
+        <option value="-- create new room --">-- create new room --</option>
+        <option ng-repeat="site in play.map.sites" value="{{site._id}}">{{site.name}}</option>
+      </select>
     </div>
-
-<div class="row" id="roomModal">
-      <ul class="nav nav-tabs">
-        <li><a data-toggle="tab" href="#roomInfoTab-Overview">Overview</a></li>
-        <li><a data-toggle="tab" href="#roomInfoTab-Details">Room</a></li>
-        <li><a data-toggle="tab" href="#roomInfoTab-Doors">Exits</a></li>
-        <li class="active"><a data-toggle="tab" href="#roomInfoTab-Con">Connection</a></li>
-      </ul>
-
-    <div class="tab-content">
-      <!-- Overview tab start -->
-      <div id="roomInfoTab-Overview" class="tab-pane fade in active">
-            <h4 >Room Information</h4>
-              Your room id is <input type="text" id="roomInfo_id" class="form-control"
-                  placeholder="The id for your room assigned by the map service" readonly/>
-      </div>
-      <!-- Overview tab end -->
-
-      <!-- Details tab start -->
-      <div id="roomInfoTab-Details" class="tab-pane fade">
+    <div>
+      <tab-container>
+        <tab-content title="Overview">
+          Your room id is <input type="text" id="roomInfo_id" class="form-control"
+              placeholder="The id for your room assigned by the map service" readonly/>
+        </tab-content>
+        <tab-content title="Room">
           <table class='table table-striped table-bordered table-condensed'>
            <tr>
              <th>Name</th>
@@ -108,77 +94,64 @@
               placeholder="Detailed description of what your room does"></textarea></td>
             </tr>
          </table>
-      </div>
-      <!-- Details tab end -->
-
-    <!-- Doors tab start -->
-    <div id="roomInfoTab-Doors" class="tab-pane fade">
-        <h4>Doors</h4>
-        <p>Door descriptions are used by Game On! when displaying exits to a player.</p>
-        <table class='table table-striped table-bordered table-condensed'>
-          <tr>
-            <th>Up</th>
-            <td><input type="text" id="roomInfo_u" class="form-control"
-            placeholder=""/></td>
+        </tab-content>
+        <tab-content title="Exits">
+          <p>Door descriptions are used by Game On! when displaying exits to a player.</p>
+          <table class='table table-striped table-bordered table-condensed'>
+            <tr>
+              <th>Up</th>
+              <td><input type="text" id="roomInfo_u" class="form-control"
+              placeholder=""/></td>
+            </tr>
+            <tr>
+              <th>Down</th>
+              <td><input type="text" id="roomInfo_d" class="form-control"
+              placeholder=""/></td>
+            </tr>
+            <tr>
+              <th>North</th>
+              <td><input type="text" id="roomInfo_n" class="form-control"
+              placeholder=""/></td>
+            </tr>
+            <tr>
+              <th>East</th>
+              <td><input type="text" id="roomInfo_e" class="form-control"
+              placeholder=""/></td>
+            </tr>
+            <tr>
+              <th>South</th>
+              <td><input type="text" id="roomInfo_s" class="form-control"
+              placeholder=""/></td>
+            </tr>
+            <tr>
+              <th>West</th>
+              <td><input type="text" id="roomInfo_w" class="form-control"
+              placeholder=""/></td>
+            </tr>
+          </table>
+        </tab-content>
+        <tab-content title="Connection">
+          <table class='table table-striped table-bordered table-condensed'>
+            <tr>
+              <th>Type</th>
+              <td>
+                <div class="radio">
+              <label><input type="radio" name="roomInfo_type" checked>Websocket</label>
+            </td>
           </tr>
           <tr>
-            <th>Down</th>
-            <td><input type="text" id="roomInfo_d" class="form-control"
-            placeholder=""/></td>
-          </tr>
-          <tr>
-            <th>North</th>
-            <td><input type="text" id="roomInfo_n" class="form-control"
-            placeholder=""/></td>
-          </tr>
-          <tr>
-            <th>East</th>
-            <td><input type="text" id="roomInfo_e" class="form-control"
-            placeholder=""/></td>
-          </tr>
-          <tr>
-            <th>South</th>
-            <td><input type="text" id="roomInfo_s" class="form-control"
-            placeholder=""/></td>
-          </tr>
-          <tr>
-            <th>West</th>
-            <td><input type="text" id="roomInfo_w" class="form-control"
-            placeholder=""/></td>
-          </tr>
-        </table>
+            <th>Target</th>
+                  <td><input type="text" id="roomInfo_target" class="form-control"
+                  placeholder="The websocket end point"/></td>
+            </tr>
+          </table>
+        </tab-content>
+      </tabContainer>
     </div>
-    <!-- Doors tab end -->
-
-    <!-- Connections tab start -->
-    <div id="roomInfoTab-Con" class="tab-pane fade">
-      <table class='table table-striped table-bordered table-condensed'>
-        <tr>
-          <th>Type</th>
-          <td>
-            <div class="radio">
-          <label><input type="radio" name="roomInfo_type" checked>Websocket</label>
-        </td>
-      </tr>
-      <tr>
-        <th>Target</th>
-              <td><input type="text" id="roomInfo_target" class="form-control"
-              placeholder="The websocket end point"/></td>
-        </tr>
-      </table>
-    </div>
-    <!-- Connections tab end -->
-
-  </div> <!-- end tab content -->
-</div>
-
     <div class="container">
-      <button type="button" id="roomInfoUpdate-btn" class="btn" ng-click="play.map.update()">Update</button>
-      <button type="button" id="roomInfoCreate-btn" class="btn"  ng-click="play.map.add()">Create</button>
-      <button type="button" id="roomInfoDelete-btn" class="btn" ng-click="play.map.remove()">Delete</button>
+      <button type="button" class="btn" ng-click="play.map.update()" ng-show="play.map.activeSite">Update</button>
+      <button type="button" class="btn"  ng-click="play.map.add()" ng-show="!play.map.activeSite">Create</button>
+      <button type="button" class="btn" ng-click="play.map.remove()" ng-show="play.map.activeSite">Delete</button>
     </div>
-
-</div>
-
   </div>
 </div>
