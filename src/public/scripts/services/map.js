@@ -35,7 +35,7 @@ angular.module('playerApp')
      var sites = []; //list of rooms registered to this ID
      var activeSite = undefined;
 
-     getRoomsForUser();   //initial population of rooms
+     //getRoomsForUser();   //initial population of rooms
 
      function getRoomsForUser() {
        console.log("MAP : Getting list of rooms for user : " + user.profile._id);
@@ -246,3 +246,49 @@ angular.module('playerApp')
    }
  ]
 );
+
+angular.module('playerApp')
+.controller('sitesCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+
+  console.log("MAP : controller 'sitesCtrl'");
+
+  var mapurl = '/map/v1/sites';  //where to get the data from
+  $scope.sites = []; //list of rooms registered to this ID
+  $scope.activeSite = {};
+  $scope.activeSiteId = "";
+
+  $scope.getSitesForUser = function() {
+    console.log("MAP : Getting list of rooms for user : " + user.profile._id);
+    $http({
+      method: 'GET',
+      url: mapurl
+    }).success(function(data) {
+      //need to filter out rooms that are not associated with this user
+      console.log("MAP : filtering registered rooms");
+      $scope.sites = [];
+      angular.forEach(data, function(site) {
+        console.log("MAP : checking " + JSON.stringify(site.owner));
+        if(site.owner == user.profile._id) {
+          console.log("MAP : found room - " + site._id);
+          $scope.sites.push(site);
+          if($scope.activeSiteId == "") {
+            $scope.activeSiteId = site._id; //set the active site to the first one if not already set
+            $scope.activeSite = site;
+          }
+        }
+      });
+      console.log("MAP : site list = " + JSON.stringify($scope.sites));
+      console.log("MAP : active site = " + JSON.stringify($scope.activeSite));
+      console.log("MAP : active site ID = " + $scope.activeSiteId);
+    });
+  }
+
+  $scope.reset = function() {
+    console.log("MAP : resetting active room selection");
+    $scope.activeSite = {};
+    $scope.activeSiteId = "";
+  }
+
+  $scope.getSitesForUser();
+
+}]);
