@@ -170,7 +170,7 @@ angular.module('playerApp')
        var endpoint = roomid ? mapurl + '/' + roomid : mapurl;
 
        $http({
-           url: mapurl,
+           url: endpoint,
            method: verb,
            headers: {  'gameon-id': gid,
                        'gameon-date': date,
@@ -198,12 +198,15 @@ angular.module('playerApp')
        getRoomsForUser();
      }
 
-     function update() {
-       console.log("MAP : updating existing room");
+     function update(id) {
+       console.log("MAP : updating existing room : " + id);
+       var data = inputToJSON("roomInfo_", "unknown");
+       var room = adaptToRoom(data);
+       registerOrUpdate(room, id);
      }
 
-     function remove() {
-       var siteid = document.getElementById("roomInfo_id").value;
+     function remove(siteid) {
+       //var siteid = document.getElementById("roomInfo_id").value;
        var gid = user.profile._id;
        var secret = user.profile.credentials.sharedSecret;
        console.log("MAP : deleting room " + siteid);
@@ -284,7 +287,14 @@ angular.module('playerApp')
   }
 
   $scope.reset = function() {
-    console.log("MAP : resetting active room selection");
+    console.log("MAP : changing active site selection to " + $scope.activeSiteId);
+    for(var i = 0; i < $scope.sites.length; i++) {
+      if($scope.sites[i]._id == $scope.activeSiteId) {
+        $scope.activeSite = $scope.sites[i];
+        return; //quit out as found site to set
+      }
+    }
+    console.log("MAP : resetting active selection to blank");
     $scope.activeSite = {};
     $scope.activeSiteId = "";
   }
