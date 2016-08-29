@@ -64,7 +64,7 @@
       <form name="play.roomConfig">
         <label>Registered rooms :
           <span  class="nullable">
-            <select class="form-control" ng-model="activeSiteId" ng-change="reset()">
+            <select class="form-control" ng-model="activeSiteId" ng-change="reset()" ng-style="optionStyle">
               <option value=""> -- create new room -- </option>
               <option ng-selected="{{site._id  == activeSiteId}}"
                       ng-repeat="site in sites"
@@ -76,9 +76,9 @@
         </label>
       </form>
       <div class="container">
-        <button type="button" class="btn" ng-model="activeSite" ng-click="play.map.update(activeSite._id)" ng-show="activeSite">Update</button>
-        <button type="button" class="btn" ng-model="activeSite"   ng-click="play.map.add()" ng-show="!activeSite">Create</button>
-        <button type="button" class="btn" ng-model="activeSite"  ng-click="play.map.remove(activeSite._id)" ng-show="activeSite">Delete</button>
+        <button type="button" class="btn" ng-model="activeSite" ng-click="play.map.update(activeSite._id)" ng-show="activeSite._id">Update</button>
+        <button type="button" class="btn" ng-model="activeSite"   ng-click="play.map.add()" ng-show="!activeSite._id">Create</button>
+        <button type="button" class="btn" ng-model="activeSite"  ng-click="play.map.remove(activeSite._id)" ng-show="activeSite._id">Delete</button>
       </div>
       <tab-container>
         <tab-content title="Overview">

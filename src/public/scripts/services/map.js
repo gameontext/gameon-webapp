@@ -299,6 +299,10 @@ angular.module('playerApp')
     $scope.activeSiteId = "";
   }
 
+  $scope.optionStyle = {
+    color: '#000000'
+  };
+
   $scope.getSitesForUser();
 
 }]);
