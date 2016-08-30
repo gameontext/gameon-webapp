@@ -82,24 +82,24 @@
       </div>
       <tab-container>
         <tab-content title="Overview">
-          Your room id is <input type="text" id="roomInfo_id" class="form-control"
+          Your room id is <input class="reg-input" type="text" id="roomInfo_id" class="form-control"
               placeholder="The id for your room assigned by the map service" readonly ng-model="activeSite._id"/>
         </tab-content>
         <tab-content title="Room">
-          <table class='table table-striped table-bordered table-condensed'>
+          <table class='reg-table table table-striped table-bordered table-condensed'>
            <tr>
              <th>Name</th>
-              <td><input type="text" id="roomInfo_name" class="form-control"
+              <td><input class="reg-input" type="text" id="roomInfo_name" class="form-control"
               placeholder="The name of your room, make it short and unique" ng-model="activeSite.info.name"/></td>
             </tr>
             <tr>
              <th>Full Name</th>
-             <td><input type="text" id="roomInfo_fullName" class="form-control"
+             <td><input class="reg-input" type="text" id="roomInfo_fullName" class="form-control"
              placeholder="Full name for your room"/ ng-model="activeSite.info.fullName"></td>
            </tr>
            <tr>
              <th>Description</th>
-              <td><textarea id="roomInfo_description" class="form-control" rows="3"
+              <td><textarea class="reg-input" id="roomInfo_description" class="form-control" rows="3"
               placeholder="Detailed description of what your room does" ng-model="activeSite.info.description"></textarea></td>
             </tr>
          </table>
@@ -109,32 +109,32 @@
           <table class='table table-striped table-bordered table-condensed'>
             <tr>
               <th>Up</th>
-              <td><input type="text" id="roomInfo_u" class="form-control"
+              <td><input class="reg-input" type="text" id="roomInfo_u" class="form-control"
               placeholder="" ng-model="activeSite.info.doors.u"/></td>
             </tr>
             <tr>
               <th>Down</th>
-              <td><input type="text" id="roomInfo_d" class="form-control"
+              <td><input class="reg-input" type="text" id="roomInfo_d" class="form-control"
               placeholder="" ng-model="activeSite.info.doors.d"/></td>
             </tr>
             <tr>
               <th>North</th>
-              <td><input type="text" id="roomInfo_n" class="form-control"
+              <td><input class="reg-input" type="text" id="roomInfo_n" class="form-control"
               placeholder="" ng-model="activeSite.info.doors.n"/></td>
             </tr>
             <tr>
               <th>East</th>
-              <td><input type="text" id="roomInfo_e" class="form-control"
+              <td><input class="reg-input" type="text" id="roomInfo_e" class="form-control"
               placeholder="" ng-model="activeSite.info.doors.e"/></td>
             </tr>
             <tr>
               <th>South</th>
-              <td><input type="text" id="roomInfo_s" class="form-control"
+              <td><input class="reg-input" type="text" id="roomInfo_s" class="form-control"
               placeholder="" ng-model="activeSite.info.doors.s"/></td>
             </tr>
             <tr>
               <th>West</th>
-              <td><input type="text" id="roomInfo_w" class="form-control"
+              <td><input class="reg-input" type="text" id="roomInfo_w" class="form-control"
               placeholder="" ng-model="activeSite.info.doors.w"/></td>
             </tr>
           </table>
@@ -150,12 +150,12 @@
           </tr>
           <tr>
             <th>Target</th>
-                  <td><input type="text" id="roomInfo_target" class="form-control"
+                  <td><input class="reg-input" type="text" id="roomInfo_target" class="form-control"
                   placeholder="The websocket end point"/></td>
             </tr>
           </table>
         </tab-content>
-      </tabContainer>
+      </tab-container>
     </div>
   </div>
 </div>
