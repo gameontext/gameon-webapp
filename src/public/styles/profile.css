@@ -16,12 +16,16 @@
 }
 
 .reg-input {
-  width: 70%;
+  width: 80%;
   color: #1E3341;
 }
 
 .reg-table {
   width: 90%;
+}
+
+.reg-table th {
+  width: 20%;
 }
 
 

@@ -186,6 +186,7 @@ angular.module('playerApp')
                        alert('Unable to register/update room : response from server : ' + response.data + ':' + response.status);
                    }
        );
+      this.getRoomsForUser();
 
     }
 
