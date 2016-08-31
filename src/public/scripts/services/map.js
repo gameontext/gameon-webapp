@@ -131,7 +131,7 @@ angular.module('playerApp')
         return result;
     }
 
-     return {
+    return {
          mapurl: mapurl,
          hexToString: hexToString,
          inputToJSON: inputToJSON,
