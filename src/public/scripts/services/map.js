@@ -32,33 +32,6 @@ angular.module('playerApp')
      console.log("Loading MAP");
 
      var mapurl = '/map/v1/sites';  //where to get the data from
-     var sites = []; //list of rooms registered to this ID
-     var activeSite = undefined;
-
-     //getRoomsForUser();   //initial population of rooms
-
-     function getRoomsForUser() {
-       console.log("MAP : Getting list of rooms for user : " + user.profile._id);
-       $http({
-         method: 'GET',
-         url: mapurl
-       }).success(function(data) {
-         //need to filter out rooms that are not associated with this user
-         console.log("MAP : filtering registered rooms");
-         var siteSet = {};
-         angular.forEach(data, function(site) {
-           sites = [];
-           console.log("MAP : checking " + JSON.stringify(site.owner));
-           if(site.owner == user.profile._id) {
-             console.log("MAP : found room - " + site._id);
-             sites.push(site);
-             if(!activeSite) {
-               activeSite = site; //set the active site to the first one if not already set
-             }
-           }
-         });
-       });
-     }
 
      //convert all the values for inputs that startswith into a JSON object, with an optional default value if missing
      function inputToJSON(startswith, defvalue) {
@@ -158,92 +131,14 @@ angular.module('playerApp')
         return result;
     }
 
-    //register or update a specified room
-    function registerOrUpdate(room, roomid) {
-       var date = now();
-       var body = JSON.stringify(room).trim();
-       var bodyHash = hash(body);
-       var gid = user.profile._id;
-       var secret = user.profile.credentials.sharedSecret;
-       var sig = hmac(gid, secret, date, bodyHash);
-       var verb = roomid ? 'PUT' : 'POST';
-       var endpoint = roomid ? mapurl + '/' + roomid : mapurl;
-
-       $http({
-           url: endpoint,
-           method: verb,
-           headers: {  'gameon-id': gid,
-                       'gameon-date': date,
-                       'gameon-sig-body': bodyHash,
-                       'gameon-signature': sig,
-                       'contentType': 'application/json', //what is being sent to the server
-           },
-           data: body
-         }).then(function (response) {
-                       alert('regsiter/update successful : response from server : ' + response.status);
-                   },
-                 function (response) {
-                       alert('Unable to register/update room : response from server : ' + response.data + ':' + response.status);
-                   }
-       );
-
-    }
-
-     function add() {
-       console.log("MAP : registering new room");
-       var data = inputToJSON("roomInfo_", "unknown");
-       var room = adaptToRoom(data);
-       console.log("MAP : registering room - " + JSON.stringify(room));
-       registerOrUpdate(room);
-       getRoomsForUser();
-     }
-
-     function update(id) {
-       console.log("MAP : updating existing room : " + id);
-       var data = inputToJSON("roomInfo_", "unknown");
-       var room = adaptToRoom(data);
-       registerOrUpdate(room, id);
-     }
-
-     function remove(siteid) {
-       //var siteid = document.getElementById("roomInfo_id").value;
-       var gid = user.profile._id;
-       var secret = user.profile.credentials.sharedSecret;
-       console.log("MAP : deleting room " + siteid);
-       var date = now();
-        var sig = hmac(gid, secret, date, '');
-        $http({
-          url: mapurl + '/' + siteid,
-          method: 'DELETE',
-          headers: {  'gameon-id': gid,
-                      'gameon-date': date,
-                      'gameon-sig-body': '',
-                      'gameon-signature': sig,
-                      contentType: 'application/json' //what is being sent to the server
-          }}).then(function (response) {
-                        alert('Room successfully deleted : response from server : ' + response.status);
-                        //remove from the array of rooms
-                        for(var i = 0; i < sites.length; i++) {
-                          if(sites[i] == siteid) {
-                            sites.splice(i, 1);
-                          }
-                        }
-                        consolelog("MAP : rooms afer delete - " + JSON.stringify(sites));
-                    },
-                  function (response) {
-                        alert('Unable to delete room : response from server : ' + response.data + ':' + response.status);
-                    }
-        );
-     }
-
      return {
          mapurl: mapurl,
-         sites: sites,
-         add: add,
-         update: update,
-         remove: remove,
-         test: remove,
-         activeSite : activeSite
+         hexToString: hexToString,
+         inputToJSON: inputToJSON,
+         hash: hash,
+         hmac: hmac,
+         now: now,
+         adaptToRoom: adaptToRoom
      };
 
    }
@@ -251,11 +146,11 @@ angular.module('playerApp')
 );
 
 angular.module('playerApp')
-.controller('sitesCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+.controller('sitesCtrl', ['$scope', '$http', 'user', 'map', function($scope, $http, user, map) {
 
   console.log("MAP : controller 'sitesCtrl'");
 
-  var mapurl = '/map/v1/sites';  //where to get the data from
+  //var mapurl = '/map/v1/sites';  //where to get the data from
   $scope.sites = []; //list of rooms registered to this ID
   $scope.activeSite = {};
   $scope.activeSiteId = "";
@@ -264,7 +159,7 @@ angular.module('playerApp')
     console.log("MAP : Getting list of rooms for user : " + user.profile._id);
     $http({
       method: 'GET',
-      url: mapurl
+      url: map.mapurl
     }).success(function(data) {
       //need to filter out rooms that are not associated with this user
       console.log("MAP : filtering registered rooms");
@@ -302,6 +197,98 @@ angular.module('playerApp')
   $scope.optionStyle = {
     color: '#000000'
   };
+
+  //register or update a specified room
+  function registerOrUpdate(room, roomid) {
+     var date = map.now();
+     var body = JSON.stringify(room).trim();
+     var bodyHash = map.hash(body);
+     var gid = user.profile._id;
+     var secret = user.profile.credentials.sharedSecret;
+     var sig = map.hmac(gid, secret, date, bodyHash);
+     var verb = roomid ? 'PUT' : 'POST';
+     var endpoint = roomid ? map.mapurl + '/' + roomid : map.mapurl;
+
+     $http({
+         url: endpoint,
+         method: verb,
+         headers: {  'gameon-id': gid,
+                     'gameon-date': date,
+                     'gameon-sig-body': bodyHash,
+                     'gameon-signature': sig,
+                     'contentType': 'application/json', //what is being sent to the server
+         },
+         data: body
+       }).then(function (response) {
+                     alert('register/update successful : response from server : ' + response.status);
+                     console.log("MAP : response " + JSON.stringify(response.data));
+                     if(!roomid) { //a new room was created, add to list and set as selected
+                       var site = response.data;
+                       $scope.sites.push(response.data);
+                       $scope.activeSiteId = site._id; //set the active site to the first one if not already set
+                       $scope.activeSite = site;
+                     }
+                 },
+               function (response) {
+                     alert('Unable to register/update room : response from server : ' + response.data + ':' + response.status);
+                 }
+     );
+
+  }
+
+   $scope.createRoom = function() {
+     console.log("MAP : creating new room");
+     var data = map.inputToJSON("roomInfo_", "unknown");
+     var room = map.adaptToRoom(data);
+     console.log("MAP : registering room - " + JSON.stringify(room));
+     registerOrUpdate(room);
+   }
+
+   $scope.updateRoom = function(id) {
+     console.log("MAP : updating existing room : " + id);
+     var data = map.inputToJSON("roomInfo_", "unknown");
+     var room = map.adaptToRoom(data);
+     registerOrUpdate(room, id);
+   }
+
+   $scope.deleteRoom = function remove(siteid) {
+     //var siteid = document.getElementById("roomInfo_id").value;
+     var gid = user.profile._id;
+     var secret = user.profile.credentials.sharedSecret;
+     console.log("MAP : deleting room " + siteid);
+     var date = map.now();
+      var sig = map.hmac(gid, secret, date, '');
+      $http({
+        url: map.mapurl + '/' + siteid,
+        method: 'DELETE',
+        headers: {  'gameon-id': gid,
+                    'gameon-date': date,
+                    'gameon-sig-body': '',
+                    'gameon-signature': sig,
+                    contentType: 'application/json' //what is being sent to the server
+        }}).then(function (response) {
+                      alert('Room successfully deleted : response from server : ' + response.status);
+                      //now remove from various lists
+                      for(var i = 0; i < $scope.sites.length; i++) {
+                        if($scope.sites[i]._id == siteid) {
+                          $scope.sites.splice(i, 1);
+                          break; //quit out as found site to remove
+                        }
+                      }
+                      //now set the new active site if any are left, otherwise reset to blank
+                      if($scope.sites.length) {
+                        $scope.activeSite = $scope.sites[0];
+                        $scope.activeSiteId = $scope.activeSite._id;
+                      } else {
+                        $scope.activeSite = {};
+                        $scope.activeSiteId = "";
+                      }
+                  },
+                function (response) {
+                      alert('Unable to delete room : response from server : ' + response.data + ':' + response.status);
+                  }
+      );
+   }
 
   $scope.getSitesForUser();
 

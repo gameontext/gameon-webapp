@@ -76,9 +76,9 @@
         </label>
       </form>
       <div class="container">
-        <button type="button" class="btn" ng-model="activeSite" ng-click="play.map.update(activeSite._id)" ng-show="activeSite._id">Update</button>
-        <button type="button" class="btn" ng-model="activeSite"   ng-click="play.map.add()" ng-show="!activeSite._id">Create</button>
-        <button type="button" class="btn" ng-model="activeSite"  ng-click="play.map.remove(activeSite._id)" ng-show="activeSite._id">Delete</button>
+        <button type="button" class="btn" ng-model="activeSite" ng-click="updateRoom(activeSite._id)" ng-show="activeSite._id">Update</button>
+        <button type="button" class="btn" ng-model="activeSite"   ng-click="createRoom()" ng-show="!activeSite._id">Create</button>
+        <button type="button" class="btn" ng-model="activeSite"  ng-click="deleteRoom(activeSite._id)" ng-show="activeSite._id">Delete</button>
       </div>
       <tab-container>
         <tab-content title="Overview">
