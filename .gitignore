@@ -7,3 +7,4 @@ src/access.log
 npm-debug.log
 .idea/
 .DS_Store
+.gradle/

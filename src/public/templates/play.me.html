@@ -58,5 +58,104 @@
     <div class="row">
         <div class="eleven columns little-text" style="word-wrap: break-word;"><div id="jwt" ng-bind="play.auth.token()"></div></div>
     </div>
+
+    <div class="row" ng-controller="sitesCtrl as sites" ng-model="activeSiteId">
+      <h4>Work with your room(s)</h4>
+      <form name="play.roomConfig">
+        <label>Registered rooms :
+          <span  class="nullable">
+            <select class="form-control" ng-model="activeSiteId" ng-change="reset()" ng-style="optionStyle">
+              <option value=""> -- create new room -- </option>
+              <option ng-selected="{{site._id  == activeSiteId}}"
+                      ng-repeat="site in sites"
+                      value="{{site._id}}">
+                {{site.info.name}}
+              </option>
+            </select>
+          </span>
+        </label>
+      </form>
+      <div class="container">
+        <button type="button" class="btn" ng-model="activeSite" ng-click="updateRoom(activeSite._id)" ng-show="activeSite._id">Update</button>
+        <button type="button" class="btn" ng-model="activeSite"   ng-click="createRoom()" ng-show="!activeSite._id">Create</button>
+        <button type="button" class="btn" ng-model="activeSite"  ng-click="deleteRoom(activeSite._id)" ng-show="activeSite._id">Delete</button>
+      </div>
+      <tab-container>
+        <tab-content title="Overview">
+          Your room id is <input class="reg-input" type="text" id="roomInfo_id" class="form-control"
+              placeholder="The id for your room assigned by the map service" readonly ng-model="activeSite._id"/>
+        </tab-content>
+        <tab-content title="Room">
+          <table class='reg-table table table-striped table-bordered table-condensed'>
+           <tr>
+             <th>Name</th>
+              <td><input class="reg-input" type="text" id="roomInfo_name" class="form-control"
+              placeholder="The name of your room, make it short and unique" ng-model="activeSite.info.name"/></td>
+            </tr>
+            <tr>
+             <th>Full Name</th>
+             <td><input class="reg-input" type="text" id="roomInfo_fullName" class="form-control"
+             placeholder="Full name for your room"/ ng-model="activeSite.info.fullName"></td>
+           </tr>
+           <tr>
+             <th>Description</th>
+              <td><textarea class="reg-input" id="roomInfo_description" class="form-control" rows="3"
+              placeholder="Detailed description of what your room does" ng-model="activeSite.info.description"></textarea></td>
+            </tr>
+         </table>
+        </tab-content>
+        <tab-content title="Exits">
+          <p>Door descriptions are used by Game On! when displaying exits to a player.</p>
+          <table class='reg-table table table-striped table-bordered table-condensed'>
+            <tr>
+              <th>Up</th>
+              <td><input class="reg-input" type="text" id="roomInfo_u" class="form-control"
+              placeholder="" ng-model="activeSite.info.doors.u"/></td>
+            </tr>
+            <tr>
+              <th>Down</th>
+              <td><input class="reg-input" type="text" id="roomInfo_d" class="form-control"
+              placeholder="" ng-model="activeSite.info.doors.d"/></td>
+            </tr>
+            <tr>
+              <th>North</th>
+              <td><input class="reg-input" type="text" id="roomInfo_n" class="form-control"
+              placeholder="" ng-model="activeSite.info.doors.n"/></td>
+            </tr>
+            <tr>
+              <th>East</th>
+              <td><input class="reg-input" type="text" id="roomInfo_e" class="form-control"
+              placeholder="" ng-model="activeSite.info.doors.e"/></td>
+            </tr>
+            <tr>
+              <th>South</th>
+              <td><input class="reg-input" type="text" id="roomInfo_s" class="form-control"
+              placeholder="" ng-model="activeSite.info.doors.s"/></td>
+            </tr>
+            <tr>
+              <th>West</th>
+              <td><input class="reg-input" type="text" id="roomInfo_w" class="form-control"
+              placeholder="" ng-model="activeSite.info.doors.w"/></td>
+            </tr>
+          </table>
+        </tab-content>
+        <tab-content title="Connection">
+          <table class='reg-table table table-striped table-bordered table-condensed'>
+            <tr>
+              <th>Type</th>
+              <td>
+                <div class="radio">
+              <label><input type="radio" name="roomInfo_type" checked>Websocket</label>
+            </td>
+          </tr>
+          <tr>
+            <th>Target</th>
+                  <td><input class="reg-input" type="text" id="roomInfo_target" class="form-control"
+                  placeholder="The websocket end point"/></td>
+            </tr>
+          </table>
+        </tab-content>
+      </tab-container>
+    </div>
   </div>
 </div>
