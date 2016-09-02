@@ -95,6 +95,12 @@
             <a class="button" ng-href="{{ctrl.api.GITHUB}}">GitHub</a>
             <a ng-if="(!ctrl.api.HOST.includes('game-on.org'))" class="button" ng-href="{{ctrl.api.DUMMY}}">Anonymous user</a>
         </div>
+        <div ng-controller="tandcsCtrl">
+          <p>By using Game On! your are agreeing to the site <a class="button tandcs" ng-click="toggle()">terms and conditions.</a></p>
+          <div ng-show="show">
+            <tAndCs/>
+          </div>
+        </div>
       </div>
 
       <!--   spinners   -->
