@@ -96,6 +96,11 @@ body .darkblue {
   border: none;
 }
 
+.outer-container .right .tandcs .button {
+  text-decoration: underline;
+  padding-left: 0px;
+}
+
 .outer-container .right .login-profile {
   font-weight: normal;
   font-size: 1rem;
