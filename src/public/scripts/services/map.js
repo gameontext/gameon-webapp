@@ -157,10 +157,22 @@ angular.module('playerApp')
 
   $scope.getSitesForUser = function() {
     console.log("MAP : Getting list of rooms for user : " + user.profile._id);
+    var date = map.now();
+    var bodyHash = map.hash("");
+    var gid = user.profile._id;
+    var secret = user.profile.credentials.sharedSecret;
+    var sig = map.hmac(gid, secret, date, bodyHash);
+
     $http({
-      method: 'GET',
-      url: map.mapurl
-    }).success(function(data) {
+        url: map.mapurl,
+        method: 'GET',
+        headers: {  'gameon-id': gid,
+                    'gameon-date': date,
+                    'gameon-sig-body': bodyHash,
+                    'gameon-signature': sig,
+                    'contentType': 'application/json' //what is being sent to the server
+                  }
+      }).success(function(data) {
       //need to filter out rooms that are not associated with this user
       console.log("MAP : filtering registered rooms");
       $scope.sites = [];
