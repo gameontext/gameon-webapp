@@ -5,7 +5,7 @@
 #
 
 echo Informing slack...
-curl -X 'POST' --silent --data-binary '{"text":"A new build for the web application has started."}' $WEBHOOK > /dev/null
+curl -X 'POST' --silent --data-binary '{"text":"A new build for the web application has started."}' $SLACK_WEBHOOK_PATH > /dev/null
 
 echo Setting up Docker...
 mkdir dockercfg ; cd dockercfg
