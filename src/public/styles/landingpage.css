@@ -1,13 +1,25 @@
+.hide {
+  display: none !important;
+}
 
+.block {
+  display: block !important;
+}
 
 .outer-container {
   display: flex;
-  /*height: 100%;*/
   align-items: stretch;
-  background-image: url(../images/background3.png);
+  background-image: url(../images/background-simple.png);
   background-size: cover;
   flex-shrink: 0;
   overflow-x: hidden;
+}
+
+.inner-container {
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  width: 100%;
 }
 
 body .darkblue {
@@ -18,15 +30,18 @@ body .darkblue {
 
 .outer-container .left {
   background-color: rgb(255, 255, 255);
-  flex: 2 0 40%;
+  flex: 1 0 50%;
   text-align: left;
   color: #35566B;
-  height: 100%;
 }
 
 .outer-container .left .go-logo {
   height: 5rem;
   margin: 2rem;
+}
+
+.outer-container .left .terms-link {
+  font-size: 1rem;
 }
 
 .outer-container .left .middle {
@@ -51,7 +66,7 @@ body .darkblue {
 }
 
 .header {
-  margin-top: 6rem;
+  margin-top: 3rem;
 }
 
 .header h1 {
@@ -78,9 +93,8 @@ body .darkblue {
 }
 
 .outer-container .right {
-  flex: 3 0 60%;
+  flex: 1 0 50%;
   display: flex;
-  margin-left: 10rem;
   justify-content: space-between;
 }
 
@@ -91,26 +105,38 @@ body .darkblue {
 }
 
 .outer-container .right .button,
-.outer-container .right .button i {
+.outer-container .right .button i,
+.outer-container .central .button,
+.outer-container .central .button i {
   color: white;
   border: none;
 }
 
-.outer-container .right .tandcs {
+.outer-container .central .login .tandcs {
   width: 80%;
 }
 
-.outer-container .right .tandcs .button {
+.outer-container .central .login .tandcs .button {
   text-decoration: underline;
   padding-left: 0px;
 }
 
-.outer-container .right .tandcs h1{
-  font-size: 3rem;
+.outer-container .central .login .tandcs h1{
+  font-size: 1rem;
 }
 
-.outer-container .right .tandcs h2{
-  font-size: 2.5rem;
+.outer-container .central .login .tandcs h2{
+  font-size: .8rem;
+}
+
+.outer-container .terms h1 {
+  font-size: 2rem;
+  letter-spacing: 0;
+}
+
+.outer-container .terms h2 {
+  font-size: 1.5rem;
+  letter-spacing: 0;
 }
 
 .outer-container .right .login-profile {
@@ -134,7 +160,7 @@ body .darkblue {
 }
 
 .outer-container .right .right-left {
-  margin: auto 0;
+  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -154,7 +180,6 @@ body .darkblue {
   flex-shrink: 0;
   margin-top: 2.8rem;
   padding-right: 0;
-
 }
 
 .outer-container .right .right-left .row .subtext {
@@ -171,7 +196,6 @@ body .darkblue {
   font-weight: 400;
   line-height: 1.3rem;
   margin-left: 4rem;
-
 }
 
 .outer-container .right .right-left .ibm-font {
@@ -185,7 +209,6 @@ body .darkblue {
   font-size: 1.5rem;
   margin-bottom: 0;
   white-space: normal;
-
 }
 
 .outer-container .right .right-left .button .icon{
@@ -197,9 +220,7 @@ body .darkblue {
 
 .outer-container .right .right-left .button .icon use {
   fill: #1E3341;
-
 }
-
 
 .outer-container .right-right {
   display: flex;
@@ -209,15 +230,38 @@ body .darkblue {
   height: 100%;
 }
 
-body .outer-container .login {
+body .outer-container .login,
+body .outer-container .terms {
   background-color: #1E3341;
   color: white;
   display: block;
+  width: 80%;
+  position: absolute;
+  z-index: 10;
+  margin: auto 10%;
+  left: 0;
+  top: 10%;
+  padding: 2rem;
+  height: 75%;
+}
+
+body .outer-container .terms {
+  overflow-y: auto;
+  font-size: 1rem;
+  letter-spacing: 0;
+  padding: 2rem;
+}
+
+body .outer-container .auth,
+body .outer-container .usersetup {
+  margin-top: 30%;
 }
 
 .login .buttons {
   display: flex;
   flex-wrap: wrap;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .login .buttons .button {
@@ -228,12 +272,19 @@ body .outer-container .login {
 
 }
 
-.login .close-login {
+.close-login {
   font-weight: 100;
   font-size: 9rem;
   position: absolute;
   right: 1rem;
   padding: 0;
+  color: white;
+  border: none;
+}
+
+.close-login:hover {
+  font-weight: 200;
+  color: white;
 }
 
 @media (min-width: 800px) {
@@ -262,20 +313,21 @@ body .outer-container .login {
   .outer-container {
     height: auto;
   }
-
-  html, body, .ng-scope{
-    /*height: inherit;*/
-  }
 }
 
 
 @media (max-width : 800px) {
 
+  * {
+    max-width: 100%;
+  }
+
   .mobilehide {
     display: none;
   }
 
-  .outer-container {
+  .outer-container,
+  .inner-container {
     flex-direction: column;
     background-image: none;
     background-color: #35566B;
@@ -284,6 +336,8 @@ body .outer-container .login {
   .outer-container .left {
     text-align: center;
     flex: 2 0 auto;
+    order: 1;
+    height: 100vh;
   }
 
   .outer-container .left .intro{
@@ -298,6 +352,12 @@ body .outer-container .login {
     border: none;
   }
 
+  .outer-container .left .terms-link {
+    padding-left: 5rem;
+    padding-right: 5rem;
+    font-size: 1rem;
+  }
+
 
   .outer-container .right {
     margin: 2rem 0;
@@ -305,6 +365,7 @@ body .outer-container .login {
     background-color: #35566B;
     padding: 0 2rem;
     overflow-x: hidden;
+    order: 2;
   }
 
   .outer-container .right .right-left .row .subtext {
@@ -323,6 +384,21 @@ body .outer-container .login {
     font-size: 6.5rem;
   }
 
+  body .outer-container .terms,
+  body .outer-container .login {
+    width: 100%;
+    margin: auto;
+    height: 100vh;
+    max-width: 100%;
+    top: 0;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+
+  body  .outer-container .terms-content {
+    margin-top: 2rem;
+  }
+
   .login .buttons {
     flex-direction: column;
     flex-wrap: nowrap;
@@ -332,18 +408,13 @@ body .outer-container .login {
 
   .login .buttons .button {
     height: auto;
+    width: 80%;
+  }
+
+  .login .close-login {
+    right: 1.5rem;
   }
 }
-
-/*@media (max-width : 800px) {*/
-  /*.outer-container .right {*/
-    /*flex: 1 1 50%;*/
-  /*}*/
-
-  /*.outer-container .left {*/
-    /*flex: 1 1 50%;*/
-  /*}*/
-/*}*/
 
 @media (max-width: 1200px) {
   .outer-container .right .right-right {
