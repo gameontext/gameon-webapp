@@ -1,5 +1,60 @@
 <div class="outer-container" data-ng-switch="$state.current.name" ng-class="{darkblue: $state.current.name=='default.login'}">
 
+  <div class="right" data-ng-switch-when="default">
+    <div class="right-left">
+      <div class="row">
+        <div class="twelve columns">
+          <a class="button" href="https://gameontext.gitbooks.io/gameon-gitbook/content/">
+            <svg class="icon">
+              <use xlink:href="#shape-catalog_32" />
+            </svg>
+            <span class="text">Learn more</span> <br>
+            <div class="subtext">Microservices architecture explained in the context of an old-school text-based adventure game.</div>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="">
+          <a class="button" href="/swagger/">
+            <svg class="icon">
+              <use xlink:href="#shape-api_32" />
+            </svg>
+            <span class="text">Swagger APIs</span> <br>
+            <span class="subtext">Our callable REST APIs. Cleanly documented with Swagger. Ready to be poked with sticks.</span>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="">
+          <a class="button" href="https://github.com/gameontext/">
+            <svg class="icon">
+              <use xlink:href="#shape-octo-32" />
+            </svg>
+            <span class="text">GitHub
+              Projects</span> <br>
+            <span class="subtext">Game On! is open source. All the code. All the words.</span>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="">
+          <a class="button" href="http://wasdev.net">
+            <svg class="icon">
+              <use xlink:href="#shape-group_32" />
+            </svg>
+            <span class="text">WASDev Team</span> <br>
+            <span class="subtext">Lots of people helped to build this game. We hope you will, too.</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <!--<div class="right-right">-->
+    <!--<img class="gameplay-ss" src="../images/better-gameplay-ss.png">-->
+    <!--</div>-->
+
+  </div>
+
 
   <div class="left" ng-class="{mobilehide: $state.current.name=='default.login'}">
     <img class="go-logo" src="../images/go-logo.png" />
@@ -25,62 +80,6 @@
       <div>the <a href="http://wasdev.net" target="_blank">wasdev</a> team</div>
     </footer>
   </div>
-
-
-  <div class="right" data-ng-switch-when="default">
-      <div class="right-left">
-        <div class="row">
-          <div class="twelve columns">
-            <a class="button" href="https://gameontext.gitbooks.io/gameon-gitbook/content/">
-              <svg class="icon">
-                <use xlink:href="#shape-catalog_32" />
-              </svg>
-               <span class="text">Learn more</span> <br>
-              <div class="subtext">Microservices architecture explained in the context of an old-school text-based adventure game.</div>
-            </a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="">
-            <a class="button" href="/swagger/">
-              <svg class="icon">
-                <use xlink:href="#shape-api_32" />
-              </svg>
-              <span class="text">Swagger APIs</span> <br>
-            <span class="subtext">Our callable REST APIs. Cleanly documented with Swagger. Ready to be poked with sticks.</span>
-            </a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="">
-            <a class="button" href="https://github.com/gameontext/">
-              <svg class="icon">
-                <use xlink:href="#shape-octo-32" />
-              </svg>
-              <span class="text">GitHub
-              Projects</span> <br>
-              <span class="subtext">Game On! is open source. All the code. All the words.</span>
-            </a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="">
-            <a class="button" href="http://wasdev.net">
-              <svg class="icon">
-                <use xlink:href="#shape-group_32" />
-              </svg>
-              <span class="text">WASDev Team</span> <br>
-              <span class="subtext">Lots of people helped to build this game. We hope you will, too.</span>
-            </a>
-          </div>
-        </div>
-
-      </div>
-      <!--<div class="right-right">-->
-        <!--<img class="gameplay-ss" src="../images/better-gameplay-ss.png">-->
-      <!--</div>-->
-
-    </div>
 
     <!--  LOGIN BUTTONS    -->
     <div class="right login" ng-class="{paddedright: $state.current.name=='default.auth' || $state.current.name=='default.usersetup' || $state.current.name=='default.profile'}">

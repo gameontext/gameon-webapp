@@ -4,7 +4,7 @@
   display: flex;
   /*height: 100%;*/
   align-items: stretch;
-  background-image: url(../images/background3.png);
+  background-image: url(../images/background-simple.png);
   background-size: cover;
   flex-shrink: 0;
   overflow-x: hidden;
@@ -18,7 +18,7 @@ body .darkblue {
 
 .outer-container .left {
   background-color: rgb(255, 255, 255);
-  flex: 2 0 40%;
+  flex: 1 0 50%;
   text-align: left;
   color: #35566B;
   height: 100%;
@@ -78,9 +78,8 @@ body .darkblue {
 }
 
 .outer-container .right {
-  flex: 3 0 60%;
+  flex: 1 0 50%;
   display: flex;
-  margin-left: 10rem;
   justify-content: space-between;
 }
 
@@ -134,7 +133,7 @@ body .darkblue {
 }
 
 .outer-container .right .right-left {
-  margin: auto 0;
+  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -284,6 +283,7 @@ body .outer-container .login {
   .outer-container .left {
     text-align: center;
     flex: 2 0 auto;
+    order: 1;
   }
 
   .outer-container .left .intro{
@@ -305,6 +305,7 @@ body .outer-container .login {
     background-color: #35566B;
     padding: 0 2rem;
     overflow-x: hidden;
+    order: 2;
   }
 
   .outer-container .right .right-left .row .subtext {
