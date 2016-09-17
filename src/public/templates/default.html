@@ -1,6 +1,6 @@
 <div class="outer-container" data-ng-switch="$state.current.name" ng-class="{darkblue: $state.current.name=='default.login'}">
-
-  <div class="right" data-ng-switch-when="default">
+<div data-ng-switch-when="default" class="inner-container">
+  <div class="right" >
     <div class="right-left">
       <div class="row">
         <div class="twelve columns">
@@ -56,6 +56,7 @@
   </div>
 
 
+
   <div class="left" ng-class="{mobilehide: $state.current.name=='default.login'}">
     <img class="go-logo" src="../images/go-logo.png" />
     <div class="middle">
@@ -80,10 +81,11 @@
       <div>the <a href="http://wasdev.net" target="_blank">wasdev</a> team</div>
     </footer>
   </div>
+</div>
 
     <!--  LOGIN BUTTONS    -->
-    <div class="right login" ng-class="{paddedright: $state.current.name=='default.auth' || $state.current.name=='default.usersetup' || $state.current.name=='default.profile'}">
-      <div data-ng-switch-when="default.login">
+    <div class="central login" data-ng-switch-when="default.login" ng-class="{paddedright: $state.current.name=='default.auth' || $state.current.name=='default.usersetup' || $state.current.name=='default.profile'}">
+      <div >
         <span class="close-login button" data-ng-click="ctrl.backToTheBeginning()">&times;</span>
         <h4 class="signin">Sign in with</h4>
         <br>

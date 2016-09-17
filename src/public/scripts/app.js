@@ -57,16 +57,22 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default', {
           url: '/',
           templateUrl: 'templates/default.html',
-          controller: 'DefaultCtrl as ctrl'
+          controller: 'DefaultCtrl as ctrl',
+          onEnter: function(){
+            console.info("state -> default");
+          }
         })
         .state('default.login', {
             url: '^/login',
+            onEnter: function(){
+              console.info("state -> default.login");
+            }
         })
         .state('default.auth', {
           url: '^/login/callback/{jwt:.*}',
 		  // State triggered by authentication callback (only).
           onEnter: function($state, $stateParams,auth) {
-           		console.log("default.auth.onEnter");
+           		console.info("state -> default.auth");
 				auth.get_public_key(
 				function(){
 				    console.log("got public cert.. proceeding to jwt validation.");
@@ -88,7 +94,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             // this step has to read the token from the params passed ($stateParams.token)
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
 
-            console.log("default.validatejwt.onEnter");
+            console.info("state -> default.validatejwt");
             if(auth.validate_jwt()){
                 console.log("token callback from auth service was valid");
                 $state.go('default.usersetup');
@@ -102,6 +108,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           url: '^/login/usersetup',
           // Triggered by default.auth state.
           onEnter: function($state, $stateParams,auth,user) {
+            console.info("state -> default.usersetup");
             console.log("building user object");
             var jwt = auth.get_jwt();
             if (jwt !== null){
@@ -126,6 +133,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default.profile', { // initial profile creation
           url: '^/login/profile',
           onEnter: function($state, $stateParams, user, auth) {
+            console.info("state: default.profile");
             //if we're missing our auth token info.. user may have hit refresh here..
             //since we've just lost all our context, send them back to the start..
             //mebbe can make this nicer ;p

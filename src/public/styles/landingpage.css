@@ -1,4 +1,6 @@
-
+.hide {
+  display: none;
+}
 
 .outer-container {
   display: flex;
@@ -8,6 +10,13 @@
   background-size: cover;
   flex-shrink: 0;
   overflow-x: hidden;
+}
+
+.inner-container {
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  width: 100%;
 }
 
 body .darkblue {
@@ -77,6 +86,11 @@ body .darkblue {
   line-height: 1em;
 }
 
+.outer-container .central {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .outer-container .right {
   flex: 1 0 50%;
   display: flex;
@@ -90,25 +104,27 @@ body .darkblue {
 }
 
 .outer-container .right .button,
-.outer-container .right .button i {
+.outer-container .right .button i,
+.outer-container .central .button,
+.outer-container .central .button i {
   color: white;
   border: none;
 }
 
-.outer-container .right .tandcs {
+.outer-container .central .login .tandcs {
   width: 80%;
 }
 
-.outer-container .right .tandcs .button {
+.outer-container .central .login .tandcs .button {
   text-decoration: underline;
   padding-left: 0px;
 }
 
-.outer-container .right .tandcs h1{
+.outer-container .central .login .tandcs h1{
   font-size: 3rem;
 }
 
-.outer-container .right .tandcs h2{
+.outer-container .central .login .tandcs h2{
   font-size: 2.5rem;
 }
 
@@ -212,6 +228,11 @@ body .outer-container .login {
   background-color: #1E3341;
   color: white;
   display: block;
+  height: 80%;
+  width: 80%;
+  position: absolute;
+  z-index: 10;
+  margin: auto;
 }
 
 .login .buttons {
