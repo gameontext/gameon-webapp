@@ -62,6 +62,9 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
             console.info("state -> default");
           }
         })
+        .state('default.terms', {
+          url: '^/terms'
+        })
         .state('default.login', {
             url: '^/login',
             onEnter: function(){
