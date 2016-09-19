@@ -166,6 +166,7 @@ angular.module('playerApp')
     $http({
         url: map.mapurl,
         method: 'GET',
+        params: {owner: user.id},
         headers: {  'gameon-id': gid,
                     'gameon-date': date,
                     'gameon-sig-body': bodyHash,
@@ -180,6 +181,7 @@ angular.module('playerApp')
         console.log("MAP : checking " + JSON.stringify(site.owner));
         if(site.owner == user.profile._id) {
           console.log("MAP : found room - " + site._id);
+          
           $scope.sites.push(site);
           if($scope.activeSiteId == "") {
             $scope.activeSiteId = site._id; //set the active site to the first one if not already set
@@ -232,7 +234,6 @@ angular.module('playerApp')
          },
          data: body
        }).then(function (response) {
-                     alert('register/update successful : response from server : ' + response.status);
                      console.log("MAP : response " + JSON.stringify(response.data));
                      if(!roomid) { //a new room was created, add to list and set as selected
                        var site = response.data;
@@ -242,8 +243,8 @@ angular.module('playerApp')
                      }
                  },
                function (response) {
-                     alert('Unable to register/update room : response from server : ' + response.data + ':' + response.status);
-                 }
+                     console.log('Unable to register/update room : response from server : ' + response.data + ':' + response.status);
+                }
      );
 
   }
@@ -279,7 +280,7 @@ angular.module('playerApp')
                     'gameon-signature': sig,
                     contentType: 'application/json' //what is being sent to the server
         }}).then(function (response) {
-                      alert('Room successfully deleted : response from server : ' + response.status);
+                      console.log('Room successfully deleted : response from server : ' + response.status);
                       //now remove from various lists
                       for(var i = 0; i < $scope.sites.length; i++) {
                         if($scope.sites[i]._id == siteid) {
@@ -297,7 +298,7 @@ angular.module('playerApp')
                       }
                   },
                 function (response) {
-                      alert('Unable to delete room : response from server : ' + response.data + ':' + response.status);
+                      console.log('Unable to delete room : response from server : ' + response.data + ':' + response.status);
                   }
       );
    }
