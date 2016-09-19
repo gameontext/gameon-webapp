@@ -1,3 +1,4 @@
+.gameView .viewport .profile textarea,
 .gameView .viewport .profile input {
   color: black;
 }
@@ -14,18 +15,3 @@
   color: white;
   font-size: 1.2rem;
 }
-
-.reg-input {
-  width: 80%;
-  color: #1E3341;
-}
-
-.reg-table {
-  width: 90%;
-}
-
-.reg-table th {
-  width: 20%;
-}
-
-

@@ -46,6 +46,7 @@ header .title a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-decoration: none;
   margin: 1rem;
   align-items: center;
   display: flex;
@@ -73,7 +74,7 @@ header .top-nav-item a {
   padding-left: 1rem;
 }
 
-header .top-nav-item a .username {
+header .top-nav-item a.profile .username {
   border-left: 1px solid black;
   padding-left: 1rem;
 }
@@ -102,13 +103,20 @@ header .top-nav-item a .username {
   }
 
   header .top-nav-item a .caption,
-  header .top-nav-item a .username {
+  header .top-nav-item a .username,
+  header .top-nav-item a .editrooms {
     display: none;
   }
 
   header .top-nav-item a .user-icon:before {
     font-family: "FontAwesome";
     content: "\f007\00a0 ";
+    color: black;
+  }
+
+  header .top-nav-item a .rooms-icon:before {
+    font-family: "FontAwesome";
+    content: "\f1ad\00a0 ";
     color: black;
   }
 
@@ -128,6 +136,10 @@ nav {
   height: 5rem;
   padding-bottom: 0;
   padding-top: 0;
+}
+
+nav.disabled {
+  display: none;
 }
 
 nav .container {
@@ -228,6 +240,10 @@ nav .clear {
   background-color: #323232;
   color: white;
   height: auto;
+}
+
+.gameView .viewport.nonav {
+  bottom: 0rem;
 }
 
 .content {
