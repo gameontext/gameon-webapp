@@ -139,23 +139,23 @@ body .darkblue {
   letter-spacing: 0;
 }
 
-.outer-container .right .login-profile {
+.outer-container .login-profile {
   font-weight: normal;
   font-size: 1rem;
 }
 
-.outer-container .right .login-profile .button {
+.outer-container .login-profile .button {
   border: 1px solid white;
   border-radius: 0;
 }
 
-.outer-container .right .login-profile input {
+.outer-container .login-profile input {
   color: black;
   border-radius: 0;
   font-size: 2rem;
 }
 
-.outer-container .right .login-profile label {
+.outer-container .login-profile label {
   font-size: 1.5rem;
 }
 
