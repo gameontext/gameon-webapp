@@ -6,7 +6,7 @@ ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_l
 #
 # npm and git needed for bower; see below.
 #
-RUN apt-get update && apt-get install -y wget npm git && ln -s /usr/bin/nodejs /usr/bin/node
+RUN apt-get clean && apt-get update && apt-get install --fix-missing -y wget npm git && ln -s /usr/bin/nodejs /usr/bin/node
 COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx-nolog.conf /etc/nginx/nginx-nolog.conf
 COPY ./startup.sh /opt/startup.sh
