@@ -104,6 +104,7 @@ body .darkblue {
   margin-top: 7rem;
 }
 
+.outer-container .right .text,
 .outer-container .right .button,
 .outer-container .right .button i,
 .outer-container .central .button,
@@ -167,13 +168,28 @@ body .darkblue {
   flex-shrink: 0;
 }
 
+
+.outer-container .right .right-left input {
+  color: black;
+}
+
+.outer-container .right .right-left .slack-button {
+  color: white;
+  padding: 0;
+}
+
+
 .outer-container .right .right-left .row {
   padding: 2rem 0;
   width: 30rem;
   flex-shrink: 1;
 }
 
-.outer-container .right .right-left .row a{
+.outer-container .right .right-left .row:nth-child(2) .button {
+  margin-top: 0;
+}
+
+.outer-container .right .right-left .row .button{
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -189,11 +205,8 @@ body .darkblue {
   height: auto;
   margin-bottom: 2rem;
   text-align: left;
-}
-
-.outer-container .right .right-left .row .subtext {
   font-size: 1.3rem;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.3rem;
   margin-left: 4rem;
 }
@@ -204,6 +217,7 @@ body .darkblue {
   padding-right: 1rem;
 }
 
+.outer-container .right .right-left .text,
 .outer-container .right .right-left .button {
   text-transform: none;
   font-size: 1.5rem;
@@ -211,14 +225,14 @@ body .darkblue {
   white-space: normal;
 }
 
-.outer-container .right .right-left .button .icon{
+.outer-container .right .right-left .icon{
   height: 3rem;
   width: 3rem;
   padding-right: 1rem;
   padding-top: 1rem;
 }
 
-.outer-container .right .right-left .button .icon use {
+.outer-container .right .right-left .icon use {
   fill: #1E3341;
 }
 
@@ -360,12 +374,16 @@ body .outer-container .usersetup {
 
 
   .outer-container .right {
-    margin: 2rem 0;
+    margin: 0;
     flex: 2 0 auto;
     background-color: #35566B;
     padding: 0 2rem;
-    overflow-x: hidden;
     order: 2;
+    height: auto;
+  }
+
+  .outer-container .right .right-left {
+    flex-direction: column;
   }
 
   .outer-container .right .right-left .row .subtext {
