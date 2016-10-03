@@ -2,6 +2,7 @@
 src/.tmp
 src/dist
 src/node_modules
+node_modules
 src/public/bower_components
 src/access.log
 npm-debug.log
