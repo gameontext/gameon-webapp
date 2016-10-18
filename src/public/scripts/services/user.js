@@ -78,6 +78,10 @@ angular.module('playerApp')
         headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+		
+        //post succeeded, now refresh the profile from the server to pull the new key.
+        load(profile._id, profile.name);
+				
         $state.go('play.room');
 
       }, function(response) {
@@ -101,6 +105,10 @@ angular.module('playerApp')
         headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+		
+        //put succeeded, now refresh the profile from the server to pull the new key.
+        load(profile._id, profile.name);
+		
         $state.go('play.room');
 
       }, function(response) {
