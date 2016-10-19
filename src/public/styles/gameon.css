@@ -340,6 +340,17 @@ div.exits:before {
   padding-right: 1em;
 }
 
+.description blockquote,
+.event blockquote {
+  border: 1px solid silver;
+  padding: 10px;
+}
+
+.description blockquote p,
+.event blockquote p {
+  margin-bottom: 2px;
+}
+
 .key a {
   color: #EA6F56;
 }
