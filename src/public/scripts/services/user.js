@@ -78,12 +78,11 @@ angular.module('playerApp')
         headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-		
-        //post succeeded, now refresh the profile from the server to pull the new key.
-        load(profile._id, profile.name);
-				
-        $state.go('play.room');
 
+        //post succeeded, now refresh the profile from the server to pull the new key.
+        load(profile._id, profile.name).finally(function(response){
+          $state.go('play.room');
+        });
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
 
@@ -105,16 +104,15 @@ angular.module('playerApp')
         headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-		
+
         //put succeeded, now refresh the profile from the server to pull the new key.
-        load(profile._id, profile.name);
-		
-        $state.go('play.room');
+        load(profile._id, profile.name).finally(function(response){
+          $state.go('play.room');
+        });
 
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-        // go to the sad state.. (Can't find the player information, and can't save it either)
-        $state.go('default.yuk');
+        // TODO: Alert
       }).catch(console.log.bind(console));
     };
 
@@ -135,8 +133,7 @@ angular.module('playerApp')
         load(profile._id, profile.name);
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-        // go to the sad state.. (Can't find the player information, and can't save it either)
-        $state.go('default.yuk');
+        // TODO: Alert
       }).catch(console.log.bind(console));
 
     };
@@ -162,6 +159,7 @@ angular.module('playerApp')
 
         }, function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+
           //error block, we failed to get any names, better use a placeholder.
           profile.name = 'MagicalSparkleUnicorn';
         }).catch(console.log.bind(console));
@@ -191,6 +189,7 @@ angular.module('playerApp')
 
         }, function(response) {
           $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+
           //error block, we failed to get any colors, better use a placeholder.
           profile.favoriteColor = 'Tangerine';
         }).catch(console.log.bind(console));
