@@ -1,14 +1,26 @@
 <header class="topnav">
-  <div class="room-icon-container">
-    <a ui-sref="play.room" title="Back to room"><i class="fa fa-arrow-left fa-fw"></i></a>
+  <div class="logo-container"></div>
+  <div class="title">
+    <span>Edit profile</span>
   </div>
 
   <div class="right-items">
 
-    <div class="myrooms top-nav-item">
+    <div class="top-nav-item">
+      <a ui-sref="play.room" title="Back to room">
+        <i class="fa fa-arrow-left fa-fw"></i>
+      </a>
+    </div>
+
+    <div class="top-nav-item">
+      <a ui-sref="play.me">
+        <i class="fa fa-user fa-fw"></i>
+      </a>
+    </div>
+
+    <div class="top-nav-item">
       <a ui-sref="play.myrooms">
-        <span class="rooms-icon"></span>
-        <span class="editrooms">Edit rooms</span>
+        <i class="fa fa-building fa-fw"></i>
       </a>
     </div>
 

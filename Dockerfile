@@ -1,6 +1,6 @@
 FROM nginx
 
-MAINTAINER Ben Smith
+MAINTAINER Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)
 
 ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_linux_amd64 /opt/forwarder
 #

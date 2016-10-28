@@ -1,16 +1,29 @@
 <header class="topnav">
-  <div class="room-icon-container">
-    <a ui-sref="play.room" title="Back to room"><i class="fa fa-arrow-left fa-fw"></i></a>
+  <div class="logo-container"></div>
+  <div class="title">
+    <span>Edit rooms</span>
   </div>
 
   <div class="right-items">
 
-    <div class="myrooms top-nav-item">
-      <a ui-sref="play.me">
-        <span class="user-icon"></span>
-        <span class="username">Edit profile</span>
+    <div class="top-nav-item">
+      <a ui-sref="play.room" title="Back to room">
+        <i class="fa fa-arrow-left fa-fw"></i>
       </a>
     </div>
+
+    <div class="top-nav-item">
+      <a ui-sref="play.me" title="Edit player profile">
+        <i class="fa fa-user fa-fw"></i>
+      </a>
+    </div>
+
+    <div class="top-nav-item">
+      <a ui-sref="play.myrooms" title="Edit registered rooms">
+        <i class="fa fa-building fa-fw"></i>
+      </a>
+    </div>
+
   </div>
 </header>
 
@@ -38,43 +51,50 @@
       <div class="padded row">
         <div class="center">
           <button type="submit" id="submit">
-            <i class="fa fa-key"></i>Regenerate Shared Secret
+            <i class="fa fa-key"></i> Regenerate Shared Secret
           </button>
         </div>
       </div>
     </form>
 
-    <div ng-controller="sitesCtrl as sites" ng-model="activeSiteId">
-
-      <form name="play.roomConfig">
-        <div class="padded row operations">
-          <label for="roomSelect">Select or create a room: </label>
-          <span class="nullable">
-            <select id="roomSelect" class="form-control u-full-width" ng-model="activeSiteId" ng-change="reset()" ng-style="optionStyle">
-              <option value=""> -- create new room -- </option>
-              <option ng-selected="{{site._id  == activeSiteId}}"
-                      ng-repeat="site in sites"
-                      value="{{site._id}}">
-                {{site.info.name}}
-              </option>
-            </select>
-          </span>
-        </div>
+    <div ng-controller="SiteCtrl as sites">
+      <form name="sites.roomConfig">
 
         <hr />
 
-        <div class="row" ng-show="activeSite._id">
-          <div class="one-third column">Room id</div>
-          <div class="two-thirds column" ng-bind="activeSite._id"></div>
+        <div class="padded row operations">
+          <p>Use the following fields to configure the registration of your room
+            with the game. Select an existing room from the drop-down.
         </div>
 
         <div class="row">
           <div class="one-third column">
+            <label for="roomSelect">Select a room: </label>
+          </div>
+          <div class="two-thirds column">
+            <select id="roomSelect" class="u-full-width"
+                ng-change="sites.resetForm()"
+                ng-model="sites.activeSite"
+                ng-options="site as site.info.name for site in sites.siteList track by site._id">
+                <option value="">-- Create a new room --</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="one-third column">Room id</div>
+          <div class="two-thirds column">
+            <input class="u-full-width" type="text" id="roomInfo_name" disabled
+            placeholder="Site id (assigned)" ng-model="sites.activeSite._id"/></div>
+        </div>
+
+        <div class="row" id="required_name">
+          <div class="one-third column">
             <label for="roomInfo_name">Room Name</label>
           </div>
           <div class="two-thirds column">
-            <input class="u-full-width" type="text" id="roomInfo_name"
-            placeholder="Short, unique room name" ng-model="activeSite.info.name"/>
+            <input class="u-full-width" type="text" id="roomInfo_name" required
+            placeholder="Short, unique room name: niftyRoom" ng-model="sites.activeSite.info.name"/>
           </div>
         </div>
 
@@ -84,26 +104,31 @@
           </div>
           <div class="two-thirds column">
             <input class="u-full-width" type="text" id="roomInfo_fullName"
-            placeholder="Full name for your room" ng-model="activeSite.info.fullName">
+            placeholder="Full name for your room" ng-model="sites.activeSite.info.fullName">
           </div>
         </div>
 
         <div class="row">
-          <div class="one-third column">
+          <div class="four columns">
             <label for="">WebSocket endpoint</label>
           </div>
-          <div class="two-thirds column">
+          <div class="six columns">
             <input class="u-full-width" type="text" id="roomInfo_target"
-            ng-model="activeSite.info.connectionDetails.target"
-            placeholder="ws://<hostname:portnumber>/<context-root>"/>
+                ng-model="sites.activeSite.info.connectionDetails.target"
+                placeholder="ws://<hostname:portnumber>/<context-root>"/>
+          </div>
+          <div class="two columns">
+            <!--
+            <button type="button" class="btn u-full-width">Test</button>
+            -->
           </div>
         </div>
 
         <div class="row">
           <label for="roomInfo_description">Description</label>
           <textarea class="u-full-width" id="roomInfo_description" rows="3"
-          placeholder="Describe your room: what kind of room are you building? A tavern? A forest? A rabbit warren?"
-          ng-model="activeSite.info.description"></textarea>
+          placeholder="Describe your room: is it a tavern? A bus stop? A store?"
+          ng-model="sites.activeSite.info.description"></textarea>
         </div>
 
         <div class="padded row">
@@ -114,56 +139,54 @@
           <div class="one column">&nbsp;</div>
           <div class="two columns">North</div>
           <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_n"
-          placeholder="" ng-model="activeSite.info.doors.n"/></div>
+          placeholder="" ng-model="sites.activeSite.info.doors.n"/></div>
         </div>
         <div class="row">
           <div class="one column">&nbsp;</div>
           <div class="two columns">South</div>
           <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_s"
-          placeholder="" ng-model="activeSite.info.doors.s"/></div>
+          placeholder="" ng-model="sites.activeSite.info.doors.s"/></div>
         </div>
         <div class="row">
           <div class="one column">&nbsp;</div>
           <div class="two columns">East</div>
           <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_e"
-          placeholder="" ng-model="activeSite.info.doors.e"/></div>
+          placeholder="" ng-model="sites.activeSite.info.doors.e"/></div>
         </div>
         <div class="row">
           <div class="one column">&nbsp;</div>
           <div class="two columns">West</div>
           <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_w"
-          placeholder="" ng-model="activeSite.info.doors.w"/></div>
+          placeholder="" ng-model="sites.activeSite.info.doors.w"/></div>
         </div>
         <div class="row">
           <div class="one column">&nbsp;</div>
           <div class="two columns">Up</div>
           <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_u"
-          placeholder="" ng-model="activeSite.info.doors.u"/></div>
+          placeholder="" ng-model="sites.activeSite.info.doors.u"/></div>
         </div>
         <div class="row">
           <div class="one column">&nbsp;</div>
           <div class="two columns">Down</div>
           <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_d"
-          placeholder="" ng-model="activeSite.info.doors.d"/></div>
+          placeholder="" ng-model="sites.activeSite.info.doors.d"/></div>
         </div>
 
-        <div class="padded row" ng-show="!activeSite._id">
+        <div class="padded row" ng-show="!sites.activeSite._id">
           <div class="center">
-            <button type="button" class="btn" ng-model="activeSite" ng-click="createRoom()">Create</button>
+            <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.createRoom()">Create</button>
           </div>
         </div>
-        <div class="padded row" ng-show="activeSite._id">
+        <div class="padded row" ng-show="sites.activeSite._id">
           <div class="one-half column">
-            <button type="button" class="btn u-full-width" ng-model="activeSite" ng-click="updateRoom(activeSite._id)">Update</button>
+            <button type="button" class="btn u-full-width" ng-model="sites.activeSite" ng-click="sites.updateRoom()"
+                    ng-disabled="sites.roomConfig.$pristine">Update</button>
           </div>
           <div class="one-half column">
-            <button type="button" class="btn u-full-width" ng-model="activeSite" ng-click="deleteRoom(activeSite._id)">Delete</button>
+            <button type="button" class="btn u-full-width" ng-model="sites.activeSite" ng-click="sites.deleteRoom()">Delete</button>
           </div>
         </div>
-
       </form>
-
     </div>
-
   </div>
 </div>
