@@ -125,20 +125,20 @@ angular.module('playerApp')
         setCaretPos(inputbox, this.userInput.length);
       }
 
-      this.inputKeyDown = function(e) {        
+      this.inputKeyDown = function(e) {
         switch (e.keyCode) {
           case 38:
             handleUp.call(this);
             break;
-          case 40: 
+          case 40:
             handleDown.call(this);
             break;
-          case 37: 
+          case 37:
           case 39:
             // left/right should not release prefix
-            break; 
+            break;
           default:
-            $log.debug("key down " + e.keyCode);
+            //$log.debug("key down " + e.keyCode);
             releasePrefix.call(this);
             break;
         }
@@ -188,4 +188,4 @@ angular.module('playerApp')
       this.marked = function(input){
         return marked(input || '');
       };
-  }]);
+}]);
