@@ -1,13 +1,29 @@
-.gameView .viewport .profile textarea,
-.gameView .viewport .profile input {
-  color: black;
-}
-
 .gameView .viewport .profile .operations a,
 .gameView .viewport .profile a,
 .gameView .viewport .profile button,
 .gameView .viewport .profile button i {
   color: white;
+}
+
+.gameView .viewport .profile button:disabled {
+  color: gray;
+}
+
+.gameView .viewport .profile textarea,
+.gameView .viewport .profile select,
+.gameView .viewport .profile input {
+  color: black;
+}
+
+.ng-invalid-required #required_name input {
+  border: 1px solid #EA6F56;
+}
+
+.ng-invalid-required #required_name::after {
+  content: '*';
+  position: absolute;
+  right: -15px;
+  color: #EA6F56;
 }
 
 .login .button i {

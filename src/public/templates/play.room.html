@@ -6,16 +6,21 @@
 
   <div class="right-items">
 
-    <div class="help top-nav-item">
+    <div class="top-nav-item">
       <a ng-click="play.listCommands()">
-        <span class="caption">Help</span>
+        <i class="fa fa-question-circle fa-fw"></i>
       </a>
     </div>
 
     <div class="top-nav-item">
-      <a ui-sref="play.me" class="profile">
-        <span class="user-icon"></span>
-        <span class="username">{{play.clientState.username}}</span>
+      <a ui-sref="play.me">
+        <i class="fa fa-user fa-fw"></i>
+      </a>
+    </div>
+
+    <div class="top-nav-item">
+      <a ui-sref="play.myrooms">
+        <i class="fa fa-building fa-fw"></i>
       </a>
     </div>
 
