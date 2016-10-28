@@ -104,13 +104,23 @@ body .darkblue {
   margin-top: 7rem;
 }
 
+<<<<<<< Updated upstream
 .outer-container .right .text,
 .outer-container .right .button,
 .outer-container .right .button i,
+=======
+.outer-container .right .block-link,
+.outer-container .right .block-link i,
+>>>>>>> Stashed changes
 .outer-container .central .button,
 .outer-container .central .button i {
   color: white;
   border: none;
+}
+
+.outer-container .right .block-indent,
+.outer-container .right .block-indent button {
+  color: white;
 }
 
 .outer-container .central .login .tandcs {
@@ -185,19 +195,24 @@ body .darkblue {
   flex-shrink: 1;
 }
 
+<<<<<<< Updated upstream
 .outer-container .right .right-left .row:nth-child(2) .button {
   margin-top: 0;
 }
 
 .outer-container .right .right-left .row .button{
+=======
+.outer-container .right .right-left .row .block-link {
+>>>>>>> Stashed changes
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
   flex-shrink: 0;
-  margin-top: 2.8rem;
+  margin-top: 1.8rem;
   padding-right: 0;
 }
 
+<<<<<<< Updated upstream
 .outer-container .right .right-left .row .subtext {
   display: table-cell;
   vertical-align: top;
@@ -209,6 +224,15 @@ body .darkblue {
   font-weight: 300;
   line-height: 1.3rem;
   margin-left: 4rem;
+=======
+.outer-container .right .right-left .block-indent {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  margin-top: .5rem;
+  padding-right: 0;
+>>>>>>> Stashed changes
 }
 
 .outer-container .right .right-left .ibm-font {
@@ -217,22 +241,62 @@ body .darkblue {
   padding-right: 1rem;
 }
 
+<<<<<<< Updated upstream
 .outer-container .right .right-left .text,
 .outer-container .right .right-left .button {
+=======
+.outer-container .right .right-left .block-link {
+>>>>>>> Stashed changes
   text-transform: none;
+  text-decoration: none;
   font-size: 1.5rem;
   margin-bottom: 0;
   white-space: normal;
 }
 
+<<<<<<< Updated upstream
 .outer-container .right .right-left .icon{
+=======
+.outer-container .right .right-left .row .block-link .text {
+  padding-top: 1rem;
+  font-weight: bold;
+}
+
+.outer-container .right .right-left .row .block-indent .subtext,
+.outer-container .right .right-left .row .block-link .subtext {
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.3rem;
+  margin-left: 4rem;
+}
+
+.outer-container .right .block-indent {
+  vertical-align: top;
+}
+
+.outer-container .right .block-indent input.inline {
+  color: black;
+  border: none;
+  width: 18rem;
+}
+.outer-container .right .block-indent button.inline {
+  border-radius: 0;
+  padding: 0 15px;
+}
+
+.outer-container .right .right-left .block-link .icon {
+>>>>>>> Stashed changes
   height: 3rem;
   width: 3rem;
   padding-right: 1rem;
   padding-top: 1rem;
 }
 
+<<<<<<< Updated upstream
 .outer-container .right .right-left .icon use {
+=======
+.outer-container .right .right-left .block-link .icon use {
+>>>>>>> Stashed changes
   fill: #1E3341;
 }
 
@@ -372,7 +436,6 @@ body .outer-container .usersetup {
     font-size: 1rem;
   }
 
-
   .outer-container .right {
     margin: 0;
     flex: 2 0 auto;
@@ -393,6 +456,7 @@ body .outer-container .usersetup {
     text-align: left;
   }
 
+  .outer-container .right .right-left .row form,
   .outer-container .right .right-left .row a {
     padding: 0;
     margin-top: 2.5rem;

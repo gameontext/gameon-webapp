@@ -24,25 +24,20 @@ body div header.topnav {
   background-repeat: no-repeat;
 }
 
-header .logo-container,
-header .room-icon-container {
-  padding: 1rem 0;
-  margin-right: 0;
-  margin-left: 2rem;
+header .logo-container {
+  padding: 1rem;
+  margin: 0;
   color: black;
   font-size: 1.5em;
-}
-
-header .room-icon-container a {
-  color: black;
+  border-right: 1px solid black;
 }
 
 header .logo-container:before {
   content: 'Game On';
 }
 
+header .title span,
 header .title a {
-  border-left: 1px solid black;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -52,7 +47,6 @@ header .title a {
   display: flex;
   color: black;
   font-size: 1.5em;
-  padding-left: 1rem;
 }
 
 header .right-items {
@@ -60,7 +54,7 @@ header .right-items {
   justify-content: flex-end;
   padding: 1rem 0;
   position: absolute;
-  right: 2.5rem;
+  right: 1.5rem;
 }
 
 header .top-nav-item {
@@ -71,55 +65,41 @@ header .top-nav-item a {
   font-size: 1.5em;
   color: black;
   text-decoration: none;
-  padding-left: 1rem;
+  padding-left: .5rem;
 }
-
-header .top-nav-item a.profile .username {
-  border-left: 1px solid black;
-  padding-left: 1rem;
-}
-
-
 
 /*--------------------------------*/
 /*      header media queries      */
 /*--------------------------------*/
 
 @media (max-width : 650px) {
-  header .logo-container:before {
-    content: 'GO';
-  }
-
-  header .right-items .help {
+  header .logo-container {
     display: none;
   }
 
   header .right-items {
-    padding-right: 1rem;
+    padding-right: .5rem;
   }
 
   header .top-nav-item {
     padding-right: 0;
   }
+}
 
-  header .top-nav-item a .caption,
-  header .top-nav-item a .username,
-  header .top-nav-item a .editrooms {
+@media (max-width : 400px) {
+  header .logo-container {
     display: none;
   }
 
-  header .top-nav-item a .user-icon:before {
-    font-family: "FontAwesome";
-    content: "\f007\00a0 ";
-    color: black;
+  body div header.topnav {
+    height: 4rem;
   }
 
-  header .top-nav-item a .rooms-icon:before {
-    font-family: "FontAwesome";
-    content: "\f1ad\00a0 ";
-    color: black;
+  header .title span,
+  header .title a,
+  header .top-nav-item a {
+    font-size: 1em;
   }
-
 }
 
 /*-----------------------------------*/
@@ -133,7 +113,7 @@ nav {
   display: block;
   bottom: 0;
   width: 100%;
-  height: 5rem;
+  height: 4rem;
   padding-bottom: 0;
   padding-top: 0;
 }
@@ -218,6 +198,18 @@ nav .clear {
 
   nav .input-w input {
     width: 95%;
+  }
+}
+
+@media (max-width : 400px) {
+  nav .slash {
+    font-size: 1em;
+  }
+
+  nav {
+    height: 3em;
+    padding: 0;
+    bottom: 0;
   }
 }
 
@@ -394,6 +386,24 @@ div.exits:before {
 
   .gameView .viewport{
     bottom: 4rem;
+  }
+
+  .commands table tr td p {
+    margin-bottom: 1em;
+  }
+}
+
+@media (max-width : 400px) {
+  .short {
+    display: inline;
+  }
+  .full {
+    display: none;
+  }
+
+  .gameView .viewport{
+    top: 4.6rem;
+    bottom: 4.6rem;
   }
 
   .commands table tr td p {
