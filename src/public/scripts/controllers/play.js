@@ -101,7 +101,7 @@ angular.module('playerApp')
       }
 
       function handleUp() {
-        handleHistoryKey.call(this, commandHistory.prev)
+        handleHistoryKey.call(this, commandHistory.prev);
       }
 
       function handleDown() {
@@ -118,11 +118,11 @@ angular.module('playerApp')
           this.userInput = cmd;
         } else {
           if (onNull) {
-            onNull.call(this)
+            onNull.call(this);
           }
         }
 
-        setCaretPos(inputbox, this.userInput.length);
+        setCaretPos(inputBox, this.userInput.length);
       }
 
       this.inputKeyDown = function(e) {

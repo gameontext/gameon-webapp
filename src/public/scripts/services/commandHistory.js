@@ -26,7 +26,7 @@ angular.module('playerApp')
       }
 
       function prev(prefix) {
-        $log.debug(["prev", prefix, cmds, last])
+        $log.debug(["prev", prefix, cmds, last]);
         for (var cur = Math.max(last - 1, -1); cur >= 0; cur--) {
           if (cmds[cur].indexOf(prefix || '') === 0) {
             last = cur;
@@ -42,7 +42,7 @@ angular.module('playerApp')
       }
 
       function next(prefix) {
-        $log.debug(["next", prefix, cmds, last])
+        $log.debug(["next", prefix, cmds, last]);
         for (var cur = Math.min(last + 1, cmds.length); cur < cmds.length; cur++) {
           if (cmds[cur].indexOf(prefix || '') === 0) {
             last = cur;
