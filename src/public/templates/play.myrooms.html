@@ -83,9 +83,7 @@
 
         <div class="row">
           <div class="one-third column">Room id</div>
-          <div class="two-thirds column">
-            <input class="u-full-width" type="text" id="roomInfo_name" disabled
-            placeholder="Site id (assigned)" ng-model="sites.activeSite._id"/></div>
+          <div class="two-thirds column little-text">{{ sites.activeSite._id }}</div>
         </div>
 
         <div class="row" id="required_name">
@@ -158,18 +156,6 @@
           <div class="two columns">West</div>
           <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_w"
           placeholder="" ng-model="sites.activeSite.info.doors.w"/></div>
-        </div>
-        <div class="row">
-          <div class="one column">&nbsp;</div>
-          <div class="two columns">Up</div>
-          <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_u"
-          placeholder="" ng-model="sites.activeSite.info.doors.u"/></div>
-        </div>
-        <div class="row">
-          <div class="one column">&nbsp;</div>
-          <div class="two columns">Down</div>
-          <div class="nine columns"><input class="u-full-width" type="text" id="roomInfo_d"
-          placeholder="" ng-model="sites.activeSite.info.doors.d"/></div>
         </div>
 
         <div class="padded row" ng-show="!sites.activeSite._id">

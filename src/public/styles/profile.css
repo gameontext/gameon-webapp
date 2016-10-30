@@ -9,6 +9,11 @@
   color: gray;
 }
 
+.gameView .viewport .profile select {
+  background-color: #ccc;
+}
+
+
 .gameView .viewport .profile textarea,
 .gameView .viewport .profile select,
 .gameView .viewport .profile input {

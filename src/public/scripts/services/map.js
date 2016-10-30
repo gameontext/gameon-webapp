@@ -24,14 +24,14 @@ angular.module('playerApp')
     $http({
       url: mapurl,
       method: 'GET',
-      params: {owner: gid},
+      params: {owner: user.profile._id},
       headers: signRequest("")
       }).then(function(response) {
         // 200: rooms discovered
         // 204: no rooms for the user
         $log.debug(response.status + ' ' + response.statusText + " %o - OK", response.data);
         var data = [];
-        if ( response.status == 200 ) {
+        if ( response.status === 200 ) {
           data = angular.fromJson(response.data);
         }
         $log.debug("getSitesForUser returing %o", data);
@@ -162,7 +162,7 @@ angular.module('playerApp')
     var mac = new KJUR.crypto.Mac({"alg": "HmacSHA256", "pass": toUTF8(secret)});
     var headers = "";  //this would be the hash of any game on headers
     var params = "";  //this would be the hash of any query string parameters
-    var hmac;
+    var hmacValue;
 
     //send in old style
     //mac.updateString(toUTF8("POST"));
@@ -172,13 +172,13 @@ angular.module('playerApp')
     mac.updateString(toUTF8(headers));
     mac.updateString(toUTF8(params));
 
-    hmac = mac.doFinalString(toUTF8(bodyHash));
-    $log.debug('HMAC : ' + hmac);
+    hmacValue = mac.doFinalString(toUTF8(bodyHash));
+    $log.debug('HMAC : ' + hmacValue);
 
-    hmac = btoa(hexToString(hmac));
-    $log.debug('Base64 : ' + hmac);
+    hmacValue = btoa(hexToString(hmacValue));
+    $log.debug('Base64 : ' + hmacValue);
 
-    return hmac;
+    return hmacValue;
   }
 
   function toUTF8(str) {
@@ -189,16 +189,16 @@ angular.module('playerApp')
   function hash(value) {
     var md = new KJUR.crypto.MessageDigest({"alg": "sha256", "prov": "cryptojs"});
     var utf8 = unescape(encodeURIComponent(value)); //convert from UTF16 -> UTF8
-    var hash;
+    var hashValue;
 
     md.updateString(utf8);
-    hash = md.digest();
-    $log.debug('Hash : ' + hash);
+    hashValue = md.digest();
+    $log.debug('Hash : ' + hashValue);
 
-    hash = btoa(hexToString(hash));
-    $log.debug('Base64 : ' + hash);
+    hashValue = btoa(hexToString(hashValue));
+    $log.debug('Base64 : ' + hashValue);
 
-    return hash;
+    return hashValue;
   }
 
   //convert a hex string into characters
