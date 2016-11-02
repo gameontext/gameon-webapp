@@ -28,7 +28,7 @@
 </header>
 
 
-<div class="viewport" scroll-glue>
+<div class="viewport" scroll-glue="play.glued">
   <div class="container">
     <div>
       <div ng-repeat="data in play.roomEvents track by data.id" data-ng-switch="data.type">
@@ -88,3 +88,6 @@
     </div>
   </div>
 </div>
+<div id="scroll-to-bottom" ng-hide="play.glued">
+  <a ng-click="play.glued = !play.glued"><i class="fa fa-hand-o-down" aria-hidden="true" title="scroll to bottom"></i></a>
+<div>

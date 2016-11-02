@@ -17,9 +17,7 @@
               <use xlink:href="#shape-catalog_32"/>
             </svg>
             <span class="text">Learn more</span> <br>
-            <div class="subtext">Microservices architecture explained in the context of an old-school text-based
-              adventure game.
-            </div>
+            <span class="subtext">Read all about the game: how to play, how to build, what it exists. The works. </span>
           </a>
         </div>
         <div class="row">
@@ -42,11 +40,11 @@
           </a>
         </div>
         <div class="row">
-          <a class="button" href="http://wasdev.net">
+          <a class="button" href="https://github.com/orgs/gameontext/people">
             <svg class="icon">
               <use xlink:href="#shape-group_32"/>
             </svg>
-            <span class="text">WASDev Team</span> <br>
+            <span class="text">Contributors</span> <br>
             <span class="subtext">Lots of people helped to build this game. We hope you will, too.</span>
           </a>
         </div>
@@ -100,11 +98,9 @@
         <a class="button" ng-href="{{ctrl.api.GOOGLE}}">Google</a>
         <a class="button" ng-href="{{ctrl.api.FACEBOOK}}">Facebook</a>
         <a class="button" ng-href="{{ctrl.api.GITHUB}}">GitHub</a>
-        <a ng-if="(!ctrl.api.HOST.includes('game-on.org'))" class="button" ng-href="{{ctrl.api.DUMMY}}">Anonymous
-          user</a>
+        <a ng-if="(!ctrl.api.HOST.includes('.org'))" class="button" ng-href="{{ctrl.api.DUMMY}}">Anonymous user</a>
       </div>
     </div>
-
 
     <!--   spinners   -->
     <div class="section auth" data-ng-switch-when="default.auth">
@@ -296,4 +292,3 @@
   </div>
 
 </div>
-

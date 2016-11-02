@@ -8,7 +8,7 @@ html, body, .ng-scope {
 
 /*-----------------------------------*/
 /* Anchor game view to the canvas    */
-/*   header, nav are absolute within */
+/*  header, nav are absolute within  */
 /*-----------------------------------*/
 .gameView {
   position: fixed;
@@ -254,7 +254,16 @@ nav .clear {
   bottom: 0rem;
 }
 
-.gameView ul li {
+.gameView #scroll-to-bottom {
+  position: absolute;
+  padding: 0 1rem;
+  right: 2em;
+  bottom: 9rem;
+  height: 1rem;
+  z-index: 12;
+}
+
+.viewport ul li {
   list-style-position: outside;
   margin-left: 1.5em;
   margin-bottom: .2em;
@@ -284,6 +293,7 @@ nav .clear {
   color: #999;
 }
 
+.gameView #scroll-to-bottom a,
 .objects li a {
   color: #EA6F56;
 }
@@ -407,6 +417,10 @@ div.exits:before {
     bottom: 4rem;
   }
 
+  .gameView #scroll-to-bottom {
+    bottom: 7rem;
+  }
+
   .commands table tr td p {
     margin-bottom: 1em;
   }
@@ -414,7 +428,7 @@ div.exits:before {
 
 @media (max-width : 400px) {
   .short {
-    display: inline;
+    dispay: inline;
   }
   .full {
     display: none;
@@ -423,6 +437,10 @@ div.exits:before {
   .gameView .viewport{
     top: 4.6rem;
     bottom: 4.6rem;
+  }
+
+  .gameView #scroll-to-bottom {
+    bottom: 7rem;
   }
 
   .commands table tr td p {
