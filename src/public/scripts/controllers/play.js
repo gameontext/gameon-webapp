@@ -28,6 +28,7 @@ angular.module('playerApp')
       this.user = user;
       this.auth = auth;
       this.map  = map;
+      this.glued = true;
       this.userInput = '';
       this.roomEvents = playerSocket.roomEvents;
       this.clientState = playerSocket.clientState;
