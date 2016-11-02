@@ -66,7 +66,7 @@ angular.module('playerApp')
              useApplyAsync: true
            });
 
-      // On open, check in with the concierge
+      // On open
       ws.onOpen(function() {
         console.log('CONNECTED / READY: sending %o', clientState);
         ws.send('ready,' + angular.toJson(clientState, 0));
@@ -84,33 +84,58 @@ angular.module('playerApp')
 
       // On received message, push to the correct collection
       ws.onMessage(function(event) {
-        $log.debug("OnMessage %o",event);
 
         var comma = event.data.indexOf(',');
         var command = event.data.slice(0,comma);
         var payload = event.data.slice(comma+1);
         var target, res;
 
+        $log.debug("OnMessage %o %o", command, payload);
+
         if ( "ack" === command ) {
           // ack,{json}
 
           res = parseJson(payload);
-          $log.debug('ack received', res);
           clientState.mediatorId = res.mediatorId;
-          clientState.roomId = res.roomId;
-          clientState.roomName = res.name;
-          if (res.fullName){
-            clientState.fullName = res.fullName;
-          }
 
-          if ( res.exits ) {
-            gameData.exits = res.exits;
-            $log.debug('exits updated', gameData);
-          }
+          if ( clientState.roomId != res.roomId ) {
+            $log.debug("OnMessage ACK switch rooms %o", res);
 
-          if ( res.commands ){
-            gameData.commands = res.commands;
-            $log.debug('commands updated', gameData);
+            // Full reset, switch rooms
+            clientState.roomId = res.roomId;
+            clientState.roomName = res.name;
+
+            if (res.fullName){
+              clientState.fullName = res.fullName;
+            }
+
+            if ( res.exits ) {
+              gameData.exits = res.exits;
+              $log.debug('exits updated', gameData);
+            } else {
+              gameData.exits = {};
+            }
+
+            if ( res.commands ){
+              gameData.commands = res.commands;
+              $log.debug('commands updated', gameData);
+            } else {
+              gameData.commands = {};
+            }
+          } else {
+            $log.debug("OnMessage ACK confirm room, reset some values %o -> %o", res, gameData);
+
+            // Update / confirmation of SOME values
+            // Rooms must be able to update/revise some things..
+            if ( res.exits ) {
+              gameData.exits = angular.extend({}, gameData.exits, res.exits);
+              $log.debug('exits updated', gameData);
+            }
+
+            if ( res.commands ){
+              gameData.commands = angular.extend({}, gameData.commands, res.commands);
+              $log.debug('commands updated', gameData);
+            }
           }
 
           // Update saved session data
@@ -135,7 +160,7 @@ angular.module('playerApp')
           res.id = id++; // this prevents element re-rendering in the UI
 
           if ( res.exits ) {
-            gameData.exits = res.exits;
+            gameData.exits = angular.extend({}, gameData.exits, res.exits);
             $log.debug('exits updated', gameData);
           }
 

@@ -36,7 +36,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "TWITTER": "https://"+baseUrl+"/auth/TwitterAuth",
     "FACEBOOK": "https://"+baseUrl+"/auth/FacebookAuth",
     "GITHUB": "https://"+baseUrl+"/auth/GitHubAuth",
-    "DUMMY": "https://"+baseUrl+"/auth/DummyAuth?dummyUserName=DevUser"
+    "DUMMY": "https://"+baseUrl+"/auth/DummyAuth?dummyUserName=DevUser&callbackHost=https://"+baseUrl
   })
   .config(['markedProvider', function (markedProvider) {
     markedProvider.setOptions({sanitize: true});
