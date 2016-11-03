@@ -48,6 +48,9 @@ angular.module('playerApp')
 
   var createSiteForUser = function(newSite) {
     $log.debug("MAP : CREATE : %o", newSite);
+    if(newSite.info.connectionDetails && !newSite.info.connectionDetails.type) {
+      newSite.info.connectionDetails.type = 'websocket';
+    }
     var body = angular.toJson(newSite.info);
 
     var q = $q.defer();
@@ -102,6 +105,9 @@ angular.module('playerApp')
 
   var updateSiteForUser = function(newSite) {
     $log.debug("MAP : UPDATE : %o", newSite);
+    if(newSite.info.connectionDetails && !newSite.info.connectionDetails.type) {
+      newSite.info.connectionDetails.type = 'websocket';
+    }
     var body = angular.toJson(newSite.info);
 
     var q = $q.defer();
