@@ -96,57 +96,62 @@ angular.module('playerApp')
           // ack,{json}
 
           res = parseJson(payload);
-          clientState.mediatorId = res.mediatorId;
-
-          if ( clientState.roomId != res.roomId ) {
-            $log.debug("OnMessage ACK switch rooms %o", res);
-
-            // Full reset, switch rooms
-            clientState.roomId = res.roomId;
-            clientState.roomName = res.name;
-
-            if (res.fullName){
-              clientState.fullName = res.fullName;
-            }
-
-            if ( res.exits ) {
-              gameData.exits = res.exits;
-              $log.debug('exits updated', gameData);
-            } else {
-              gameData.exits = {};
-            }
-
-            if ( res.commands ){
-              gameData.commands = res.commands;
-              $log.debug('commands updated', gameData);
-            } else {
-              gameData.commands = {};
-            }
-          } else {
-            $log.debug("OnMessage ACK confirm room, reset some values %o -> %o", res, gameData);
-
-            // Update / confirmation of SOME values
-            // Rooms must be able to update/revise some things..
-            if ( res.exits ) {
-              gameData.exits = angular.extend({}, gameData.exits, res.exits);
-              $log.debug('exits updated', gameData);
-            }
-
-            if ( res.commands ){
-              gameData.commands = angular.extend({}, gameData.commands, res.commands);
-              $log.debug('commands updated', gameData);
-            }
-          }
-
-          // Update saved session data
-          playerSession.set('clientState', clientState);
-          playerSession.set('gameData', gameData);
-
-          if ( !canSend ) {
-            // indicate we can send again, and catch up with anything
-            // we queued while the connection was re-establishing itself
-            canSend = true;
-            sendPending();
+          
+          if ( res.hasOwnProperty('playerUpdate') ){
+        	  user.load(user.profile._id, user.profile.name);
+          }else{          
+	          clientState.mediatorId = res.mediatorId;
+	
+	          if ( clientState.roomId != res.roomId ) {
+	            $log.debug("OnMessage ACK switch rooms %o", res);
+	
+	            // Full reset, switch rooms
+	            clientState.roomId = res.roomId;
+	            clientState.roomName = res.name;
+	
+	            if (res.fullName){
+	              clientState.fullName = res.fullName;
+	            }
+	
+	            if ( res.exits ) {
+	              gameData.exits = res.exits;
+	              $log.debug('exits updated', gameData);
+	            } else {
+	              gameData.exits = {};
+	            }
+	
+	            if ( res.commands ){
+	              gameData.commands = res.commands;
+	              $log.debug('commands updated', gameData);
+	            } else {
+	              gameData.commands = {};
+	            }
+	          } else {
+	            $log.debug("OnMessage ACK confirm room, reset some values %o -> %o", res, gameData);
+	
+	            // Update / confirmation of SOME values
+	            // Rooms must be able to update/revise some things..
+	            if ( res.exits ) {
+	              gameData.exits = angular.extend({}, gameData.exits, res.exits);
+	              $log.debug('exits updated', gameData);
+	            }
+	
+	            if ( res.commands ){
+	              gameData.commands = angular.extend({}, gameData.commands, res.commands);
+	              $log.debug('commands updated', gameData);
+	            }
+	          }
+	
+	          // Update saved session data
+	          playerSession.set('clientState', clientState);
+	          playerSession.set('gameData', gameData);
+	
+	          if ( !canSend ) {
+	            // indicate we can send again, and catch up with anything
+	            // we queued while the connection was re-establishing itself
+	            canSend = true;
+	            sendPending();
+	          }       
           }
         } else {
           // player,id,{json}
