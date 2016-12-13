@@ -7,8 +7,8 @@ fi
 
 # Configure amalgam8 for this container
 export A8_SERVICE=webapp:v1
-export A8_ENDPOINT_PORT=443
-export A8_ENDPOINT_TYPE=https
+export A8_ENDPOINT_PORT=8080
+export A8_ENDPOINT_TYPE=http
 
 if [ "$ETCDCTL_ENDPOINT" != "" ]; then
   echo Setting up etcd...
