@@ -38,14 +38,18 @@ if [ "$ETCDCTL_ENDPOINT" != "" ]; then
   if [ "$LOGSTASH_ENDPOINT" != "" ]; then
      echo Starting nginx in the background...
      if [ -z "$A8_REGISTRY_URL" ]; then 
+       echo Running without a8.
        #no a8, just run server.
        exec nginx -c /etc/nginx/nginx.conf
      else
        #a8, configure security, and run via sidecar.
        if [ ! -z "$JWT" ]; then     
+         echo Running a8 with security.
          export A8_REGISTRY_TOKEN=$JWT
          export A8_CONTROLLER_TOKEN=$JWT
-       fi  
+       else
+         echo Running a8 with no security (local)
+       fi
        exec a8sidecar --proxy --register nginx -c /etc/nginx/nginx.conf
     fi    
     echo Starting the logstash forwarder...
