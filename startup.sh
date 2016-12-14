@@ -40,7 +40,7 @@ if [ "$ETCDCTL_ENDPOINT" != "" ]; then
      if [ -z "$A8_REGISTRY_URL" ]; then 
        echo Running without a8.
        #no a8, just run server.
-       exec nginx -c /etc/nginx/nginx.conf
+       nginx -c /etc/nginx/nginx.conf
      else
        #a8, configure security, and run via sidecar.
        if [ ! -z "$JWT" ]; then     
@@ -50,7 +50,7 @@ if [ "$ETCDCTL_ENDPOINT" != "" ]; then
        else
          echo Running a8 with no security.
        fi
-       exec a8sidecar --proxy --register nginx -c /etc/nginx/nginx.conf
+       a8sidecar --proxy --register nginx -c /etc/nginx/nginx.conf
     fi    
     echo Starting the logstash forwarder...
     sed -i s/PLACEHOLDER_LOGHOST/${LOGSTASH_ENDPOINT}/g /opt/forwarder.conf
