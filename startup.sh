@@ -48,7 +48,7 @@ if [ "$ETCDCTL_ENDPOINT" != "" ]; then
          export A8_REGISTRY_TOKEN=$JWT
          export A8_CONTROLLER_TOKEN=$JWT
        else
-         echo Running a8 with no security (local)
+         echo Running a8 with no security.
        fi
        exec a8sidecar --proxy --register nginx -c /etc/nginx/nginx.conf
     fi    
