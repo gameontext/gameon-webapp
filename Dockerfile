@@ -8,7 +8,8 @@ ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_l
 #
 RUN apt-get clean && apt-get update && apt-get install --fix-missing -y wget npm git && ln -s /usr/bin/nodejs /usr/bin/node
 
-RUN wget -qO- https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
+#disable for testing.. 
+#RUN wget -qO- https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx-nolog.conf /etc/nginx/nginx-nolog.conf
