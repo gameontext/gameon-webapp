@@ -19,7 +19,7 @@ rm libapparmor.deb
 wget https://get.docker.com/builds/Linux/x86_64/docker-1.9.1 --quiet -O docker
 chmod +x docker
 
-echo Building projects using gradle...
+echo Building docker image.
 ./docker build -t gameon-webapp .
 if [ $? != 0 ]
 then
