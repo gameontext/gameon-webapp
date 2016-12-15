@@ -37,12 +37,8 @@ else
     echo "Docker run failed.. it's too late.. the damage is done already."
     curl -X 'POST' --silent --data-binary '{"text":"Docker Run for the webapp service has failed."}' $SLACK_WEBHOOK_PATH > /dev/null
     exit -3
-  else
-    cd ..
-    rm -rf dockercfg
   fi
 fi
 
 echo Removing non-artifacts...
-
 rm docker ; rm -rf dockercfg
