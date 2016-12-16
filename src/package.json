@@ -1,5 +1,5 @@
 {
-  "name": "player-frontend",
+  "name": "gameontext-webapp",
   "private": true,
   "devDependencies": {
     "autoprefixer": "^6.1.0",
