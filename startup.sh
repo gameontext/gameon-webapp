@@ -2,7 +2,10 @@
 
 # Configure our link to etcd based on shared volume with secret
 if [ ! -z "$ETCD_SECRET" ]; then
+  echo "Configuring for secure etcd"
   . /data/primordial/setup.etcd.sh /data/primordial $ETCD_SECRET
+else
+  echo "Using local env for any etcd"
 fi
 
 # Configure amalgam8 for this container
@@ -47,10 +50,12 @@ if [ "$ETCDCTL_ENDPOINT" != "" ]; then
          echo Running a8 with security.
          export A8_REGISTRY_TOKEN=$JWT
          export A8_CONTROLLER_TOKEN=$JWT
+         CONF=nginx-a8.conf
        else
          echo Running a8 with no security.
+         CONF=nginx.conf
        fi
-       a8sidecar --proxy --register nginx -c /etc/nginx/nginx.conf
+       a8sidecar --register nginx -c /etc/nginx/$CONF
     fi    
     echo Starting the logstash forwarder...
     sed -i s/PLACEHOLDER_LOGHOST/${LOGSTASH_ENDPOINT}/g /opt/forwarder.conf
