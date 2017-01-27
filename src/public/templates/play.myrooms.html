@@ -76,7 +76,7 @@
                 ng-change="sites.resetForm()"
                 ng-model="sites.activeSite"
                 ng-options="site as site.info.name for site in sites.siteList track by site._id">
-                <option value="">-- Create a new room --</option>
+                <option value="">-- Register a new room --</option>
             </select>
           </div>
         </div>
@@ -160,7 +160,7 @@
 
         <div class="padded row" ng-show="!sites.activeSite._id">
           <div class="center">
-            <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.createRoom()">Create</button>
+            <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.createRoom()">Register</button>
           </div>
         </div>
         <div class="padded row" ng-show="sites.activeSite._id">
