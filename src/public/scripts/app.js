@@ -67,8 +67,9 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.login', {
             url: '^/login',
-            onEnter: function(){
+            onEnter: function(ga){
               console.info("state -> default.login");
+              ga.report('send','event','GameOn','App','login');
             }
         })
         .state('default.auth', {
@@ -93,16 +94,18 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default.validatejwt', {
           url: '^/login/getpubliccert',
 		  // State triggered by auth obtaining public key
-          onEnter: function($state, $stateParams, auth) {
+          onEnter: function($state, $stateParams, auth, ga) {
             // this step has to read the token from the params passed ($stateParams.token)
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
 
             console.info("state -> default.validatejwt");
             if(auth.validate_jwt()){
                 console.log("token callback from auth service was valid");
+                ga.report('send','event','GameOn','App','login-pass');
                 $state.go('default.usersetup');
             }else{
                 //TODO: goto a login failed page..
+                ga.report('send','event','GameOn','App','login-fail');
                 $state.go('default.login');
             }
           }
@@ -110,7 +113,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default.usersetup', {
           url: '^/login/usersetup',
           // Triggered by default.auth state.
-          onEnter: function($state, $stateParams,auth,user) {
+          onEnter: function($state, $stateParams,auth,user,ga) {
             console.info("state -> default.usersetup");
             console.log("building user object");
             var jwt = auth.get_jwt();
@@ -121,8 +124,10 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
                 //user.load returns a promise that resolves to true if the user was found.. false otherwise.
                 user.load(jwt.id, jwt.name).then(function(userKnownToDB){
                   if(userKnownToDB){
+                    ga.report('send','event','GameOn','App','login-existing');
                     $state.go('play.room');
                   }else{
+                    ga.report('send','event','GameOn','App','login-new');
                     $state.go('default.profile');
                   }
                 });
@@ -174,8 +179,9 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
               });
             }
           },
-          onEnter: function($state, auth, user, userAndAuth){
+          onEnter: function($state, auth, user, userAndAuth, ga){
             console.log("In play state", user, auth, userAndAuth);
+            ga.report('send','event','GameOn','App','play');
           }
         })
         .state('play.room', {

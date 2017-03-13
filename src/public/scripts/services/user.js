@@ -12,8 +12,8 @@
  */
 angular.module('playerApp')
   .factory('user',
-  [          '$log','$state','API','$http','auth',
-    function ($log,  $state,  API,  $http,  auth) {
+  [          '$log','$state','API','$http','auth','ga',
+    function ($log,  $state,  API,  $http,  auth,  ga) {
 
     var generatedNames = [];
     var generatedColors = [];
@@ -78,7 +78,9 @@ angular.module('playerApp')
         headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
+        console.log("GA");
+        console.log(ga);
+        ga.report('send','event','GameOn','User','Create');
         //post succeeded, now refresh the profile from the server to pull the new key.
         load(profile._id, profile.name).finally(function(response){
           $state.go('play.room');
@@ -104,7 +106,7 @@ angular.module('playerApp')
         headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
+        ga.report('send','event','GameOn','User','Update');
         //put succeeded, now refresh the profile from the server to pull the new key.
         load(profile._id, profile.name).finally(function(response){
           $state.go('play.room');
@@ -128,7 +130,7 @@ angular.module('playerApp')
         headers : gameonHeaders
       }).then(function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
+        ga.report('send','event','GameOn','User','SecretUpdate');
         //update succeeded, now refresh the profile from the server to pull the new key.
         load(profile._id, profile.name);
       }, function(response) {

@@ -48,6 +48,7 @@ angular.module('playerApp')
 
   var createSiteForUser = function(newSite) {
     $log.debug("MAP : CREATE : %o", newSite);
+    ga.report('send','event','GameOn','Map','createSite');
     if(newSite.info.connectionDetails && !newSite.info.connectionDetails.type) {
       newSite.info.connectionDetails.type = 'websocket';
     }
@@ -76,7 +77,7 @@ angular.module('playerApp')
 
   var deleteSiteForUser = function(newSite) {
     $log.debug("MAP : DELETE : %o", newSite._id);
-
+    ga.report('send','event','GameOn','Map','deleteSite');
     var q = $q.defer();
     $http({
         url: mapurl + '/' + newSite._id,
@@ -105,6 +106,7 @@ angular.module('playerApp')
 
   var updateSiteForUser = function(newSite) {
     $log.debug("MAP : UPDATE : %o", newSite);
+    ga.report('send','event','GameOn','Map','updateSite');
     if(newSite.info.connectionDetails && !newSite.info.connectionDetails.type) {
       newSite.info.connectionDetails.type = 'websocket';
     }

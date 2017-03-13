@@ -11,8 +11,8 @@
  */
 angular.module('playerApp')
   .factory('auth',
-  [        '$log','API','$http','playerSession',
-  function ($log,  API,  $http,  playerSession) {
+  [        '$log','API','$http','playerSession','ga',
+  function ($log,  API,  $http,  playerSession,  ga) {
     console.log("Loading AUTH");
 
     var _token = null,
