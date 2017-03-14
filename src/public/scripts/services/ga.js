@@ -49,8 +49,8 @@ angular.module('playerApp')
      }
 
      if (googleAnalytics) {
-         ga('create', 'UA-93627603-1', 'auto');
-         ga('send', 'pageview');
+        ga('create', 'UA-90113653-2', 'auto');
+        ga('send', 'pageview');
      }
 
      return {
