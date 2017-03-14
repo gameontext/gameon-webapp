@@ -75,7 +75,8 @@ angular.module('playerApp')
       // On open
       ws.onOpen(function() {
         console.log('CONNECTED / READY: sending %o', clientState);
-        ga.send('send','event','GameOn','Socket','open('+clientState.roomId+')');
+        ga.send('send','event','GameOn','Socket','open');
+        ga.send('send','event','Room','Switch',clientState.roomId);
         ws.send('ready,' + angular.toJson(clientState, 0));
 
         // If the user was active in the previous session, clear the
