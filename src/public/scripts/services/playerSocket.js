@@ -190,7 +190,7 @@ angular.module('playerApp')
       // and indicate that we can no longer send outbound messages
       ws.onClose(function(event) {
         $log.debug('connection closed: %o %o', event.code, event);
-        ga.send('send','event','GameOn','Socket','close');
+        ga.report('send','event','GameOn','Socket','close');
         canSend = false;
 
         playerSession.set('clientState', clientState);
@@ -259,7 +259,7 @@ angular.module('playerApp')
         clientState = {};
         gameData = {};
         ws.close();
-        ga.send('send','event','GameOn','Socket','logout');
+        ga.report('send','event','GameOn','Socket','logout');
         auth.logout(); // will also reset the session
       };
 
@@ -371,7 +371,7 @@ angular.module('playerApp')
 
         if ( message.indexOf('/exits') === 0 ) {
             $log.debug('show cached exits: %o', gameData.exits);
-            ga.send('send','event','GameOn','Socket','/exits');
+            ga.report('send','event','GameOn','Socket','/exits');
             roomEvents.push({
               type: 'exits',
               content: gameData.exits,
@@ -381,7 +381,7 @@ angular.module('playerApp')
             // which is updated via onClose
         } else if (message.indexOf('/help') === 0 ) {
             $log.debug('show cached commands: %o', gameData.commands);
-            ga.send('send','event','GameOn','Socket','/help');
+            ga.report('send','event','GameOn','Socket','/help');
             roomEvents.push({
               type: 'commands',
               content: gameData.commands,
@@ -402,7 +402,7 @@ angular.module('playerApp')
           };
 
           if ( message.indexOf('/sos') === 0 ) {
-            ga.send('send','event','GameOn','Socket','/sos');
+            ga.report('send','event','GameOn','Socket','/sos');
             sendMsg = "sos,*," + angular.toJson(output);
           } else {
             sendMsg = "room,"+clientState.roomId+","+angular.toJson(output);
