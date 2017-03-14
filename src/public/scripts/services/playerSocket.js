@@ -75,8 +75,8 @@ angular.module('playerApp')
       // On open
       ws.onOpen(function() {
         console.log('CONNECTED / READY: sending %o', clientState);
-        ga.send('send','event','GameOn','Socket','open');
-        ga.send('send','event','Room','Switch',clientState.roomId);
+        ga.report('send','event','GameOn','Socket','open');
+        ga.report('send','event','Room','Switch',clientState.roomId);
         ws.send('ready,' + angular.toJson(clientState, 0));
 
         // If the user was active in the previous session, clear the
@@ -103,7 +103,7 @@ angular.module('playerApp')
           res = parseJson(payload);
 
           if ( res.hasOwnProperty('playerUpdate') ) {
-            ga.send('send','event','GameOn','Socket','playerUpdate');
+            ga.report('send','event','GameOn','Socket','playerUpdate');
             user.load(user.profile._id, user.profile.name);
           } else {
             clientState.mediatorId = res.mediatorId;
@@ -115,7 +115,7 @@ angular.module('playerApp')
               clientState.roomId = res.roomId;
               clientState.roomName = res.name;
 
-              ga.send('send','event','GameOn','Socket','roomSwitch');
+              ga.report('send','event','GameOn','Socket','roomSwitch');
 
               if (res.fullName){
                 clientState.fullName = res.fullName;
