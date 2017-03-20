@@ -11,8 +11,8 @@
 */
 angular.module('playerApp')
    .factory('map',
-    [      '$log','$state','$q','API','$http','user',
-  function ($log,  $state,  $q,  API,  $http,  user) {
+    [      '$log','$state','$q','API','$http','user', 'ga',
+  function ($log,  $state,  $q,  API,  $http,  user,   ga) {
      $log.debug("Loading MAP");
 
   var mapurl = '/map/v1/sites';  //where to get the data from
