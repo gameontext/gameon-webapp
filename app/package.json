@@ -1,0 +1,21 @@
+{
+  "name": "gameontext-webapp",
+  "private": true,
+  "devDependencies": {
+    "autoprefixer": "^6.1.0",
+    "bower": "^1.7.9",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-html-angular-validate": "^0.5.7",
+    "grunt-wiredep": "^3.0.1",
+    "jshint-stylish": "^2.2.1"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

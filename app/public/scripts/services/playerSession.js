@@ -22,15 +22,6 @@ angular.module('playerApp')
         return elements[key];
       };
 
-      var set = function(key, value) {
-        elements[key] = value;
-        save();
-      };
-
-      var remove = function(key) {
-        delete elements[key];
-      };
-
       var reset = function() {
         // Clear local storage entirely
         elements = {};
@@ -40,6 +31,15 @@ angular.module('playerApp')
       var save = function() {
         $log.debug("Update local storage %o", elements);
         localStorage.playerSession = angular.toJson(elements);
+      };
+
+      var set = function(key, value) {
+        elements[key] = value;
+        save();
+      };
+
+      var remove = function(key) {
+        delete elements[key];
       };
 
       // Available methods and structures
