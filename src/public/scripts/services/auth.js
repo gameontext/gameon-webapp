@@ -13,7 +13,7 @@ angular.module('playerApp')
   .factory('auth',
   [        '$log','API','$http','playerSession','ga',
   function ($log,  API,  $http,  playerSession,  ga) {
-    console.log("Loading AUTH");
+    console.log("Loading AUTH", ga);
 
     var _token = null,
         _publicKey = null,

@@ -17,6 +17,92 @@ angular.module('playerApp')
 
   var mapurl = '/map/v1/sites';  //where to get the data from
 
+
+  //convert a hex string into characters
+  function hexToString(hex) {
+    var result = '';
+    for (var i = 0; i < hex.length; i += 2) {
+      var val = hex.substr(i, 2);
+      result += String.fromCharCode(parseInt(val, 16));
+    }
+    return result;
+  }
+
+  function toUTF8(str) {
+    return unescape(encodeURIComponent(str)); //convert from UTF16 -> UTF8
+  }
+
+  //pads a numeric value with additional zeros
+  function pad(value) {
+    return value < 10 ? '0' + value : value;
+  }
+
+  //construct a SHA256 hash of the supplied value
+  function hash(value) {
+    var md = new KJUR.crypto.MessageDigest({"alg": "sha256", "prov": "cryptojs"});
+    var utf8 = unescape(encodeURIComponent(value)); //convert from UTF16 -> UTF8
+    var hashValue;
+
+    md.updateString(utf8);
+    hashValue = md.digest();
+    $log.debug('Hash : ' + hashValue);
+
+    hashValue = btoa(hexToString(hashValue));
+    $log.debug('Base64 : ' + hashValue);
+
+    return hashValue;
+  }
+
+  //return the current time as a UTC date/time stamp
+  function now() {
+    var d = new Date();
+    //UTC = 2015-03-25T12:00:00
+    var utcd = d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate());
+    utcd += 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
+    utcd += '.000Z';
+    return utcd;
+  }
+
+  //create a valid hmac to send to the servers
+  function hmac(id, secret, date, bodyHash) {
+    var mac = new KJUR.crypto.Mac({"alg": "HmacSHA256", "pass": toUTF8(secret)});
+    var headers = "";  //this would be the hash of any game on headers
+    var params = "";  //this would be the hash of any query string parameters
+    var hmacValue;
+
+    //send in old style
+    //mac.updateString(toUTF8("POST"));
+    //mac.updateString(toUTF8("/map/v1/sites"));
+    mac.updateString(toUTF8(id));
+    mac.updateString(toUTF8(date));
+    mac.updateString(toUTF8(headers));
+    mac.updateString(toUTF8(params));
+
+    hmacValue = mac.doFinalString(toUTF8(bodyHash));
+    $log.debug('HMAC : ' + hmacValue);
+
+    hmacValue = btoa(hexToString(hmacValue));
+    $log.debug('Base64 : ' + hmacValue);
+
+    return hmacValue;
+  }
+
+  function signRequest(body) {
+    var date = now();
+    var bodyHash = hash(body);
+    var gid = user.profile._id;
+    var secret = user.profile.credentials.sharedSecret;
+    var sig = hmac(gid, secret, date, bodyHash);
+
+    return {
+      'gameon-id': gid,
+      'gameon-date': date,
+      'gameon-sig-body': bodyHash,
+      'gameon-signature': sig,
+      'contentType': 'application/json' //what is being sent to the server
+    };
+  }
+
   var getSitesForUser = function() {
     $log.debug("MAP : GET : for user " + user.profile._id);
 
@@ -134,90 +220,10 @@ angular.module('playerApp')
     return q.promise;
   };
 
-  function signRequest(body) {
-    var date = now();
-    var bodyHash = hash(body);
-    var gid = user.profile._id;
-    var secret = user.profile.credentials.sharedSecret;
-    var sig = hmac(gid, secret, date, bodyHash);
 
-    return {
-      'gameon-id': gid,
-      'gameon-date': date,
-      'gameon-sig-body': bodyHash,
-      'gameon-signature': sig,
-      'contentType': 'application/json' //what is being sent to the server
-    };
-  }
 
-  //pads a numeric value with additional zeros
-  function pad(value) {
-    return value < 10 ? '0' + value : value;
-  }
 
-  //return the current time as a UTC date/time stamp
-  function now() {
-    var d = new Date();
-    //UTC = 2015-03-25T12:00:00
-    var utcd = d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate());
-    utcd += 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
-    utcd += '.000Z';
-    return utcd;
-  }
 
-  //create a valid hmac to send to the servers
-  function hmac(id, secret, date, bodyHash) {
-    var mac = new KJUR.crypto.Mac({"alg": "HmacSHA256", "pass": toUTF8(secret)});
-    var headers = "";  //this would be the hash of any game on headers
-    var params = "";  //this would be the hash of any query string parameters
-    var hmacValue;
-
-    //send in old style
-    //mac.updateString(toUTF8("POST"));
-    //mac.updateString(toUTF8("/map/v1/sites"));
-    mac.updateString(toUTF8(id));
-    mac.updateString(toUTF8(date));
-    mac.updateString(toUTF8(headers));
-    mac.updateString(toUTF8(params));
-
-    hmacValue = mac.doFinalString(toUTF8(bodyHash));
-    $log.debug('HMAC : ' + hmacValue);
-
-    hmacValue = btoa(hexToString(hmacValue));
-    $log.debug('Base64 : ' + hmacValue);
-
-    return hmacValue;
-  }
-
-  function toUTF8(str) {
-    return unescape(encodeURIComponent(str)); //convert from UTF16 -> UTF8
-  }
-
-  //construct a SHA256 hash of the supplied value
-  function hash(value) {
-    var md = new KJUR.crypto.MessageDigest({"alg": "sha256", "prov": "cryptojs"});
-    var utf8 = unescape(encodeURIComponent(value)); //convert from UTF16 -> UTF8
-    var hashValue;
-
-    md.updateString(utf8);
-    hashValue = md.digest();
-    $log.debug('Hash : ' + hashValue);
-
-    hashValue = btoa(hexToString(hashValue));
-    $log.debug('Base64 : ' + hashValue);
-
-    return hashValue;
-  }
-
-  //convert a hex string into characters
-  function hexToString(hex) {
-    var result = '';
-    for (var i = 0; i < hex.length; i += 2) {
-      var val = hex.substr(i, 2);
-      result += String.fromCharCode(parseInt(val, 16));
-    }
-    return result;
-  }
 
   return {
     getSitesForUser: getSitesForUser,

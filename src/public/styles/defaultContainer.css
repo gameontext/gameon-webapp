@@ -1,0 +1,230 @@
+/* Colors:
+   - red/orange: #EA6F56;
+   - aqua blue: #65CFD9;
+   - darker aqua (links): #1EAEDB;
+   - dark blue (background): #35566B
+   - deep dark blue (text/borders): #1E3341
+ ------------------------------------ */
+a {
+  color: #1EAEDB;
+}
+a:hover {
+  color: #1E3341;
+}
+.main {
+  background-color: #fff;
+}
+aside.related,
+aside.related a {
+  color: #fff;
+}
+section.enter,
+section.error,
+section.login,
+section.terms,
+section.usersetup,
+.default-container section.userprofile {
+  color: #35566B;
+}
+.background,
+aside.related .text,
+aside.related .subtext,
+aside.related .icon {
+  background-color: #35566B;
+}
+section.enter header h1 .on {
+  font-weight: bold;
+  color: #65CFD9;
+}
+.main a.button {
+  background-color: #EA6F56;
+  color: #fff;
+}
+.background .icon-corner use,
+.background .icon-floating use,
+.background .icon-floating-circle use,
+.background .icon-big-light use,
+.background .icon-small-light use{
+  fill: #65CFD9;
+}
+.background .icon-bottom use,
+.background .icon-left use,
+aside.related .button .icon use {
+  fill: #1E3341;
+}
+/* Main section
+ ------------------------------------ */
+img.go-logo {
+  height: 5rem;
+  margin: 2rem;
+}
+.main > header {
+  text-align: center;
+}
+section.auth,
+section.enter,
+section.error,
+section.login,
+section.terms,
+section.usersetup {
+  text-align: center;
+}
+section header {
+  margin: 3rem 0;
+}
+section header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+/* Enter page
+ ------------------------------------ */
+section.enter header h1 {
+  font-size: 6.5rem;
+  font-weight: normal;
+  margin: 0;
+}
+section.enter header h1 .on {
+  font-weight: bold;
+}
+section.enter header .lead {
+  display: block;
+  font-size: 2rem;
+  font-weight: 500;
+}
+section.enter > footer {
+  font-size: .8rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+section.enter .intro {
+  text-align: justify;
+  line-height: 2rem;
+  font-size: 1.1rem;
+}
+section.enter .terms-link {
+  font-size: 1rem;
+}
+section.enter .intro,
+section.enter .terms-link {
+  max-width: 30rem;
+  padding-right: 5rem;
+  padding-left: 5rem;
+  margin: 2rem auto;
+}
+/* Login page
+ ------------------------------------ */
+section.login .buttons {
+  margin: 1rem auto;
+  width: 90%;
+
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: center;
+}
+section.login .button {
+  margin: .3rem;
+  width: 30rem;
+}
+/* Scrying/Authenticating page
+ ------------------------------------ */
+section.usersetup,
+section.auth {
+  font-size: 2rem;
+}
+/* Terms page
+ ------------------------------------ */
+section.terms {
+  text-align: left;
+  font-size: 1rem;
+  letter-spacing: 0;
+  padding: 2rem;
+}
+/* Sidebar
+ ------------------------------------ */
+aside.related {
+  padding: 2rem;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+aside.related .link {
+  text-decoration: none;
+  position: relative;
+  min-height: 5rem;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+
+  text-transform: none;
+  font-size: 1.5rem;
+  white-space: normal;
+
+  margin: 0;
+  padding: 1rem 0 1rem 4rem;
+}
+aside.related .link .icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 3rem;
+  width: 3rem;
+  padding: 1rem 1rem 1rem 0;
+}
+aside.related .link .text {
+  display: block;
+  padding-bottom: .5rem;
+}
+aside.related .link .subtext {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 300;
+  line-height: 1.6rem;
+  padding-bottom: .5rem;
+}
+/* Responsive layout
+ ------------------------------------ */
+.default-container {
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+}
+.main {
+  min-height: 70vh;
+  display: flex;
+  flex-flow: column nowrap;
+}
+/* Larger than tablet */
+@media (min-width: 800px) {
+  .default-container {
+    flex-shrink: 0;
+    overflow-x: hidden;
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+  aside.related {
+    background: transparent;
+    margin-top: 100px;
+    padding: 0 30px;
+    min-width: 350px;
+    max-width: 400px;
+    order: -1;
+    flex: 1;
+  }
+  div.main {
+    min-height: 100vh;
+    min-width: 35rem;
+    max-width: 68rem;
+    flex: 2;
+  }
+  section.terms {
+    max-height: 100vh;
+    overflow-y: scroll;
+  }
+}

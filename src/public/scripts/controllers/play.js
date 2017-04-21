@@ -81,58 +81,58 @@ angular.module('playerApp')
       };
 
       this.currentPrefix = null;
-      this.input = function(e) {
-        if (e.keyCode === 13) {
-          commandHistory.push(this.userInput);
-          releasePrefix.call(this);
-          this.send();
-          inputBox.focus();
-        }
-      };
 
-      function releasePrefix() {
-        this.currentPrefix = null;
-        commandHistory.reset();
-      }
-
-      function capturePrefix() {
+      this.capturePrefix = function() {
         if (this.currentPrefix === null) {
           this.currentPrefix = this.userInput;
         }
-      }
+      };
 
-      function handleUp() {
-        handleHistoryKey.call(this, commandHistory.prev);
-      }
+      this.releasePrefix = function() {
+        this.currentPrefix = null;
+        commandHistory.reset();
+      };
 
-      function handleDown() {
-        handleHistoryKey.call(this, commandHistory.next, function() {
-          this.userInput = this.currentPrefix;
-        });
-      }
-
-      function handleHistoryKey(historyAction, onNull) {
-        capturePrefix.call(this);
-        var cmd = historyAction(this.currentPrefix);
+      this.handleHistoryKey = function(historyAction, onNull) {
+        this.capturePrefix();
+        var cmd = this.historyAction(this.currentPrefix);
 
         if (cmd !== null) {
           this.userInput = cmd;
         } else {
           if (onNull) {
-            onNull.call(this);
+            this.onNull();
           }
         }
-
         setCaretPos(inputBox, this.userInput.length);
-      }
+      };
+
+      this.handleUp = function() {
+        this.handleHistoryKey(commandHistory.prev);
+      };
+
+      this.handleDown = function() {
+        this.handleHistoryKey(commandHistory.next, function() {
+          this.userInput = this.currentPrefix;
+        });
+      };
+
+      this.input = function(e) {
+        if (e.keyCode === 13) {
+          commandHistory.push(this.userInput);
+          this.releasePrefix();
+          this.send();
+          inputBox.focus();
+        }
+      };
 
       this.inputKeyDown = function(e) {
         switch (e.keyCode) {
           case 38:
-            handleUp.call(this);
+            this.handleUp();
             break;
           case 40:
-            handleDown.call(this);
+            this.handleDown();
             break;
           case 37:
           case 39:
@@ -140,7 +140,7 @@ angular.module('playerApp')
             break;
           default:
             //$log.debug("key down " + e.keyCode);
-            releasePrefix.call(this);
+            this.releasePrefix();
             break;
         }
       };

@@ -78,7 +78,7 @@ module.exports = function (grunt) {
         reportCheckstylePath: null,
         tmplext: 'html',
         angular: true,
-        customattrs: ['scroll-glue'],
+        customattrs: ['scroll-glue', 'marked'],
         customtags: ['profile-core']
       },
       files: {

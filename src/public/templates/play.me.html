@@ -1,64 +1,45 @@
-<header class="topnav">
-  <div class="logo-container"></div>
+<header>
   <div class="title">
-    <span>Edit profile</span>
+    <span>User profile and settings</span>
   </div>
-
-  <div class="right-items">
-
-    <div class="top-nav-item">
+  <div class="top-nav-item">
       <a ui-sref="play.room" title="Back to room">
         <i class="fa fa-arrow-left fa-fw"></i>
       </a>
-    </div>
-
-    <div class="top-nav-item">
-      <a ui-sref="play.me">
-        <i class="fa fa-user fa-fw"></i>
-      </a>
-    </div>
-
-    <div class="top-nav-item">
-      <a ui-sref="play.myrooms">
-        <i class="fa fa-building fa-fw"></i>
-      </a>
-    </div>
-
+  </div>
+  <div class="top-nav-item">
+    <a ui-sref="play.me" title="Edit player profile">
+      <i class="fa fa-user fa-fw"></i>
+    </a>
+  </div>
+  <div class="top-nav-item">
+    <a ui-sref="play.myrooms" title="Edit registered rooms">
+      <i class="fa fa-building fa-fw"></i>
+    </a>
   </div>
 </header>
+<div class="body nonav">
+  <section class="me-session">
+    <h2>Session</h2>
+    <div class="label-button">
+      <p>Log out of this browser, and remove all stored session data.</p>
+      <a class="button" ng-click="play.logout()"><i class="fa fa-sign-out"></i> Log out</a>
+    </div>
+  </section>
 
-<div class="viewport nonav">
-  <div class="container profile">
-    <div class="padded row operations">
-      <div class="one-half column">
-        <a class="button u-full-width" ng-click="play.restart()"><i class="fa fa-undo"></i> Restart</a>
-      </div>
-      <div class="one-half column">
-        <a class="button u-full-width" ng-click="play.logout()"><i class="fa fa-sign-out"></i> Log out</a>
-      </div>
-    </div>
-    <div class="padded row">
-      <h4>Update profile</h4>
-    </div>
+  <section class="userprofile">
+    <h2>Update User Profile</h2>
     <form name="play.profileForm" ng-submit="play.updateProfile()">
-      <profile-core user="play.user" form="play.profileForm"></profile-core>
-      <div class="row">
-        <div class="center">
-          <button type="submit" class="button" id="submit">
-            <i class="fa fa-floppy-o"></i> Done
-          </button>
-        </div>
+      <profile-core user="play.user" form="play.profileForm" class="box"></profile-core>
+      <div data-ng-hide="ctrl.profileForm.$invalid">
+        <a class="button" data-ng-click="ctrl.user.create()"><i class="fa fa-floppy-o"></i> Done!</a>
       </div>
     </form>
-    <div class="padded row">
-      <h4>API key (JWT)</h4>
-    </div>
-    <div class="row">
-      Use the following key to experiment with authenticated API calls <a href="https://gameontext.org/swagger/">using Swagger</a>.
-    </div>
-    <div class="row">
-        <div class="eleven columns little-text" style="word-wrap: break-word;"><div id="jwt" ng-bind="play.auth.token()"></div></div>
-    </div>
+  </section>
 
-  </div>
+  <section class="me-api-key">
+    <h2>API key (JWT)</h2>
+    <p>Use the following key to experiment with authenticated API calls <a href="https://gameontext.org/swagger/">using Swagger</a>.</p>
+    <div class="config"><div class="little-text key" id="jwt" ng-bind="play.auth.token()"></div></div>
+  </section>
 </div>

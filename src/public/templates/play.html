@@ -1,15 +1,14 @@
-<div class="gameView" ng-class="play.fixKeyboard" >
-    <div ui-view></div>
+<div class="game-container" ng-class="play.fixKeyboard" ng-cloak>
+  <div class="viewport">
+    <div class="panel" ui-view></div>
     <nav ng-class="{ disabled: !$state.includes('play.room') }">
-      <div class="container">
       <div class="slash"><a ng-click="play.fillin('/')"><i class="fa fa-code"></i></a></div>
       <div class="input-w">
         <input type="search" id="inputbox" ng-model="play.userInput"
           ng-keypress="play.input($event)" ng-keydown="play.inputKeyDown($event)"
           ng-click="play.inputFocus($event)" ng-focus="play.inputFocus($event)" ng-blur="play.inputBlur($event)"/>
-        <div class="clear"><a ng-click="play.fillin('')"><i class="fa fa-times-circle"></i></a></div>
       </div>
-      </div>
-      <!--<div class="action"><a ng-click="play.send()"><i class="fa fa-send-o"></i></a></div>-->
+      <div class="clear"><a ng-click="play.fillin('')"><i class="fa fa-times-circle"></i></a></div>
     </nav>
+  </div>
 </div>

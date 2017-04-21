@@ -82,7 +82,7 @@ angular.module('playerApp')
         console.log(ga);
         ga.report('send','event','GameOn','User','create');
         //post succeeded, now refresh the profile from the server to pull the new key.
-        load(profile._id, profile.name).finally(function(response){
+        load(profile._id, profile.name).finally(function(){
           $state.go('play.room');
         });
       }, function(response) {
@@ -108,7 +108,7 @@ angular.module('playerApp')
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         ga.report('send','event','GameOn','User','update');
         //put succeeded, now refresh the profile from the server to pull the new key.
-        load(profile._id, profile.name).finally(function(response){
+        load(profile._id, profile.name).finally(function(){
           $state.go('play.room');
         });
 

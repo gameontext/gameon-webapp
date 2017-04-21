@@ -1,0 +1,369 @@
+/* Colors:
+   - viewport: #323232;
+   - red/orange: #EA6F56;
+   - magenta: #c557ea
+   - aqua blue: #65CFD9;
+   - darker aqua (links): #1EAEDB;
+   - dark blue (background): #35566B
+   - deep dark blue (text/borders): #1E3341
+ ------------------------------------ */
+.game-container .viewport {
+  background-color: #323232;
+}
+.game-container nav .slash {
+  background-color: #1EAEDB;
+}
+.game-container header,
+.game-container nav .input-w input,
+.game-container nav .clear {
+  background-color: #fff;
+}
+.game-container .flex-config-row select {
+  background-color: #ccc;
+}
+.little-text.key,
+.interaction code {
+  border: 1px solid #666;
+  border-radius: 3px;
+  background-color: #170603;
+  color: #E1E1E1;
+}
+.body,
+.interaction,
+.interaction .paused a,
+.game-container a.button,
+.game-container nav .slash,
+.game-container nav .slash a {
+  color: #fff;
+}
+.game-container .flex-config textarea,
+.game-container .flex-config select,
+.game-container .flex-config input,
+.game-container .flex-config-row textarea,
+.game-container .flex-config-row select,
+.game-container .flex-config-row input,
+.game-container header a {
+  color: #000;
+}
+.game-container nav .clear a {
+  color: #1EAEDB;
+}
+.game-container #scroll-to-bottom a,
+.interaction .key a,
+.interaction .exits:before,
+.interaction .objects li a {
+  color: #EA6F56;
+}
+.interaction .key a:hover,
+.interaction .paused a:hover,
+.interaction .objects li a:hover {
+  color: #aa503e;
+}
+.game-container .flex-config-row button:disabled,
+.interaction .little-text,
+.interaction .command {
+  color: #999;
+}
+.interaction .chat {
+  color: #32822e
+}
+.interaction .chat.me {
+  color: #5EBDC9;
+}
+/* header
+------------------------------------- */
+.game-container header {
+  font-size: 1.5rem;
+  display: flex;
+  z-index: 10;
+  align-items: center;
+}
+.game-container header .title {
+  flex: 1;
+  min-width: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.game-container header .title > a,
+.game-container header .title > span {
+  white-space: nowrap;
+}
+.game-container header .top-nav-item {
+  width: 2rem;
+  padding: 0 .5rem;
+}
+/* body
+------------------------------------- */
+.game-container .body {
+  padding: 0 20px 2rem 20px;
+}
+.game-container .body .interaction {
+  display: flex;
+  flex-flow: column nowrap;
+  align-content: stretch;
+}
+.game-container .userprofile .box {
+  max-width: 700px;
+}
+.game-container .userprofile .box .flex-config,
+.game-container .body section .button {
+  min-width: 200px;
+  max-width: 20rem;
+  width: 100%;
+}
+.game-container .little-text.key {
+  word-wrap: break-word;
+  white-space: normal;
+}
+label[for="roomInfo_name"]:after {
+  content: ' *';
+  color: #EA6F56;
+}
+/* Nav / User entry bar (bottom)
+------------------------------------- */
+.game-container nav.disabled {
+  display: none;
+}
+.game-container nav {
+  z-index: 11;
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: stretch;
+}
+.game-container nav .input-w {
+  flex: 1;
+}
+.game-container nav .slash,
+.game-container nav .clear,
+.game-container nav .input-w input,
+.game-container nav .input-w input:focus {
+  border: none;
+  border-radius: 0;
+}
+.game-container nav .clear {
+  width: 3rem;
+}
+.game-container nav .slash {
+  width: 4rem;
+}
+.game-container nav .clear,
+.game-container nav .slash {
+  text-align: center;
+}
+.game-container nav .clear a,
+.game-container nav .slash a {
+  width: 2.2rem;
+  font-size: 1.5rem;
+}
+.game-container nav .slash a {
+  font-weight: 800;
+}
+.game-container nav .input-w input {
+  width: 100%;
+}
+.game-container nav .slash,
+.game-container nav .clear,
+.game-container header .top-nav-item a,
+.game-container header .title a {
+  cursor: pointer;
+}
+.game-container nav .slash,
+.game-container nav .clear {
+  z-index: 100;
+}
+/* Absolute elements
+ ------------------------------------ */
+.game-container .viewport header {
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  width: auto;
+  height: 4rem;
+  padding: .3rem .5rem;
+  background-image: linear-gradient(90deg, #35566B, #7FD6DE);
+  background-size: 100% 0.5rem;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+.game-container .viewport .body {
+  position: absolute;
+  top: 4.7rem;
+  bottom: 40px;
+  right: 0;
+  left: 0;
+  margin: 0;
+  overflow: auto;
+  -webkit-overflow: touch;
+}
+.game-container .viewport .body.nonav {
+  bottom: 0;
+}
+.game-container .viewport nav {
+  position: fixed;
+  bottom: 0;
+  left:0;
+  right:0;
+  width: auto;
+  height: 38px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.game-container .viewport #scroll-to-bottom {
+  position: absolute;
+  padding: 0 1rem;
+  right: .5rem;
+  bottom: 4.5rem;
+  height: 1rem;
+  z-index: 12;
+  padding: 0 1rem;
+  height: 1rem;
+  z-index: 12;
+}
+@media (max-width: 759px) {
+  .game-container .viewport {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+}
+@media (min-width: 800px) {
+    .game-container .viewport {
+      position: relative;
+      width: 800px;
+      height: 100vh;
+      min-height: 100vh;
+      max-height: 100vh;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .game-container .viewport .panel {
+      overflow: hidden;
+    }
+    .game-container .viewport nav {
+      position: absolute;
+    }
+}
+@media (min-width: 1400px) {
+    .game-container .viewport {
+      margin: 0 auto 0 20%;
+    }
+}
+
+/* Interactions with room
+ ---------------------------------------- */
+.interaction .content {
+  margin-top: 1.5rem;
+}
+.interaction .element {
+  margin-top: 1rem;
+  margin-bottom: .6rem;
+}
+.interaction .event {
+  margin-top: .2rem;
+  margin-bottom: .5rem;
+}
+.interaction code {
+  padding: 2px;
+  margin: 1px;
+  font-size: .9em;
+}
+.interaction .event:after, .top:after{
+  content: "";
+  display: table;
+  clear: both;
+}
+.interaction .exits:before {
+  font-family: "FontAwesome";
+  content: "\f277\00a0";
+}
+.interaction .chat:before {
+  font-family: "FontAwesome";
+  content: "\f0e6\00a0 ";
+}
+.interaction .location .name {
+  font-weight: bold;
+  border-bottom: 1px solid white;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.interaction .location .objects {
+  margin: 1em 0;
+}
+.interaction ul li {
+  list-style-position: outside;
+  margin-left: 1.5em;
+  margin-bottom: .2em;
+}
+.interaction ul {
+  padding-left: 10px;
+}
+.interaction .objects ul {
+  margin-bottom: .2em;
+}
+.interaction .command {
+  font-size: 1rem;
+  font-style: italic;
+}
+.interaction .joinpart {
+  font-size: 1rem;
+  font-style: italic;
+  text-align: right;
+}
+.interaction .list-item {
+  padding: 0.1rem 0;
+}
+.interaction .exits table,
+.interaction .exits table tr,
+.interaction .exits table tr td,
+.interaction .commands table,
+.interaction .commands table tr,
+.interaction .commands table tr td {
+  border: none;
+  vertical-align: top;
+  padding: 0;
+}
+.interaction .exits table tr td p,
+.interaction .commands table tr td p {
+  margin-bottom: 0.1em;
+}
+.interaction .exits table tr td.key a,
+.interaction .commands table tr td.key a {
+  padding-right: 1em;
+}
+.interaction .description blockquote,
+.interaction .event blockquote {
+  border: 1px solid silver;
+  padding: 10px;
+}
+.interaction .description blockquote p,
+.interaction .event blockquote p {
+  margin-bottom: 2px;
+}
+.interaction .chat .username {
+  display: inline;
+}
+.interaction .chat .content {
+  margin-top: 0;
+  display: block;
+  word-wrap: break-word;
+  padding-left: 2.2rem;
+}
+.interaction .short {
+  display: inline;
+}
+.interaction .full {
+  display: none;
+}
+@media (min-width : 400px) {
+  .interaction .short {
+    display: none;
+  }
+  .interaction .full {
+    display: inline;
+  }
+}

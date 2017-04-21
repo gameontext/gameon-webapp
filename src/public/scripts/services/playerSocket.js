@@ -49,6 +49,212 @@ angular.module('playerApp')
       // More cached data: exits, inventory, etc.
       var gameData = angular.extend({}, playerSession.get('gameData'));
 
+      function updateGameData(data, updates, roomSwitch) {
+        $log.debug("updateGameData switch=%o: %o -> %o", roomSwitch, updates, data);
+
+        if ( updates.objects ) {
+          updates.roomInventory = updates.objects;
+        }
+
+        if ( updates.roomInventory ) {
+          data.roomInventory = updates.roomInventory;
+          $log.debug('room inventory updated', data.roomInventory);
+        }
+
+        if ( roomSwitch ) {
+          if ( updates.exits ) {
+            data.exits = updates.exits;
+            $log.debug('exits updated', data.exits);
+          } else {
+            data.exits = {};
+          }
+
+          if ( updates.commands ){
+            data.commands = updates.commands;
+            $log.debug('commands updated', data.commands);
+          } else {
+            data.commands = {};
+          }
+        } else {
+          // Update / confirmation of SOME values
+          // Rooms must be able to update/revise some things..
+          if ( updates.exits ) {
+            data.exits = angular.extend({}, data.exits, updates.exits);
+            $log.debug('exits updated', data.exits);
+          }
+
+          if ( updates.commands ){
+            data.commands = angular.extend({}, data.commands, updates.commands);
+            $log.debug('commands updated', data.commands);
+          }
+        }
+      }
+
+      var pause = function(message, button) {
+        lastPauseId = id++;
+        roomEvents.push({
+          type: 'paused',
+          content: message,
+          button: button,
+          id: lastPauseId
+        });
+
+        $log.debug('PAUSE %o %o', message, button);
+        ws.close();
+      };
+
+      var resume = function(id) {
+        if ( id <= 0 ) {
+          return;
+        }
+
+        retryCount = 0;
+        lastPauseId = 0;
+        ws.reconnect();
+        for (var i = roomEvents.length - 1; i >= 0; --i) {
+          $log.debug('i %o: %o', i, roomEvents[i]);
+          if ( roomEvents[i].id === id ) {
+            $log.debug('RESULT: %o', roomEvents[i]);
+            roomEvents[i].button = false;
+            roomEvents[i].content = 'Session resumed.';
+            break;
+          }
+        }
+      };
+
+      var logout = function() {
+        clientState = {};
+        gameData = {};
+        ws.close();
+        ga.report('send','event','GameOn','Socket','logout');
+        auth.logout(); // will also reset the session
+      };
+
+      var parseJson = function(message) {
+        var res;
+        try {
+          res = angular.fromJson(message);
+        } catch(e) {
+          $log.debug('parse %o %o', message, e);
+          res = {username: user.username, content: message};
+        }
+
+        return res;
+      };
+
+      var send = function(message) {
+        if ( message.charAt(0) === '/') {
+          // echo command to user's screen
+          roomEvents.push({
+            type: 'command',
+            content: message,
+            id: id++
+            });
+        }
+
+        if ( message.indexOf('/exits') === 0 ) {
+            $log.debug('show cached exits: %o', gameData.exits);
+            ga.report('send','event','GameOn','Socket','/exits');
+            roomEvents.push({
+              type: 'exits',
+              content: gameData.exits,
+              id: id++
+              });
+            // DONE/SENT!, return whether or not we can still send,
+            // which is updated via onClose
+        } else if (message.indexOf('/help') === 0 ) {
+            $log.debug('show cached commands: %o', gameData.commands);
+            ga.report('send','event','GameOn','Socket','/help');
+            roomEvents.push({
+              type: 'commands',
+              content: gameData.commands,
+              id: id++
+            });
+            // DONE/SENT!, return whether or not we can still send,
+            // which is updated via onClose
+        } else if (message.indexOf('/pause') === 0 ) {
+          pause('This session has been paused', true);
+        } else if (message.indexOf('/resume') === 0 ) {
+          resume(lastPauseId);
+        } else if ( canSend ) {
+          var sendMsg;
+          var output = {
+            username: user.profile.name,
+            userId: user.profile._id,
+            content: message
+          };
+
+          if ( message.indexOf('/sos') === 0 ) {
+            ga.report('send','event','GameOn','Socket','/sos');
+            sendMsg = "sos,*," + angular.toJson(output);
+          } else {
+            sendMsg = "room,"+clientState.roomId+","+angular.toJson(output);
+            pingCount = 0; // clear ping count with user activity
+          }
+
+          $log.debug('sending message: %o', sendMsg);
+          ws.send(sendMsg);
+        } else {
+          pendingSend.push(message);
+          $log.debug('Not able to send at the moment. Pushing message to pending list (%o): %o', pendingSend.length, message);
+        }
+
+        // return whether or not we can still send
+        return canSend;
+      };
+
+      var trySend = function(element) {
+          // CARE! 'this' is the value passed from sendPending for iterating over
+          // all pending elements (array.every), it is not playerSocket.
+          if ( send(element) ) {
+            this.i++;
+            return true;
+          }
+          return false;
+      };
+
+      var sendPending = function() {
+        var howfar = { i: 0 };
+
+        // Iterate through the pending messages, stopping if the connection
+        // is closed again *sigh*
+        pendingSend.every(trySend, howfar);
+
+        $log.debug('CATCH UP: pendingSend.length = %o, sent %o', pendingSend.length, howfar.i);
+        pendingSend.splice(0, howfar.i);
+      };
+
+      var listExits = function() {
+        // echo command to user's screen
+        roomEvents.push({
+          type: 'command',
+          content: '/exits',
+          id: id++
+        });
+
+        $log.debug('show cached exits: %o', gameData.exits);
+        roomEvents.push({
+          type: 'exits',
+          content: gameData.exits,
+          id: id++
+        });
+      };
+
+      var listCommands = function() {
+        roomEvents.push({
+          type: 'command',
+          content: '/help',
+          id: id++
+        });
+
+        $log.debug('show cached commands: %o', gameData.commands);
+        roomEvents.push({
+          type: 'commands',
+          content: gameData.commands,
+          id: id++
+        });
+      };
+
       // Clear the bookmark if the DB says we're in a different room than the local session does.
       if ( user.profile.hasOwnProperty('location') && user.profile.location.location !== clientState.roomId ) {
         $log.debug('cache cleared');
@@ -81,8 +287,9 @@ angular.module('playerApp')
 
         // If the user was active in the previous session, clear the
         // retry count:
-        if ( userActive() )
+        if ( userActive() ) {
           retryCount = 0;
+        }
 
         console.log('open session state: retryCount=%o pingCount=%o', retryCount, pingCount);
       });
@@ -108,7 +315,7 @@ angular.module('playerApp')
           } else {
             clientState.mediatorId = res.mediatorId;
 
-            if ( clientState.roomId != res.roomId ) {
+            if ( clientState.roomId !== res.roomId ) {
               $log.debug("OnMessage ACK switch rooms %o", res);
 
               // Full reset, switch rooms
@@ -125,7 +332,7 @@ angular.module('playerApp')
             }
 
             // Update game data w/ ack (might be a room switch)
-            updateGameData(gameData, res, clientState.roomId != res.roomId)
+            updateGameData(gameData, res, clientState.roomId !== res.roomId);
 
             // Update saved session data
             playerSession.set('clientState', clientState);
@@ -201,7 +408,7 @@ angular.module('playerApp')
           pause("Paused due to expired session. Please [log in again](/#/login) to play.", false);
           $rootScope.$apply(); // process addition to array, not a usual render loop
 
-        } else if ( event.code != 1000 ) {
+        } else if ( event.code !== 1000 ) {
           retryCount++;
 
           if ( userActive() && retryCount <= 5 ) {
@@ -213,212 +420,6 @@ angular.module('playerApp')
           }
         }
       });
-
-      function updateGameData(data, updates, roomSwitch) {
-        $log.debug("updateGameData switch=%o: %o -> %o", roomSwitch, updates, data);
-
-        if ( updates.objects ) {
-          updates.roomInventory = updates.objects;
-        }
-
-        if ( updates.roomInventory ) {
-          data.roomInventory = updates.roomInventory;
-          $log.debug('room inventory updated', data.roomInventory);
-        }
-
-        if ( roomSwitch ) {
-          if ( updates.exits ) {
-            data.exits = updates.exits;
-            $log.debug('exits updated', data.exits);
-          } else {
-            data.exits = {};
-          }
-
-          if ( updates.commands ){
-            data.commands = updates.commands;
-            $log.debug('commands updated', data.commands);
-          } else {
-            data.commands = {};
-          }
-        } else {
-          // Update / confirmation of SOME values
-          // Rooms must be able to update/revise some things..
-          if ( updates.exits ) {
-            data.exits = angular.extend({}, data.exits, updates.exits);
-            $log.debug('exits updated', data.exits);
-          }
-
-          if ( updates.commands ){
-            data.commands = angular.extend({}, data.commands, updates.commands);
-            $log.debug('commands updated', data.commands);
-          }
-        }
-      }
-
-      var logout = function() {
-        clientState = {};
-        gameData = {};
-        ws.close();
-        ga.report('send','event','GameOn','Socket','logout');
-        auth.logout(); // will also reset the session
-      };
-
-      var pause = function(message, button) {
-        lastPauseId = id++;
-        roomEvents.push({
-          type: 'paused',
-          content: message,
-          button: button,
-          id: lastPauseId
-        });
-
-        $log.debug('PAUSE %o %o', message, button);
-        ws.close();
-      }
-
-      var resume = function(id) {
-        if ( id <= 0 )
-          return;
-
-        retryCount = 0;
-        lastPauseId = 0;
-        ws.reconnect();
-        for (var i = roomEvents.length - 1; i >= 0; --i) {
-          $log.debug('i %o: %o', i, roomEvents[i]);
-          if ( roomEvents[i].id === id ) {
-            $log.debug('RESULT: %o', roomEvents[i]);
-            roomEvents[i].button = false;
-            roomEvents[i].content = 'Session resumed.'
-            break;
-          }
-        }
-      }
-
-      var parseJson = function(message) {
-        var res;
-        try {
-          res = angular.fromJson(message);
-        } catch(e) {
-          $log.debug('parse %o %o', message, e);
-          res = {username: user.username, content: message};
-        }
-
-        return res;
-      };
-
-      var trySend = function(element) {
-          // CARE! 'this' is the value passed from sendPending for iterating over
-          // all pending elements (array.every), it is not playerSocket.
-          if ( send(element) ) {
-            this.i++;
-            return true;
-          }
-          return false;
-      };
-
-      var sendPending = function() {
-        var howfar = { i: 0 };
-
-        // Iterate through the pending messages, stopping if the connection
-        // is closed again *sigh*
-        pendingSend.every(trySend, howfar);
-
-        $log.debug('CATCH UP: pendingSend.length = %o, sent %o', pendingSend.length, howfar.i);
-        pendingSend.splice(0, howfar.i);
-      };
-
-      var listExits = function() {
-        // echo command to user's screen
-        roomEvents.push({
-          type: 'command',
-          content: '/exits',
-          id: id++
-        });
-
-        $log.debug('show cached exits: %o', gameData.exits);
-        roomEvents.push({
-          type: 'exits',
-          content: gameData.exits,
-          id: id++
-        });
-
-      };
-
-      var listCommands = function() {
-        roomEvents.push({
-          type: 'command',
-          content: '/help',
-          id: id++
-        });
-
-        $log.debug('show cached commands: %o', gameData.commands);
-        roomEvents.push({
-          type: 'commands',
-          content: gameData.commands,
-          id: id++
-        });
-      };
-
-      var send = function(message) {
-        if ( message.charAt(0) === '/') {
-          // echo command to user's screen
-          roomEvents.push({
-            type: 'command',
-            content: message,
-            id: id++
-            });
-        }
-
-        if ( message.indexOf('/exits') === 0 ) {
-            $log.debug('show cached exits: %o', gameData.exits);
-            ga.report('send','event','GameOn','Socket','/exits');
-            roomEvents.push({
-              type: 'exits',
-              content: gameData.exits,
-              id: id++
-              });
-            // DONE/SENT!, return whether or not we can still send,
-            // which is updated via onClose
-        } else if (message.indexOf('/help') === 0 ) {
-            $log.debug('show cached commands: %o', gameData.commands);
-            ga.report('send','event','GameOn','Socket','/help');
-            roomEvents.push({
-              type: 'commands',
-              content: gameData.commands,
-              id: id++
-            });
-            // DONE/SENT!, return whether or not we can still send,
-            // which is updated via onClose
-        } else if (message.indexOf('/pause') === 0 ) {
-          pause('This session has been paused', true);
-        } else if (message.indexOf('/resume') === 0 ) {
-          resume(lastPauseId);
-        } else if ( canSend ) {
-          var sendMsg;
-          var output = {
-            username: user.profile.name,
-            userId: user.profile._id,
-            content: message
-          };
-
-          if ( message.indexOf('/sos') === 0 ) {
-            ga.report('send','event','GameOn','Socket','/sos');
-            sendMsg = "sos,*," + angular.toJson(output);
-          } else {
-            sendMsg = "room,"+clientState.roomId+","+angular.toJson(output);
-            pingCount = 0; // clear ping count with user activity
-          }
-
-          $log.debug('sending message: %o', sendMsg);
-          ws.send(sendMsg);
-        } else {
-          pendingSend.push(message);
-          $log.debug('Not able to send at the moment. Pushing message to pending list (%o): %o', pendingSend.length, message);
-        }
-
-        // return whether or not we can still send
-        return canSend;
-      };
 
       // Available methods and structures
       var sharedApi = {
