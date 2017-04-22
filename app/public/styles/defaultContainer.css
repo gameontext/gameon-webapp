@@ -81,6 +81,14 @@ section header h1 {
   justify-content: center;
   margin-left: 1.3rem;
 }
+.default-container section .close {
+  display: block;
+  position: absolute;
+  top: 12rem;
+  right: 1rem;
+  font-size: 2rem;
+  z-index: 9;
+}
 /* Enter page
  ------------------------------------ */
 section.enter header h1 {
