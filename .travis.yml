@@ -11,7 +11,7 @@ language: node_js
 node_js:
   - '6'
 before_install:
-  - cd src
+  - cd app
 install:
   - npm install
 before_script:
