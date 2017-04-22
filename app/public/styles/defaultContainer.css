@@ -66,7 +66,8 @@ section.enter,
 section.error,
 section.login,
 section.terms,
-section.usersetup {
+section.usersetup,
+.default-container section.userprofile {
   text-align: center;
 }
 section header {
@@ -76,7 +77,10 @@ section header h1 {
   margin: 0;
   font-size: 2rem;
 }
-
+.default-container .userprofile .box {
+  justify-content: center;
+  margin-left: 1.3rem;
+}
 /* Enter page
  ------------------------------------ */
 section.enter header h1 {

@@ -122,6 +122,9 @@ input.ng-invalid-required {
   flex-flow: row wrap;
   justify-content: flex-start;
 }
+.userprofile .box .flex-config {
+  width: 20rem;
+}
 .flex-config,
 .flex-config-row {
   display: flex;
