@@ -119,6 +119,11 @@ angular.module('playerApp')
         var data = [];
         if ( response.status === 200 ) {
           data = angular.fromJson(response.data);
+          if( typeof data === 'undefined' ) {
+            // TODO: Alert -- problem occurred
+            $log.error("Bad JSON data %s", response.data);
+            data = [];
+          }
         }
         $log.debug("getSitesForUser returing %o", data);
         q.resolve(data);
@@ -127,7 +132,7 @@ angular.module('playerApp')
         // TODO: Alert -- problem occurred
         // return empty set for decent experience
         q.resolve([]);
-      });
+      }).catch(console.log.bind(console));
 
       return q.promise;
   };
@@ -156,7 +161,7 @@ angular.module('playerApp')
         // 409: save conflict
         $log.debug(response.status + ' ' + response.statusText + " %o - FAILED", response.data);
         q.reject(response.data);
-      });
+      }).catch(console.log.bind(console));
 
     return q.promise;
   };
@@ -185,7 +190,7 @@ angular.module('playerApp')
         } else {
           q.reject(response.data);
         }
-      });
+      }).catch(console.log.bind(console));
 
     return q.promise;
   };
@@ -215,7 +220,7 @@ angular.module('playerApp')
         // 409: save conflict
         $log.debug(response.status + ' ' + response.statusText + " %o - FAILED", response.data);
         q.reject(response.data);
-      });
+      }).catch(console.log.bind(console));
 
     return q.promise;
   };

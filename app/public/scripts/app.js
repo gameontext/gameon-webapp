@@ -15,16 +15,12 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
   .run(
   [          '$rootScope', '$state', '$stateParams',
     function ($rootScope,   $state,   $stateParams) {
-      console.log("Page init starting.");
-
       // make life easier
       $rootScope.$on("$stateChangeError", console.log.bind(console));
 
       // From https://github.com/angular-ui/ui-router/blob/gh-pages/sample/app/app.js
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
-
-      console.log("Page init complete: " + baseUrl);
     }
   ])
   .constant("API", {
@@ -40,6 +36,9 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
   })
   .config(['markedProvider', function (markedProvider) {
     markedProvider.setOptions({sanitize: true});
+  }])
+  .config(['$locationProvider', function($locationProvider) {
+    $locationProvider.hashPrefix('');
   }])
   .config(
   [          '$stateProvider','$urlRouterProvider',

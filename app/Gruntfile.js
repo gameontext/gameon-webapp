@@ -15,11 +15,11 @@ var gruntConfig = {
   jshint: {
     options: {
       jshintrc: '.jshintrc',
-      reporter: require('jshint-stylish')
     },
     all: {
       src: [
         'Gruntfile.js',
+        'karma.*.js',
         'public/scripts/{,*/}*.js'
       ]
     },
@@ -59,6 +59,16 @@ var gruntConfig = {
     },
     server: ['.tmp']
   },
+
+  karma: {
+    unit: {
+      configFile: 'karma.conf.js',
+      port: 9999,
+      singleRun: true,
+      browsers: ['PhantomJS'],
+      logLevel: 'INFO'
+    }
+  }
 };
 
 module.exports = function (grunt) {
@@ -68,13 +78,14 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-html-angular-validate');
   grunt.loadNpmTasks('grunt-wiredep');
+  grunt.loadNpmTasks('grunt-karma');
 
   grunt.initConfig(gruntConfig);
 
   grunt.registerTask('build', ['clean','wiredep',
                                'jshint', 'htmlangular']);
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('test', ['jshint', 'htmlangular']);
+  grunt.registerTask('test', ['jshint', 'htmlangular', 'karma']);
 
   return gruntConfig;
 };

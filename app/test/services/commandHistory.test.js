@@ -1,6 +1,8 @@
+'use strict';
+
 describe('commandHistory', function () {
   beforeEach(function() {
-    module('playerApp')
+    module('playerApp');
   });
 
   var commandHistory;
@@ -19,7 +21,7 @@ describe('commandHistory', function () {
     });
 
     it('works with single entry', function() {
-      commandHistory.push("/something")
+      commandHistory.push("/something");
 
       var cmd = commandHistory.prev();
 
@@ -27,7 +29,7 @@ describe('commandHistory', function () {
     });
 
     it('does not go back beyond oldest', function() {
-      commandHistory.push("/something")
+      commandHistory.push("/something");
 
       var cmd = commandHistory.prev();
       cmd = commandHistory.prev();
@@ -36,7 +38,7 @@ describe('commandHistory', function () {
     });
 
     it('is not confused by going back beyond oldest', function() {
-      commandHistory.push("/something")
+      commandHistory.push("/something");
 
       var cmd = commandHistory.prev();
       cmd = commandHistory.prev();
@@ -47,16 +49,16 @@ describe('commandHistory', function () {
     });
 
     it('works with multiple entries', function() {
-      commandHistory.push("/something1")
-      commandHistory.push("/something2")
+      commandHistory.push("/something1");
+      commandHistory.push("/something2");
 
       var cmd = commandHistory.prev();
       expect(cmd).toBe("/something2");
 
-      var cmd = commandHistory.prev();
+      cmd = commandHistory.prev();
       expect(cmd).toBe("/something1");
 
-      var cmd = commandHistory.prev();
+      cmd = commandHistory.prev();
       expect(cmd).toBe("/something1");
     });
   });
@@ -68,7 +70,7 @@ describe('commandHistory', function () {
     });
 
     it('is benign before moving back', function() {
-      commandHistory.push("/something")
+      commandHistory.push("/something");
       var cmd = commandHistory.next();
       expect(cmd).toBe(null);
     });

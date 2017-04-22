@@ -2,15 +2,19 @@
   "name": "gameontext-webapp",
   "private": true,
   "devDependencies": {
-    "autoprefixer": "^6.1.0",
     "bower": "^1.7.9",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-html-angular-validate": "^0.5.7",
+    "grunt-karma": "^2.0.0",
     "grunt-wiredep": "^3.0.1",
-    "jshint-stylish": "^2.2.1"
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.6.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-spec-reporter": "0.0.31"
   },
   "scripts": {
     "test": "grunt test"

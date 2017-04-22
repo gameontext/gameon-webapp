@@ -13,7 +13,7 @@ angular.module('playerApp')
   .factory('auth',
   [        '$log','API','$http','playerSession','ga',
   function ($log,  API,  $http,  playerSession,  ga) {
-    console.log("Loading AUTH", ga);
+    $log.debug("Loading AUTH", ga);
 
     var _token = null,
         _publicKey = null,
@@ -31,7 +31,7 @@ angular.module('playerApp')
           _publicKey = data.data;
           playerSession.set('publicKey', _publicKey);
           success();
-        }, failure);
+        }, failure).catch(console.log.bind(console));
       } else {
         console.log("Already had cert");
         console.log(_publicKey);
