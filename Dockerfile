@@ -6,7 +6,10 @@ ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_l
 #
 # npm and git needed for bower; see below.
 #
-RUN apt-get clean && apt-get update && apt-get install --fix-missing -y wget npm git && ln -s /usr/bin/nodejs /usr/bin/node
+RUN apt-get clean && apt-get update && apt-get install --fix-missing -y wget git \
+ && wget -qO- https://deb.nodesource.com/setup_6.x | bash - \
+ && apt-get install --fix-missing -y nodejs git \
+ && ln -sf /usr/bin/nodejs /usr/bin/node
 
 RUN wget -qO- https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
 
@@ -21,11 +24,12 @@ RUN wget https://github.com/coreos/etcd/releases/download/v2.2.2/etcd-v2.2.2-lin
     rm etcd-v2.2.2-linux-amd64.tar.gz && \
     mv etcdctl /usr/local/bin/etcdctl
 
+ADD ./app/ /opt/www
+
 EXPOSE 8080
 
 CMD ["/opt/startup.sh"]
 
-ADD ./src/ /opt/www
 
 #
 # And in fact, we do need to build the bower components into the image and not build them locally, so

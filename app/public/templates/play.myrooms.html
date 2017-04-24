@@ -1,0 +1,128 @@
+<header>
+  <div class="title">
+    <span>Edit rooms</span>
+  </div>
+  <div class="top-nav-item">
+      <a ui-sref="play.room" title="Back to room">
+        <i class="fa fa-arrow-left fa-fw"></i>
+      </a>
+  </div>
+  <div class="top-nav-item">
+    <a ui-sref="play.me" title="Edit player profile">
+      <i class="fa fa-user fa-fw"></i>
+    </a>
+  </div>
+  <div class="top-nav-item">
+    <a ui-sref="play.myrooms" title="Edit registered rooms">
+      <i class="fa fa-building fa-fw"></i>
+    </a>
+  </div>
+</header>
+<div class="body nonav">
+  <section>
+    <h2>Owner credentials</h2>
+    <div class="flex-config-row">
+      <div class="label">Game On! id</div>
+      <div class="little-text key" id="owner-id">{{play.user.profile._id}}</div>
+    </div>
+    <div class="flex-config-row">
+      <div class="label">Use the following secret for room registration</div>
+      <div class="little-text key" id="sharedSecret">{{play.user.profile.credentials.sharedSecret}}</div>
+    </div>
+    <form name="play.sharedsecretForm" ng-submit="play.updateSharedSecret()">
+      <div class="padded flex-config">
+        <button type="submit" id="submit">
+          <i class="fa fa-key"></i> Regenerate Shared Secret
+        </button>
+      </div>
+    </form>
+  </section>
+  <hr />
+  <section ng-controller="SiteCtrl as sites">
+    <form name="sites.roomConfig">
+    <h2>Room management</h2>
+    <div class="padded full">
+      <p>Use the following fields to configure the registration of your room
+        with the game. Select an existing room from the drop-down.</p>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomSelect">Select a room: </label>
+      <select id="roomSelect"
+          ng-change="sites.resetForm()"
+          ng-model="sites.activeSite"
+          ng-options="site as site.info.name for site in sites.siteList track by site._id">
+          <option value="">-- Register a new room --</option>
+      </select>
+    </div>
+
+    <div class="flex-config-row">
+      <label for="roomInfo_name">Room Name</label>
+      <input type="text" id="roomInfo_name" required
+      placeholder="Short, unique room name: niftyRoom" ng-model="sites.activeSite.info.name"/>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_fullName">Full Name</label>
+      <input type="text" id="roomInfo_fullName"
+      placeholder="Full name for your room" ng-model="sites.activeSite.info.fullName">
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_target">WebSocket endpoint</label>
+      <input type="text" id="roomInfo_target"
+          ng-model="sites.activeSite.info.connectionDetails.target"
+          placeholder="ws://<hostname:portnumber>/<context-root>"/>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_repo">Github repository</label>
+      <input type="text" id="roomInfo_repo"
+          ng-model="sites.activeSite.info.connectionDetails.repo"
+          placeholder="https://github.com/owner/repository"/>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_health">Health endpoint</label>
+      <input type="text" id="roomInfo_health"
+          ng-model="sites.activeSite.info.connectionDetails.health"
+          placeholder="http://<hostname:portnumber>/<context-root>"/>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_description">Description</label>
+      <textarea class="u-full-width" id="roomInfo_description" rows="3"
+        placeholder="Describe your room: is it a tavern? A bus stop? A store?"
+        ng-model="sites.activeSite.info.description"></textarea>
+    </div>
+    <div class="padded full">
+      <h3>Doors</h3>
+      <p>Describe the doors of your room as they
+        <a href="https://book.gameontext.org/microservices/Map.html#_the_nature_of_doors" target="_blank">appear from the outside</a>.</p>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_n">North</label>
+      <input class="u-full-width" type="text" id="roomInfo_n"
+      placeholder="" ng-model="sites.activeSite.info.doors.n"/>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_s">South</label>
+      <input class="u-full-width" type="text" id="roomInfo_s"
+      placeholder="" ng-model="sites.activeSite.info.doors.s"/>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_e">East</label>
+      <input class="u-full-width" type="text" id="roomInfo_e"
+      placeholder="" ng-model="sites.activeSite.info.doors.e"/>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_w">West</label>
+      <input class="u-full-width" type="text" id="roomInfo_w"
+      placeholder="" ng-model="sites.activeSite.info.doors.w"/>
+    </div>
+    <div class="padded flex-config" ng-show="!sites.activeSite._id">
+      <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.createRoom()">Register</button>
+    </div>
+    <div class="padded flex-config" ng-show="sites.activeSite._id">
+      <button type="button" class="btn u-full-width" ng-model="sites.activeSite" ng-click="sites.updateRoom()"
+              ng-disabled="sites.roomConfig.$pristine">Update</button>
+      <button type="button" class="btn u-full-width" ng-model="sites.activeSite" ng-click="sites.deleteRoom()">Delete</button>
+    </div>
+    </form>
+  </section>
+
+</div>
