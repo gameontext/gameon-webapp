@@ -11,7 +11,7 @@
   background-color: #323232;
 }
 .game-container nav .slash {
-  background-color: #1EAEDB;
+  background-color: #65CFD9;
 }
 .game-container header,
 .game-container nav .input-w input,
@@ -46,7 +46,7 @@
   color: #000;
 }
 .game-container nav .clear a {
-  color: #1EAEDB;
+  color: #65CFD9;
 }
 .game-container #scroll-to-bottom a,
 .interaction .key a,
@@ -153,7 +153,7 @@ label[for="roomInfo_name"]:after {
 .game-container nav .clear a,
 .game-container nav .slash a {
   width: 2.2rem;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
 }
 .game-container nav .slash a {
   font-weight: 800;
