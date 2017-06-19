@@ -95,7 +95,7 @@ angular.module('playerApp')
 
       this.handleHistoryKey = function(historyAction, onNull) {
         this.capturePrefix();
-        var cmd = this.historyAction(this.currentPrefix);
+        var cmd = historyAction(this.currentPrefix);
 
         if (cmd !== null) {
           this.userInput = cmd;
