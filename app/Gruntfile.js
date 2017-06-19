@@ -3,49 +3,6 @@
 // configuration hash is factored out for testing
 var gruntConfig = {
 
-  // Automatically inject Bower components into the app
-  wiredep: {
-    app: {
-      src: ['public/index.html'],
-      ignorePath:  /\.\.\//
-    },
-  },
-
-  // Make sure code styles are up to par and there are no obvious mistakes
-  jshint: {
-    options: {
-      jshintrc: '.jshintrc',
-    },
-    all: {
-      src: [
-        'Gruntfile.js',
-        'karma.*.js',
-        'public/scripts/{,*/}*.js'
-      ]
-    },
-    test: {
-      options: {
-        jshintrc: 'test/.jshintrc'
-      },
-      src: ['test/spec/{,*/}*.js']
-    }
-  },
-
-  // angular-aware html linting
-  htmlangular: {
-    options: {
-      reportpath: null,
-      reportCheckstylePath: null,
-      tmplext: 'html',
-      angular: true,
-      customattrs: ['scroll-glue', 'marked'],
-      customtags: ['profile-core']
-    },
-    files: {
-      src: ['public/templates/*.html']
-    }
-  },
-
   // Empties folders to start fresh
   clean: {
     dist: {
@@ -58,6 +15,63 @@ var gruntConfig = {
       }]
     },
     server: ['.tmp']
+  },
+
+  // Make sure code styles are up to par and there are no obvious mistakes
+  jshint: {
+    options: {
+      jshintrc: '.jshintrc',
+    },
+    all: {
+      src: [
+        'Gruntfile.js',
+        'karma.*.js',
+        'public/scripts/**/*.js'
+      ]
+    },
+    test: {
+      options: {
+        jshintrc: 'test/.jshintrc'
+      },
+      src: ['test/**/*.js']
+    }
+  },
+
+  // angular-aware html linting
+  htmlangular: {
+    public: {
+      options: {
+        reportpath: null,
+        reportCheckstylePath: null,
+        angular: true
+      },
+      files: {
+        src: ['public/index.html']
+      }
+    },
+    templates: {
+      options: {
+        reportpath: null,
+        reportCheckstylePath: null,
+        tmplext: 'html',
+        angular: true,
+        customattrs: ['scroll-glue', 'marked'],
+        customtags: ['profile-core']
+      },
+      files: {
+        src: ['public/templates/*.html']
+      }
+    }
+  },
+
+  wiredep: {
+    task: {
+      src: [
+        'public/index.html'
+      ],
+      options: {
+      }
+    }
   },
 
   karma: {
@@ -82,8 +96,7 @@ module.exports = function (grunt) {
 
   grunt.initConfig(gruntConfig);
 
-  grunt.registerTask('build', ['clean','wiredep',
-                               'jshint', 'htmlangular']);
+  grunt.registerTask('build', ['clean','wiredep', 'jshint', 'htmlangular']);
   grunt.registerTask('default', ['build']);
   grunt.registerTask('test', ['jshint', 'htmlangular', 'karma']);
 

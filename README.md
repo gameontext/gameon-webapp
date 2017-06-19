@@ -10,10 +10,61 @@ Want to help! Pile On!
 
 [Contributing to Game On!](https://github.com/gameontext/gameon/blob/master/CONTRIBUTING.md)
 
-## Run tests:
-From the project's root:
+## Building and testing the web front end 
 
-    npm install (only once)
-    npm test
+The build requires node 6, and uses grunt and bower to manage builds.
 
-Then go to the webpage mentioned in the console's output on your browser. That will kick off continuous testing by karma, so any save to a .js file in the scripts (or bower_components) folder, or to a test file in the /test folder, will trigger re-run of the test suite.
+```
+npm install
+bower install
+grunt build
+```
+
+If you don't have these installed, don't worry! We have you covered! 
+
+* From the webapp project itself, create a docker image for building:  
+  ```
+  docker build -f Dockerfile-node -t webapp-build .
+  ```
+  
+  Then, to build, run: 
+  ```
+  docker run --rm -it -v $PWD/app:/app webapp-build /usr/local/bin/local-build.sh
+  ```
+  To open a shell: 
+  ```
+  docker run --rm -it -v $PWD/app:/app webapp-build /bin/bash
+  ```
+  
+
+* If you're building from the top-level `gameon` project with docker-compose, copy the following from `docker-compose.override.yml.example` into `docker-compose.override.yml`: 
+  ```
+  webapp-build:
+    build:
+       context: webapp
+       dockerfile: Dockerfile-node
+    command: /usr/local/bin/docker-build.sh
+    volumes:
+      - './webapp/app:/app'
+
+  webapp:
+    build:
+      context: webapp
+    volumes:
+      - './webapp/app:/opt/www'
+  ```
+
+  After that, use `docker-compose` to manage building and rebuilding the web front-end: 
+  ```
+  docker-compose run webapp-build
+  ```
+  
+  `go-run.sh` will rebuild the webapp project this way automatically, once the information is added to `docker-compose.override.yml`
+
+## Running tests
+
+By default, we use Karma with PhantomJS for unit testing: 
+
+```
+  grunt test
+```

@@ -3,15 +3,9 @@ FROM nginx
 MAINTAINER Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)
 
 ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_linux_amd64 /opt/forwarder
-#
-# npm and git needed for bower; see below.
-#
-RUN apt-get clean && apt-get update && apt-get install --fix-missing -y wget git \
- && wget -qO- https://deb.nodesource.com/setup_6.x | bash - \
- && apt-get install --fix-missing -y nodejs git \
- && ln -sf /usr/bin/nodejs /usr/bin/node
 
-RUN wget -qO- https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
+RUN apt-get update && apt-get install -y wget\
+  && wget -qO- https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx-a8.conf /etc/nginx/nginx-a8.conf
@@ -29,10 +23,3 @@ ADD ./app/ /opt/www
 EXPOSE 8080
 
 CMD ["/opt/startup.sh"]
-
-
-#
-# And in fact, we do need to build the bower components into the image and not build them locally, so
-# there's a lot of mess inside the container that in the end prolly isn't needed.
-#
-RUN cd /opt/www ; npm install bower@1.5.3 ; node_modules/.bin/bower install --allow-root
