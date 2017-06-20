@@ -1,0 +1,21 @@
+FROM node:7.5
+MAINTAINER Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)
+
+RUN npm install -g grunt-cli \
+  && mkdir /app
+
+ADD docker-build.sh /usr/local/bin
+
+WORKDIR /app
+
+RUN touch /root/.bashrc \
+ && chmod +x /usr/local/bin/docker-build.sh \
+ && echo "/usr/local/bin/docker-build.sh" >> /root/.bashrc
+
+#Express port
+EXPOSE 3000
+
+#Grunt watch
+EXPOSE 35729
+
+CMD [ "echo", "To reach a shell for building, use\n docker run --rm -it -v $PWD/app:/app webapp-build /bin/bash\nTo build inline with other containers, use docker-compose from gameon root:\n docker-compose up webapp-build" ]

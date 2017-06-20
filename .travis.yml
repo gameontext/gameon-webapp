@@ -10,17 +10,32 @@ services:
 language: node_js
 node_js:
   - '6'
+
+cache:
+  directories:
+    - travis_phantomjs
+
 before_install:
   - cd app
+  - "export PHANTOMJS_VERSION=2.1.1"
+  - "export PATH=$PWD/travis_phantomjs/phantomjs-$PHANTOMJS_VERSION-linux-x86_64/bin:$PATH"
+  - "if [ $(phantomjs --version) != $PHANTOMJS_VERSION ]; then rm -rf $PWD/travis_phantomjs; mkdir -p $PWD/travis_phantomjs; fi"
+  - "if [ $(phantomjs --version) != $PHANTOMJS_VERSION ]; then wget https://github.com/Medium/phantomjs/releases/download/v$PHANTOMJS_VERSION/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 -O $PWD/travis_phantomjs/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2; fi"
+  - "if [ $(phantomjs --version) != $PHANTOMJS_VERSION ]; then tar -xvf $PWD/travis_phantomjs/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 -C $PWD/travis_phantomjs; fi"
+  - "phantomjs --version"
+
 install:
   - npm install
 before_script:
   - bower install
 script:
   - grunt build
+  - grunt test
   - cd ..
+
 after_success:
   - test $TRAVIS_BRANCH = "master" \
     && docker login -e="${DOCKER_EMAIL}" -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" \
     && docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE} ${DOCKER_BUILDDIR} \
     && docker push ${DOCKER_REPO}/${DOCKER_IMAGE}
+  - cat app/coverage/lcov.info | app/node_modules/.bin/codacy-coverage -c $TRAVIS_COMMIT

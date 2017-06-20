@@ -24,10 +24,11 @@ describe('map registration client', function () {
     }
   }));
 
-  beforeEach(inject(function(_$httpBackend_, _$rootScope_, _$q_, _map_){
+  beforeEach(inject(function(_$httpBackend_, _$rootScope_, _$state_, _$q_, _map_){
     // The injector unwraps the underscores (_) from around the parameter names when matching
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
+    $state = _$state_;
     $q = _$q_;
     map = _map_;
   }));
