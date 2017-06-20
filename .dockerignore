@@ -1,3 +1,5 @@
 app/node_modules
-app/public/bower_components
+app/Gruntfile.js
+app/test
+app/coverage
 docker

@@ -4,7 +4,7 @@ MAINTAINER Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)
 
 ADD https://download.elastic.co/logstash-forwarder/binaries/logstash-forwarder_linux_amd64 /opt/forwarder
 
-RUN apt-get update && apt-get install -y wget\
+RUN apt-get update && apt-get install -y wget procps\
   && wget -qO- https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
