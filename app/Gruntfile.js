@@ -11,6 +11,7 @@ var gruntConfig = {
         src: [
           '.tmp',
           'build',
+          'coverage'
         ]
       }]
     },
