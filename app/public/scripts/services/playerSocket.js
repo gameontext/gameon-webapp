@@ -16,8 +16,8 @@
  */
 angular.module('playerApp')
   .factory('playerSocket',
-  [          '$rootScope','$websocket','$log','user','auth','API','playerSession','marked','ga',
-    function ($rootScope,  $websocket,  $log,  user,  auth,  API,  playerSession,  marked,  ga) {
+  [          '$rootScope','$websocket','$log','user','auth','API','playerSession', 'ga',
+    function ($rootScope,  $websocket,  $log,  user,  auth,  API,  playerSession,   ga) {
 
       var ws;
       var id = 0;
@@ -88,6 +88,9 @@ angular.module('playerApp')
             $log.debug('commands updated', data.commands);
           }
         }
+
+        $log.debug("updateGameData done: %o", data);
+        return data;
       }
 
       var pause = function(message, button) {
@@ -138,11 +141,65 @@ angular.module('playerApp')
           $log.debug('parse %o %o', message, e);
           res = {username: user.username, content: message};
         }
-
         return res;
       };
 
+      var pushExits = function() {
+        $log.debug('show cached exits: %o %o', gameData, clientState);
+        ga.report('send','event','GameOn','Socket','/exits');
+        roomEvents.push({
+          type: 'exits',
+          content: gameData[clientState.roomId].exits,
+          id: id++
+        });
+      };
+
+      var listExits = function() {
+        // echo command to user's screen
+        roomEvents.push({
+          type: 'command',
+          content: '/exits',
+          id: id++
+        });
+        pushExits();
+      };
+
+      var pushCommands = function() {
+        $log.debug('show cached commands: %o %o', gameData, clientState);
+        ga.report('send','event','GameOn','Socket','/help');
+        roomEvents.push({
+          type: 'commands',
+          content: gameData[clientState.roomId].commands,
+          id: id++
+        });
+      };
+
+      var listCommands = function() {
+        roomEvents.push({
+          type: 'command',
+          content: '/help',
+          id: id++
+        });
+        pushCommands();
+      };
+
+      var debugStats = function() {
+        roomEvents.push({
+          type: 'event',
+          id: id++,
+          content: 'While whistling casually, you flip open a tucked away control panel to see what\'s what:\n\n' +
+            '* most recent id=' + id + '\n' +
+            '* pingCount=' + pingCount + '\n' +
+            '* retryCount=' + retryCount + '\n' +
+            '* canSend=' + canSend + '\n'
+        });
+      };
+
       var send = function(message) {
+        if (message.indexOf('/me') === 0 ) {
+          message = message.replace(/\/me /, '_') + '_';
+        }
+
         if ( message.charAt(0) === '/') {
           // echo command to user's screen
           roomEvents.push({
@@ -153,29 +210,19 @@ angular.module('playerApp')
         }
 
         if ( message.indexOf('/exits') === 0 ) {
-            $log.debug('show cached exits: %o', gameData.exits);
-            ga.report('send','event','GameOn','Socket','/exits');
-            roomEvents.push({
-              type: 'exits',
-              content: gameData.exits,
-              id: id++
-              });
+            pushExits();
             // DONE/SENT!, return whether or not we can still send,
             // which is updated via onClose
         } else if (message.indexOf('/help') === 0 ) {
-            $log.debug('show cached commands: %o', gameData.commands);
-            ga.report('send','event','GameOn','Socket','/help');
-            roomEvents.push({
-              type: 'commands',
-              content: gameData.commands,
-              id: id++
-            });
+            pushCommands();
             // DONE/SENT!, return whether or not we can still send,
             // which is updated via onClose
         } else if (message.indexOf('/pause') === 0 ) {
           pause('This session has been paused', true);
         } else if (message.indexOf('/resume') === 0 ) {
           resume(lastPauseId);
+        } else if (message.indexOf('/debug') === 0 ) {
+          debugStats();
         } else if ( canSend ) {
           var sendMsg;
           var output = {
@@ -189,8 +236,8 @@ angular.module('playerApp')
             sendMsg = "sos,*," + angular.toJson(output);
           } else {
             sendMsg = "room,"+clientState.roomId+","+angular.toJson(output);
-            pingCount = 0; // clear ping count with user activity
           }
+          pingCount = 0; // clear ping count with user activity
 
           $log.debug('sending message: %o', sendMsg);
           ws.send(sendMsg);
@@ -222,37 +269,6 @@ angular.module('playerApp')
 
         $log.debug('CATCH UP: pendingSend.length = %o, sent %o', pendingSend.length, howfar.i);
         pendingSend.splice(0, howfar.i);
-      };
-
-      var listExits = function() {
-        // echo command to user's screen
-        roomEvents.push({
-          type: 'command',
-          content: '/exits',
-          id: id++
-        });
-
-        $log.debug('show cached exits: %o', gameData.exits);
-        roomEvents.push({
-          type: 'exits',
-          content: gameData.exits,
-          id: id++
-        });
-      };
-
-      var listCommands = function() {
-        roomEvents.push({
-          type: 'command',
-          content: '/help',
-          id: id++
-        });
-
-        $log.debug('show cached commands: %o', gameData.commands);
-        roomEvents.push({
-          type: 'commands',
-          content: gameData.commands,
-          id: id++
-        });
       };
 
       // Clear the bookmark if the DB says we're in a different room than the local session does.
@@ -300,7 +316,7 @@ angular.module('playerApp')
         var comma = event.data.indexOf(',');
         var command = event.data.slice(0,comma);
         var payload = event.data.slice(comma+1);
-        var target, res;
+        var target, res, oldRoom, roomSwitch;
 
         $log.debug("OnMessage %o %o %o", pingCount, command, payload);
 
@@ -313,9 +329,13 @@ angular.module('playerApp')
             ga.report('send','event','GameOn','Socket','playerUpdate');
             user.load(user.profile._id, user.profile.name);
           } else {
+            roomSwitch = clientState.roomId !== res.roomId;
+            oldRoom = clientState.roomId;
+
+            $log.debug("ACK for room %s: %o", res.roomId, res);
             clientState.mediatorId = res.mediatorId;
 
-            if ( clientState.roomId !== res.roomId ) {
+            if ( roomSwitch ) {
               $log.debug("OnMessage ACK switch rooms %o", res);
 
               // Full reset, switch rooms
@@ -329,10 +349,17 @@ angular.module('playerApp')
               } else {
                 clientState.fullName = res.name;
               }
+
+              delete gameData[oldRoom];
             }
 
+
             // Update game data w/ ack (might be a room switch)
-            updateGameData(gameData, res, clientState.roomId !== res.roomId);
+            $log.debug("ACK Update game data for room %s: %o %o", res.roomId, res, clientState);
+            gameData[res.roomId] = updateGameData(
+              gameData[res.roomId] || {},
+              res,
+              roomSwitch);
 
             // Update saved session data
             playerSession.set('clientState', clientState);
@@ -346,6 +373,7 @@ angular.module('playerApp')
             }
           }
         } else if ( "ping" === command ) {
+          $log.debug('ping' + pingCount);
            // count pings
            pingCount++;
            if ( !userActive() ) {
@@ -367,21 +395,24 @@ angular.module('playerApp')
           }
 
           // update game data (not a room switch)
-          updateGameData(gameData, res, false);
-
+          var dataKey = res.roomId || clientState.roomId;
+          $log.debug("Other Update game data for room %s: %o %o", dataKey, res, clientState);
+          gameData[dataKey] = updateGameData(
+            gameData[dataKey] || {},
+            res,
+            false);
           playerSession.set('gameData', gameData);
 
           switch (res.type) {
             case 'event':
               if ( res.content[user.profile._id] ) {
-                res.content = marked(res.content[user.profile._id] || '');
+                res.content = res.content[user.profile._id] || '';
               } else {
-                res.content = marked(res.content['*'] || '');
+                res.content = res.content['*'] || '';
               }
               roomEvents.push(res);
               break;
             default:
-              res.description = marked(res.description || '');
               roomEvents.push(res);
               break;
           }
@@ -425,7 +456,6 @@ angular.module('playerApp')
       var sharedApi = {
         roomEvents: roomEvents,
         clientState: clientState,
-        gameData: gameData,
         logout: logout,
         listExits: listExits,
         listCommands: listCommands,
