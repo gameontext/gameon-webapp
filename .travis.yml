@@ -28,7 +28,7 @@ script:
 - cd ..
 after_success:
 - echo "TRAVIS_BRANCH='$TRAVIS_BRANCH'" \
-  ;if [ "$TRAVIS_BRANCH" == "deliverbaseimage" ]; then
+  ;if [ "$TRAVIS_BRANCH" == "master" ]; then
      echo "Building and Pushing new BASE image" \
      && docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" && echo "Login ok" \
      && docker build -t ${DOCKER_REPO}/gameon-liberty-base baseimage && echo "Build complete" \
