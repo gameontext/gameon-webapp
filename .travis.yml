@@ -27,7 +27,8 @@ script:
 - grunt test
 - cd ..
 after_success:
-- test $TRAVIS_BRANCH = "master" \
+- echo "TRAVIS_BRANCH : '$TRAVIS_BRANCH'" \
+  && test "$TRAVIS_BRANCH" = "master" \
   && docker login -e="${DOCKER_EMAIL}" -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" \
   && docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE} ${DOCKER_BUILDDIR} \
   && docker push ${DOCKER_REPO}/${DOCKER_IMAGE}
