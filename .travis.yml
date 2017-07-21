@@ -30,7 +30,7 @@ after_success:
 - echo "TRAVIS_BRANCH='$TRAVIS_BRANCH'" \
   ;if [ "$TRAVIS_BRANCH" == "master" ]; then
      echo "Building and Pushing new image" \
-     && docker login -e="${DOCKER_EMAIL}" -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" \
+     && docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" \
      && echo "Login ok" \
      && docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE} ${DOCKER_BUILDDIR} \
      && echo "Build complete" \
