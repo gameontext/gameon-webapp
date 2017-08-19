@@ -24,3 +24,8 @@ ADD ./app/ /opt/www
 EXPOSE 8080
 
 CMD ["/opt/startup.sh"]
+
+HEALTHCHECK \
+  --timeout=10s \
+  --start-period=40s \
+  CMD wget -q -O /dev/null http://localhost:8080/
