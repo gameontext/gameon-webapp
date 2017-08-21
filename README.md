@@ -37,11 +37,11 @@ If you don't have these installed, don't worry! We have you covered!
   ```
   
 
-* If you're building from the top-level `gameon` project with docker-compose, copy the following from `docker-compose.override.yml.example` into `docker-compose.override.yml`: 
+* If you're building from the top-level `gameon` project with docker-compose, copy the following from `docker/docker-compose.override.yml.example` into `docker/docker-compose.override.yml`: 
   ```
   webapp-build:
     build:
-       context: webapp
+       context: ../webapp
        dockerfile: Dockerfile-node
     command: /usr/local/bin/docker-build.sh
     volumes:
@@ -49,17 +49,15 @@ If you don't have these installed, don't worry! We have you covered!
 
   webapp:
     build:
-      context: webapp
+      context: ../webapp
     volumes:
       - './webapp/app:/opt/www'
   ```
 
-  After that, use `docker-compose` to manage building and rebuilding the web front-end: 
+  After that, use `docker-compose` via `docker/go-run.sh` to manage building and rebuilding the web front-end: 
   ```
-  docker-compose run webapp-build
+  ./docker/go-run.sh rebuild webapp
   ```
-  
-  `go-run.sh` will rebuild the webapp project this way automatically, once the information is added to `docker-compose.override.yml`
 
 ## Running tests
 
