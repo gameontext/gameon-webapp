@@ -94,7 +94,7 @@ angular.module('playerApp')
     };
 
     var update = function() {
-        $log.debug("Updating user with: %o", profile);
+      $log.debug("Updating user with: %o", profile);
       // Update user
       var gameonHeaders = {'gameon-jwt': auth.token()};
 
@@ -119,7 +119,7 @@ angular.module('playerApp')
     };
 
     var updateSharedSecret = function() {
-        $log.debug("Updating user sharedSecret for profile : %o", profile);
+      $log.debug("Updating user sharedSecret for profile : %o", profile);
       // Update user
       var gameonHeaders = {'gameon-jwt': auth.token()};
 

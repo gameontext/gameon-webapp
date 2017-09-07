@@ -111,7 +111,6 @@ angular.module('playerApp')
       get_public_key: get_public_key,
       logout: logout,
       token: function (){
-          $log.debug("AUTH.TOKEN returning %o ",_token);
           return _token;
       }
     };
