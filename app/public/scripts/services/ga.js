@@ -38,7 +38,7 @@ angular.module('playerApp')
 
     if (googleAnalytics) {
       $window.ga('create', 'UA-90113653-2', 'auto', {allowLinker: true});
-      $window.ga(('set', 'dimension1', 'game');
+      $window.ga('set', 'dimension1', 'game');
       $window.ga('require', 'linker');
       $window.ga('linker:autoLink', ['gameontext.org','blog.gameontext.org','book.gameontext.org']);
       $window.ga('send', 'pageview');
