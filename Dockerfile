@@ -17,11 +17,11 @@ RUN apt-get update \
   && rm etcd-v${ETCD_VERSION}-linux-amd64.tar.gz \
   && mv etcdctl /usr/local/bin/etcdctl
 
-COPY ./nginx.conf        /etc/nginx/nginx.conf
-COPY ./nginx-common.conf /etc/nginx/nginx-common.conf
-COPY ./nginx-nolog.conf  /etc/nginx/nginx-nolog.conf
-COPY ./startup.sh /opt/startup.sh
-COPY ./forwarder.conf /opt/forwarder.conf
+COPY docker/nginx.conf        /etc/nginx/nginx.conf
+COPY docker/nginx-common.conf /etc/nginx/nginx-common.conf
+COPY docker/nginx-nolog.conf  /etc/nginx/nginx-nolog.conf
+COPY docker/startup.sh        /opt/startup.sh
+COPY docker/forwarder.conf    /opt/forwarder.conf
 
 ADD ./app/ /opt/www
 
