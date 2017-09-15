@@ -436,7 +436,7 @@ angular.module('playerApp')
 
         if ( event.code === 1008 ) {
           $log.debug('WEBSOCKET POLICY CLOSE', event);
-          pause("Paused due to expired session. Please [log in again](/#/login) to play.", false);
+          pause("You've been here so long your session expired! Please [log in again](/#/login).", false);
           $rootScope.$apply(); // process addition to array, not a usual render loop
 
         } else if ( event.code !== 1000 ) {
@@ -446,7 +446,7 @@ angular.module('playerApp')
             $log.debug('error shut down, retry %o', retryCount);
             ws.reconnect();
           } else {
-            pause("Paused after 5 attempts. Press the button when ready to try again", true);
+            pause("Paused. Are you still here? Press the button when you're ready to play again!", true);
             $rootScope.$apply(); // process addition to array, not a usual render loop
           }
         }
