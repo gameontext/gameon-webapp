@@ -18,32 +18,32 @@
     </a>
   </div>
 </header>
-<div class="body nonav">
+<div class="body nonav rooms">
   <section>
     <h2>Owner credentials</h2>
     <div class="flex-config-row">
-      <div class="label">Game On! id</div>
+      <div class="label flex-config">Game On! id: </div>
       <div class="little-text key" id="owner-id">{{play.user.profile._id}}</div>
     </div>
-    <div class="flex-config-row">
-      <div class="label">Use the following secret for room registration</div>
-      <div class="little-text key" id="sharedSecret">{{play.user.profile.credentials.sharedSecret}}</div>
+    <div class="padded full">
+      <h3>Registration secret</h3>
+      <p>Use the following secret for room registration.</p>
     </div>
-    <form name="play.sharedsecretForm" ng-submit="play.updateSharedSecret()">
-      <div class="padded flex-config">
+    <div class="flex-config-row">
+      <div class="little-text key" id="sharedSecret">{{play.user.profile.credentials.sharedSecret}}</div>
+      <form name="play.sharedsecretForm" ng-submit="play.updateSharedSecret()">
         <button type="submit" id="submit">
-          <i class="fa fa-key"></i> Regenerate Shared Secret
+          <i class="fa fa-key"></i> Regenerate
         </button>
-      </div>
-    </form>
+      </form>
+    </div>
   </section>
-  <hr />
+  <hr class="padded"/>
   <section ng-controller="SiteCtrl as sites">
     <form name="sites.roomConfig">
     <h2>Room management</h2>
     <div class="padded full">
-      <p>Use the following fields to configure the registration of your room
-        with the game. Select an existing room from the drop-down.</p>
+      <p>Select "Register a new room" or an existing room from the drop-down to view/edit Room registration details.</p>
     </div>
     <div class="flex-config-row">
       <label for="roomSelect">Select a room: </label>
@@ -54,7 +54,11 @@
           <option value="">-- Register a new room --</option>
       </select>
     </div>
-
+    <div class="padded full">
+      <h3>Room Details</h3>
+      <p>Use the following fields to configure the registration of your room
+        with the game.</p>
+    </div>
     <div class="flex-config-row">
       <label for="roomInfo_name">Room Name</label>
       <input type="text" id="roomInfo_name" required
@@ -66,28 +70,40 @@
       placeholder="Full name for your room" ng-model="sites.activeSite.info.fullName">
     </div>
     <div class="flex-config-row">
-      <label for="roomInfo_target">WebSocket endpoint</label>
-      <input type="text" id="roomInfo_target"
-          ng-model="sites.activeSite.info.connectionDetails.target"
-          placeholder="ws://<hostname:portnumber>/<context-root>"/>
+      <label for="roomInfo_description">Description</label>
+      <textarea id="roomInfo_description" rows="3"
+        placeholder="Describe your room: is it a tavern? A bus stop? A store?"
+        ng-model="sites.activeSite.info.description"></textarea>
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_repo">Github repository</label>
       <input type="text" id="roomInfo_repo"
-          ng-model="sites.activeSite.info.connectionDetails.repo"
+          ng-model="sites.activeSite.info.repositoryUrl"
           placeholder="https://github.com/owner/repository"/>
+    </div>
+    <div class="padded full">
+      <h3>Connection Details</h3>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_target">WebSocket endpoint</label>
+      <input type="text" id="roomInfo_target"
+          ng-model="sites.activeSite.info.connectionDetails.target"
+          placeholder="ws://<hostname:portnumber>/room"/>
+    </div>
+    <div class="flex-config-row">
+      <label for="roomInfo_token">Token <a href="https://book.gameontext.org/microservices/ApplicationSecurity.html#_signing_websocket_requests_mediator_to_room" target="_blank">(more)</a></label>
+      <input type="text" id="roomInfo_token"
+          ng-model="sites.activeSite.info.connectionDetails.token"
+          placeholder=""/>&nbsp;
+      <button ng-click="play.createConnectionSecret()">
+        <i class="fa fa-key"></i> Generate
+      </button>
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_health">Health endpoint</label>
       <input type="text" id="roomInfo_health"
-          ng-model="sites.activeSite.info.connectionDetails.health"
-          placeholder="http://<hostname:portnumber>/<context-root>"/>
-    </div>
-    <div class="flex-config-row">
-      <label for="roomInfo_description">Description</label>
-      <textarea class="u-full-width" id="roomInfo_description" rows="3"
-        placeholder="Describe your room: is it a tavern? A bus stop? A store?"
-        ng-model="sites.activeSite.info.description"></textarea>
+          ng-model="sites.activeSite.info.connectionDetails.healthUrl"
+          placeholder="http://<hostname:portnumber>/health"/>
     </div>
     <div class="padded full">
       <h3>Doors</h3>
@@ -96,31 +112,31 @@
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_n">North</label>
-      <input class="u-full-width" type="text" id="roomInfo_n"
+      <input type="text" id="roomInfo_n"
       placeholder="" ng-model="sites.activeSite.info.doors.n"/>
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_s">South</label>
-      <input class="u-full-width" type="text" id="roomInfo_s"
+      <input type="text" id="roomInfo_s"
       placeholder="" ng-model="sites.activeSite.info.doors.s"/>
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_e">East</label>
-      <input class="u-full-width" type="text" id="roomInfo_e"
+      <input type="text" id="roomInfo_e"
       placeholder="" ng-model="sites.activeSite.info.doors.e"/>
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_w">West</label>
-      <input class="u-full-width" type="text" id="roomInfo_w"
+      <input type="text" id="roomInfo_w"
       placeholder="" ng-model="sites.activeSite.info.doors.w"/>
     </div>
-    <div class="padded flex-config" ng-show="!sites.activeSite._id">
+    <div class="padded flex-config full" ng-show="!sites.activeSite._id">
       <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.createRoom()">Register</button>
     </div>
-    <div class="padded flex-config" ng-show="sites.activeSite._id">
-      <button type="button" class="btn u-full-width" ng-model="sites.activeSite" ng-click="sites.updateRoom()"
-              ng-disabled="sites.roomConfig.$pristine">Update</button>
-      <button type="button" class="btn u-full-width" ng-model="sites.activeSite" ng-click="sites.deleteRoom()">Delete</button>
+    <div class="padded flex-config-row full" ng-show="sites.activeSite._id">
+      <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.updateRoom()"
+              ng-disabled="sites.roomConfig.$pristine">Update</button> &nbsp;
+      <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.deleteRoom()">Delete</button>
     </div>
     </form>
   </section>
