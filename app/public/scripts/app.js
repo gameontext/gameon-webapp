@@ -57,54 +57,56 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           url: '/',
           templateUrl: 'templates/default.html',
           controller: 'DefaultCtrl as ctrl',
-          onEnter: function(){
+          onEnter: function(go_ga){
             console.info("state -> default");
+            go_ga.hit('default');
           }
         })
         .state('default.terms', {
           url: '^/terms'
         })
         .state('default.login', {
-            url: '^/login',
-            onEnter: function(ga){
-              console.info("state -> default.login");
-              ga.report('send','event','GameOn','App','login');
-            }
+          url: '^/login',
+          onEnter: function(go_ga){
+            console.info("state -> default.login");
+            go_ga.hit('login');
+            go_ga.report('send','event','GameOn','App','login');
+          }
         })
         .state('default.auth', {
           url: '^/login/callback/{jwt:.*}',
-		  // State triggered by authentication callback (only).
-          onEnter: function($state, $stateParams,auth) {
-           		console.info("state -> default.auth");
-				auth.get_public_key(
-				function(){
-				    console.log("got public cert.. proceeding to jwt validation.");
+      // State triggered by authentication callback (only).
+          onEnter: function($state, $stateParams, auth) {
+            console.info("state -> default.auth");
+            auth.get_public_key(
+            function(){
+                console.log("got public cert.. proceeding to jwt validation.");
 
-					auth.remember_jwt($stateParams.jwt);
-					$state.go('default.validatejwt');
-				},
-				function(){
-					//TODO: handle failure to obtain public key.
-					//      can't do much without it.
-					$state.go('default.yuk');
-				});
+              auth.remember_jwt($stateParams.jwt);
+              $state.go('default.validatejwt');
+            },
+            function(){
+              //TODO: handle failure to obtain public key.
+              //      can't do much without it.
+              $state.go('default.yuk');
+            });
            }
         })
         .state('default.validatejwt', {
           url: '^/login/getpubliccert',
-		  // State triggered by auth obtaining public key
-          onEnter: function($state, $stateParams, auth, ga) {
+      // State triggered by auth obtaining public key
+          onEnter: function($state, $stateParams, auth, go_ga) {
             // this step has to read the token from the params passed ($stateParams.token)
             // and cause it to be stashed into the auth object so we can rely on it going forwards.
 
             console.info("state -> default.validatejwt");
             if(auth.validate_jwt()){
                 console.log("token callback from auth service was valid");
-                ga.report('send','event','GameOn','App','login-pass');
+                go_ga.report('send','event','GameOn','App','login-pass');
                 $state.go('default.usersetup');
             }else{
                 //TODO: goto a login failed page..
-                ga.report('send','event','GameOn','App','login-fail');
+                go_ga.report('send','event','GameOn','App','login-fail');
                 $state.go('default.login');
             }
           }
@@ -112,8 +114,9 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('default.usersetup', {
           url: '^/login/usersetup',
           // Triggered by default.auth state.
-          onEnter: function($state, $stateParams,auth,user,ga) {
+          onEnter: function($state, $stateParams,auth,user,go_ga) {
             console.info("state -> default.usersetup");
+            go_ga.hit('usersetup');
             console.log("building user object");
             var jwt = auth.get_jwt();
             if (jwt !== null){
@@ -123,10 +126,10 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
                 //user.load returns a promise that resolves to true if the user was found.. false otherwise.
                 user.load(jwt.id, jwt.name).then(function(userKnownToDB){
                   if(userKnownToDB){
-                    ga.report('send','event','GameOn','App','login-existing');
+                    go_ga.report('send','event','GameOn','App','login-existing');
                     $state.go('play.room');
                   }else{
-                    ga.report('send','event','GameOn','App','login-new');
+                    go_ga.report('send','event','GameOn','App','login-new');
                     $state.go('default.profile');
                   }
                 });
@@ -139,7 +142,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.profile', { // initial profile creation
           url: '^/login/profile',
-          onEnter: function($state, $stateParams, user, auth) {
+          onEnter: function($state, $stateParams, user, auth, go_ga) {
             console.info("state: default.profile");
             //if we're missing our auth token info.. user may have hit refresh here..
             //since we've just lost all our context, send them back to the start..
@@ -148,6 +151,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
               console.log("Missing auth info.. redirecting.. ");
               $state.go('default.login');
             }else{
+              go_ga.hit('profile');
               console.log("default.profile.onEnter has this ", user.profile.name, auth);
             }
           }
@@ -178,22 +182,33 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
               });
             }
           },
-          onEnter: function($state, auth, user, userAndAuth, ga){
+          onEnter: function($state, auth, user, userAndAuth){
             console.log("In play state", user, auth, userAndAuth);
-            ga.report('send','event','GameOn','App','play');
           }
         })
         .state('play.room', {
           url: '',
-          templateUrl: 'templates/play.room.html'
+          templateUrl: 'templates/play.room.html',
+          onEnter: function(go_ga){
+            go_ga.hit('game_screen');
+            go_ga.report('send','event','GameOn','App','play');
+          }
         })
         .state('play.myrooms', {
           url: '/myrooms',
-          templateUrl: 'templates/play.myrooms.html'
+          templateUrl: 'templates/play.myrooms.html',
+          onEnter: function(go_ga){
+            go_ga.hit('room_editor');
+            go_ga.report('send','event','GameOn','App','edit_rooms');
+          }
         })
         .state('play.me', {
           url: '/me',
-          templateUrl: 'templates/play.me.html'
+          templateUrl: 'templates/play.me.html',
+          onEnter: function(go_ga){
+            go_ga.hit('profile_editor');
+            go_ga.report('send','event','GameOn','App','edit_profile');
+          }
         });
     }
   ]);

@@ -9,8 +9,8 @@
     <link rel="shortcut icon" href="favicon.ico?v=YAAzvGnJvP">
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/normalize-css/normalize.css" />
     <link rel="stylesheet" href="bower_components/font-awesome-bower/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/normalize-css/normalize.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <link rel="stylesheet" href="styles/flex.css">
@@ -135,26 +135,30 @@
     </div>
 
     <script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date(); a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      window.ga(function() {
+        window.ga('create', 'UA-90113653-2', 'auto', 'gameontext', {allowLinker: true});
+        window.ga('gameontext.require', 'linker');
+        window.ga('gameontext.linker:autoLink', ['gameontext.org','blog.gameontext.org','book.gameontext.org']);
+        window.ga('gameontext.set','dimension1', 'game');
+        window.ga('gameontext.set','hostname', 'gameontext.org');
+        window.ga('gameontext.send','pageview');
+      });
     </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/angular-websocket/dist/angular-websocket.js"></script>
-    <script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script>
-    <script src="bower_components/jsrsasign/jsrsasign-latest-all-min.js"></script>
     <script src="bower_components/angular-ios9-uiwebview-patch/angular-ios9-uiwebview-patch.js"></script>
     <script src="bower_components/marked/lib/marked.js"></script>
     <script src="bower_components/angular-marked/dist/angular-marked.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-websocket/dist/angular-websocket.js"></script>
+    <script src="bower_components/jsrsasign/jsrsasign-latest-all-min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -164,7 +168,7 @@
     <script src="scripts/controllers/play.js"></script>
     <script src="scripts/controllers/site.js"></script>
     <script src="scripts/directives/profileCore.js"></script>
-    <script src="scripts/services/ga.js"></script>
+    <script src="scripts/services/go_ga.js"></script>
     <script src="scripts/services/playerSocket.js"></script>
     <script src="scripts/services/playerSession.js"></script>
     <script src="scripts/services/auth.js"></script>

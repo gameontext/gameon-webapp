@@ -19,7 +19,7 @@
 'use strict';
 
 angular.module('playerApp')
-   .factory('ga',
+   .factory('go_ga',
     [      '$log','$window',
   function ($log,  $window) {
     $log.debug("GA Svc :Initialising Google analytics service");
@@ -28,23 +28,33 @@ angular.module('playerApp')
     var googleAnalytics = window.location.hostname === 'gameontext.org';
     $log.debug("GA Svc : Google Analytics is currently set to  : " + googleAnalytics);
 
+    var ga_tracker;
+
     var report = function(p1, p2, p3, p4, p5) {
-      if (googleAnalytics) {
-          $window.ga(p1, p2, p3, p4, p5);
+      if (googleAnalytics && ga_tracker ) {
+        ga_tracker.send(p1, p2, p3, p4, p5);
       } else {
-          $log.debug("GA Svc: Logging request for ga(%o %o %o %o %o)", p1, p2, p3, p4, p5);
+          $log.debug("GA Svc: ga.send(%o %o %o %o %o)", p1, p2, p3, p4, p5);
+      }
+    };
+
+    var hit = function(pageview) {
+      if (googleAnalytics && ga_tracker ) {
+        ga_tracker.set('page', pageview);
+        ga_tracker.send('pageview');
+      } else {
+        $log.debug("GA Svc: ga.send('pageview') for %s", pageview);
       }
     };
 
     if (googleAnalytics) {
-      $window.ga('create', 'UA-90113653-2', 'auto', {allowLinker: true});
-      $window.ga('set', 'dimension1', 'game');
-      $window.ga('require', 'linker');
-      $window.ga('linker:autoLink', ['gameontext.org','blog.gameontext.org','book.gameontext.org']);
-      $window.ga('send', 'pageview');
+      $window.ga(function() {
+        ga_tracker = $window.ga.getByName('gameontext');
+      });
     }
 
     return {
-       report : report
+       report : report,
+       hit : hit
     };
 }]);

@@ -11,8 +11,8 @@
 */
 angular.module('playerApp')
    .factory('map',
-    [      '$log','$state','$q','API','$http','user', 'ga',
-  function ($log,  $state,  $q,  API,  $http,  user,   ga) {
+    [      '$log','$state','$q','API','$http','user', 'go_ga',
+  function ($log,  $state,  $q,  API,  $http,  user,   go_ga) {
      $log.debug("Loading MAP");
 
   var mapurl = '/map/v1/sites';  //where to get the data from
@@ -139,7 +139,7 @@ angular.module('playerApp')
 
   var createSiteForUser = function(newSite) {
     $log.debug("MAP : CREATE : %o", newSite);
-    ga.report('send','event','GameOn','Map','createSite');
+    go_ga.report('send','event','GameOn','Map','createSite');
     if(newSite.info.connectionDetails && !newSite.info.connectionDetails.type) {
       newSite.info.connectionDetails.type = 'websocket';
     }
@@ -168,7 +168,7 @@ angular.module('playerApp')
 
   var deleteSiteForUser = function(newSite) {
     $log.debug("MAP : DELETE : %o", newSite._id);
-    ga.report('send','event','GameOn','Map','deleteSite');
+    go_ga.report('send','event','GameOn','Map','deleteSite');
     var q = $q.defer();
     $http({
         url: mapurl + '/' + newSite._id,
@@ -197,7 +197,7 @@ angular.module('playerApp')
 
   var updateSiteForUser = function(newSite) {
     $log.debug("MAP : UPDATE : %o", newSite);
-    ga.report('send','event','GameOn','Map','updateSite');
+    go_ga.report('send','event','GameOn','Map','updateSite');
     if(newSite.info.connectionDetails && !newSite.info.connectionDetails.type) {
       newSite.info.connectionDetails.type = 'websocket';
     }
@@ -224,11 +224,6 @@ angular.module('playerApp')
 
     return q.promise;
   };
-
-
-
-
-
 
   return {
     getSitesForUser: getSitesForUser,
