@@ -68,6 +68,26 @@ angular.module('playerApp')
         user.updateSharedSecret();
       };
 
+      this.createConnectionSecret = function( ) {
+        var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var i;
+        var result = "";
+        var length = 32;
+        if($window.crypto && $window.crypto.getRandomValues) {
+          var values = new Uint32Array(length);
+          $window.crypto.getRandomValues(values);
+          for(i=0; i < length; i++) {
+              result += charset[values[i] % charset.length];
+          }
+          return result;
+        } else {
+          for(i=0; i<length; i++) {
+            result += charset[Math.floor(Math.random()*charset.length)];
+          }
+          return result;
+        }
+      };
+
       this.doorName = function(direction) {
           switch(direction) {
               case 'N': return '<span class="full">(N)orth</span><span class="short">N</span>';
