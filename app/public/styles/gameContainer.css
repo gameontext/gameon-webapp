@@ -25,7 +25,7 @@
 .interaction code {
   border: 1px solid #666;
   border-radius: 3px;
-  background-color: #170603;
+  background-color: #222;
   color: #E1E1E1;
 }
 .body,
@@ -48,6 +48,8 @@
 .game-container nav .clear a {
   color: #65CFD9;
 }
+.game-container .viewport h2,
+.game-container .viewport h3,
 .game-container #scroll-to-bottom a,
 .interaction .key a,
 .interaction .exits:before,

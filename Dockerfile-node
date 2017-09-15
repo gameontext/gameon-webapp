@@ -1,16 +1,32 @@
 FROM node:7.5
 MAINTAINER Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)
 
-RUN npm install -g grunt-cli \
-  && mkdir /app
+ENV DEBIAN_FRONTEND noninteractive
+ENV PHANTOMJS_VERSION 2.1.1
 
-ADD docker-build.sh /usr/local/bin
+RUN apt-get update \
+  && apt-get install -y \
+     bzip2 \
+     curl  \
+  && apt-get autoremove \
+  && apt-get clean \
+  && rm -rf /tmp/* /var/lib/apt/lists/*
+
+RUN mkdir /tmp/phantomjs \
+  && curl -L https://github.com/Medium/phantomjs/releases/download/v$PHANTOMJS_VERSION/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 \
+         | tar -xj --strip-components=1 -C /tmp/phantomjs \
+  && cd /tmp/phantomjs \
+  && mv bin/phantomjs /usr/local/bin \
+  && npm install -g grunt-cli \
+  && mkdir /app \
+  && touch /root/.bashrc \
+  && mkdir /root/lib \
+  && echo "/usr/local/bin/docker-build.sh" >> /root/.bashrc
 
 WORKDIR /app
 
-RUN touch /root/.bashrc \
- && chmod +x /usr/local/bin/docker-build.sh \
- && echo "/usr/local/bin/docker-build.sh" >> /root/.bashrc
+COPY docker/docker-build.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/docker-build.sh
 
 #Express port
 EXPOSE 3000
@@ -18,4 +34,4 @@ EXPOSE 3000
 #Grunt watch
 EXPOSE 35729
 
-CMD [ "echo", "To reach a shell for building, use\n docker run --rm -it -v $PWD/app:/app webapp-build /bin/bash" ]
+CMD [ "echo", "To reach a shell for building, use\n docker run --rm -it -v $PWD/app:/app -v /app/node_modules webapp-build /bin/bash" ]

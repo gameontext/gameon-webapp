@@ -16,8 +16,8 @@
  */
 angular.module('playerApp')
   .factory('playerSocket',
-  [          '$rootScope','$websocket','$log','user','auth','API','playerSession', 'ga',
-    function ($rootScope,  $websocket,  $log,  user,  auth,  API,  playerSession,   ga) {
+  [          '$rootScope','$websocket','$log','user','auth','API','playerSession', 'go_ga',
+    function ($rootScope,  $websocket,  $log,  user,  auth,  API,  playerSession,   go_ga) {
 
       var ws;
       var id = 0;
@@ -129,7 +129,7 @@ angular.module('playerApp')
         clientState = {};
         gameData = {};
         ws.close();
-        ga.report('send','event','GameOn','Socket','logout');
+        go_ga.report('send','event','GameOn','Socket','logout');
         auth.logout(); // will also reset the session
       };
 
@@ -146,7 +146,7 @@ angular.module('playerApp')
 
       var pushExits = function() {
         $log.debug('show cached exits: %o %o', gameData, clientState);
-        ga.report('send','event','GameOn','Socket','/exits');
+        go_ga.report('send','event','GameOn','Socket','/exits');
         roomEvents.push({
           type: 'exits',
           content: gameData[clientState.roomId].exits,
@@ -166,7 +166,7 @@ angular.module('playerApp')
 
       var pushCommands = function() {
         $log.debug('show cached commands: %o %o', gameData, clientState);
-        ga.report('send','event','GameOn','Socket','/help');
+        go_ga.report('send','event','GameOn','Socket','/help');
         roomEvents.push({
           type: 'commands',
           content: gameData[clientState.roomId].commands,
@@ -232,7 +232,7 @@ angular.module('playerApp')
           };
 
           if ( message.indexOf('/sos') === 0 ) {
-            ga.report('send','event','GameOn','Socket','/sos');
+            go_ga.report('send','event','GameOn','Socket','/sos');
             sendMsg = "sos,*," + angular.toJson(output);
           } else {
             sendMsg = "room,"+clientState.roomId+","+angular.toJson(output);
@@ -297,8 +297,8 @@ angular.module('playerApp')
       // On open
       ws.onOpen(function() {
         console.log('CONNECTED / READY: sending %o', clientState);
-        ga.report('send','event','GameOn','Socket','open');
-        ga.report('send','event','Room','Switch',clientState.roomId);
+        go_ga.report('send','event','GameOn','Socket','open');
+        go_ga.report('send','event','Room','Switch',clientState.roomId);
         ws.send('ready,' + angular.toJson(clientState, 0));
 
         // If the user was active in the previous session, clear the
@@ -326,7 +326,7 @@ angular.module('playerApp')
           res = parseJson(payload);
 
           if ( res.hasOwnProperty('playerUpdate') ) {
-            ga.report('send','event','GameOn','Socket','playerUpdate');
+            go_ga.report('send','event','GameOn','Socket','playerUpdate');
             user.load(user.profile._id, user.profile.name);
           } else {
             roomSwitch = clientState.roomId !== res.roomId;
@@ -342,7 +342,7 @@ angular.module('playerApp')
               clientState.roomId = res.roomId;
               clientState.roomName = res.name;
 
-              ga.report('send','event','GameOn','Socket','roomSwitch');
+              go_ga.report('send','event','GameOn','Socket','roomSwitch');
 
               if (res.fullName){
                 clientState.fullName = res.fullName;
@@ -428,7 +428,7 @@ angular.module('playerApp')
       // and indicate that we can no longer send outbound messages
       ws.onClose(function(event) {
         $log.debug('connection closed: %o %o', event.code, event);
-        ga.report('send','event','GameOn','Socket','close');
+        go_ga.report('send','event','GameOn','Socket','close');
         canSend = false;
 
         playerSession.set('clientState', clientState);

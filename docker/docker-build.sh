@@ -6,7 +6,16 @@ if [ ! -f /app/bower.json ]; then
 else
     cd /app
 
+echo $1
+    if [ $# -lt 1 ]
+    then
+      ACTION=build
+    else
+      ACTION=$1
+      shift
+    fi
+
     npm install
     ./node_modules/.bin/bower install --allow-root
-    grunt build
+    grunt ${ACTION}
 fi
