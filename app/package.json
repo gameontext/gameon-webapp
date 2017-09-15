@@ -15,7 +15,7 @@
     "grunt-html-angular-validate": "^0.5.7",
     "grunt-karma": "^2.0.0",
     "grunt-wiredep": "^3.0.1",
-    "jasmine-core": "^2.5.2",
+    "jasmine-core": "^2.8.0",
     "karma": "^1.6.0",
     "karma-cli": "^1.0.1",
     "karma-coverage": "^1.1.1",
