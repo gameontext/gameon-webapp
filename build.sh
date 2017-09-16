@@ -12,7 +12,8 @@ then
     DOCKER_CMD="sudo docker"
 fi
 
-## Ensure volume exists for node modules (avoid putting in filesystem because of OS differences)
+## Ensure volume exists for node modules (avoid putting in
+## filesystem because of OS differences)
 ${DOCKER_CMD} volume inspect webapp-node-modules &> /dev/null
 rc=$?
 if [ $rc -ne 0 ]
@@ -47,11 +48,8 @@ case "$ACTION" in
   test)
     WEBAPP_CMD="/usr/local/bin/docker-build.sh test"
   ;;
-  image)
-    # Build webapp image
-    docker build -f Dockerfile -t webapp .
-  ;;
 esac
+
 
 ${DOCKER_CMD} run --rm -it \
    -v $PWD/app:/app \
