@@ -27,6 +27,7 @@ then
   ${DOCKER_CMD} build -f Dockerfile-node -t webapp-build .
 fi
 
+PORT=
 
 case "$ACTION" in
   tools)
@@ -35,6 +36,10 @@ case "$ACTION" in
   ;;
   build)
     WEBAPP_CMD=/usr/local/bin/docker-build.sh
+  ;;
+  debug)
+    PORT="-p 9876:9876"
+    WEBAPP_CMD=/bin/bash
   ;;
   shell)
     WEBAPP_CMD=/bin/bash
@@ -51,5 +56,6 @@ esac
 ${DOCKER_CMD} run --rm -it \
    -v $PWD/app:/app \
    -v webapp-node-modules:/app/node_modules \
+   ${PORT} \
    webapp-build \
    ${WEBAPP_CMD}

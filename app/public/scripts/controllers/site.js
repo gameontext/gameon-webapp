@@ -71,6 +71,15 @@ angular.module('playerApp')
       this.roomConfig.$setPristine();
     };
 
+    this.slugify = function() {
+      var text = this.activeSite.info.fullName;
+      if( angular.isUndefined(this.activeSite.info.name) || this.activeSite.info.name === '') {
+        this.activeSite.info.name = text.toString().toLowerCase().trim()
+            .replace(/&/g, '-and-')         // Replace & with 'and'
+            .replace(/[\s\W-]+/g, '-');     // Replace spaces, non-word characters and dashes with a single dash (-)
+      }
+    };
+
     // Trigger initial load of user sites
     this.getSites();
 }]);
