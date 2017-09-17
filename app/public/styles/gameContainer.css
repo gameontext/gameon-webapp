@@ -51,6 +51,7 @@
 .game-container .viewport h2,
 .game-container .viewport h3,
 .game-container #scroll-to-bottom a,
+.game-container .error,
 .interaction .key a,
 .interaction .exits:before,
 .interaction .objects li a {
@@ -60,6 +61,13 @@
 .interaction .paused a:hover,
 .interaction .objects li a:hover {
   color: #aa503e;
+}
+.game-container hr.error,
+.game-container .flex-config-row a.button,
+.game-container .flex-config button:enabled,
+.game-container .flex-config-row button:enabled {
+  color: #EA6F56;
+  border-color: #EA6F56;
 }
 .game-container .flex-config-row button:disabled,
 .interaction .little-text,
@@ -120,6 +128,9 @@
 label[for="roomInfo_name"]:after {
   content: ' *';
   color: #EA6F56;
+}
+.game-container .flex-config-row ul.error {
+  margin: 0;
 }
 /* Nav / User entry bar (bottom)
 ------------------------------------- */

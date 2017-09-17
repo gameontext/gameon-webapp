@@ -160,6 +160,7 @@ angular.module('playerApp')
         // 403: unauthorized
         // 409: save conflict
         $log.debug(response.status + ' ' + response.statusText + " %o - FAILED", response.data);
+        response.data.reason = response.status + ' ' + response.statusText;
         q.reject(response.data);
       }).catch(console.log.bind(console));
 
@@ -188,6 +189,7 @@ angular.module('playerApp')
             // Previously deleted. No worries.
             q.resolve(newSite._id);
         } else {
+          response.data.reason = response.status + ' ' + response.statusText;
           q.reject(response.data);
         }
       }).catch(console.log.bind(console));
@@ -219,6 +221,7 @@ angular.module('playerApp')
         // 404: not found / previously deleted
         // 409: save conflict
         $log.debug(response.status + ' ' + response.statusText + " %o - FAILED", response.data);
+        response.data.reason = response.status + ' ' + response.statusText;
         q.reject(response.data);
       }).catch(console.log.bind(console));
 

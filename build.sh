@@ -48,6 +48,9 @@ case "$ACTION" in
   test)
     WEBAPP_CMD="/usr/local/bin/docker-build.sh test"
   ;;
+  all)
+    WEBAPP_CMD="/usr/local/bin/docker-build.sh all"
+  ;;
 esac
 
 
