@@ -1,8 +1,8 @@
-# Game On! Webapp Service
+# Game On! Web Frontend
 
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/97dba9bf5a944578b56831a974f225fa)](https://www.codacy.com/app/gameontext/gameon-webapp)
 
-See the Swagger service [information page](https://gameontext.gitbooks.io/gameon-gitbook/content/microservices/webapp.html) in the Game On! Docs for more information on how to use this service.
+Check out our [core system architecture](https://book.gameontext.org/microservices/) to see how the "webapp" service fits.
 
 ## Contributing
 
@@ -24,13 +24,13 @@ grunt build
 
 ### In a Container! 
 
-If you don't have (or don't want!) node, bower and/or grunt installed, don't worry! We have you covered! The image created by `Dockerfile-node` contains everything you need to build and unit test the web front end.
+If you don't have (or don't want!) node, bower and/or grunt installed, don't worry, we have you covered! The image created by `Dockerfile-node` contains everything you need to build and unit test the web front end.
 
-* Use `build.sh` to build and test the front end. Operations are: 
-  - `build` -- build the webapp (performs steps above)
+* Use `build.sh` to build and test the front end using this container. Operations are: 
+  - `build` -- build the webapp (performs steps above, but inside a container)
   - `shell` -- open a shell for iterative development
   - `test`  -- test the webapp using `grunt test`, see [below](#running-tests)
-  - 
+
 * Issue docker commands directly: 
   - create a volume for node_modules (this prevents conflicts if you switch between native and docker-based builds): 
     ```
@@ -51,6 +51,10 @@ If you don't have (or don't want!) node, bower and/or grunt installed, don't wor
   - To test: 
     ```
     docker run --rm -it -v $PWD/app:/app -v webapp-node-modules:/app/node_modules webapp-build docker-build.sh test
+    ```
+  - create the final image: 
+    ```
+    docker build -t gameontext/webapp .
     ```
 
 ## From the top-level `gameon` project (submodules)

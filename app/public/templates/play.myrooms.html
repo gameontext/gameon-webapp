@@ -31,15 +31,13 @@
     </div>
     <div class="flex-config-row">
       <div class="little-text key" id="sharedSecret">{{play.user.profile.credentials.sharedSecret}}</div>
-      <form name="play.sharedsecretForm" ng-submit="play.updateSharedSecret()">
-        <button type="submit" id="submit">
-          <i class="fa fa-key"></i> Regenerate
-        </button>
-      </form>
+      <button name="play.sharedsecret" ng-click="play.updateSharedSecret()">
+        <i class="fa fa-key"></i> Regenerate
+      </button>
     </div>
   </section>
   <hr class="padded"/>
-  <section ng-controller="SiteCtrl as sites">
+  <section id="site-edit" ng-controller="SiteCtrl as sites">
     <form name="sites.roomConfig">
     <h2>Room management</h2>
     <div class="padded full">
@@ -60,24 +58,25 @@
         with the game.</p>
     </div>
     <div class="flex-config-row">
-      <label for="roomInfo_name">Room Name</label>
-      <input type="text" id="roomInfo_name" required
-      placeholder="Short, unique room name: niftyRoom" ng-model="sites.activeSite.info.name"/>
+      <label for="roomInfo_fullName">Full Name</label>
+      <input type="text" id="roomInfo_fullName" name="ri_fn"
+        placeholder="Full name for your room" ng-model="sites.activeSite.info.fullName"
+        ng-blur="sites.slugify()">
     </div>
     <div class="flex-config-row">
-      <label for="roomInfo_fullName">Full Name</label>
-      <input type="text" id="roomInfo_fullName"
-      placeholder="Full name for your room" ng-model="sites.activeSite.info.fullName">
+      <label for="roomInfo_name">Short Name</label>
+      <input type="text" id="roomInfo_name" name="ri_name" required
+        placeholder="Short, unique room name: niftyRoom" ng-model="sites.activeSite.info.name"/>
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_description">Description</label>
-      <textarea id="roomInfo_description" rows="3"
+      <textarea id="roomInfo_description" rows="3" name="ri_desc"
         placeholder="Describe your room: is it a tavern? A bus stop? A store?"
         ng-model="sites.activeSite.info.description"></textarea>
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_repo">Github repository</label>
-      <input type="text" id="roomInfo_repo"
+      <input type="url" id="roomInfo_repo" name="ri_repo"
           ng-model="sites.activeSite.info.repositoryUrl"
           placeholder="https://github.com/owner/repository"/>
     </div>
@@ -85,25 +84,26 @@
       <h3>Connection Details</h3>
     </div>
     <div class="flex-config-row">
+      <label for="roomInfo_health">Health endpoint</label>
+      <input type="url" id="roomInfo_health"  name="ri_cd_health"
+          ng-model="sites.activeSite.info.connectionDetails.healthUrl"
+          placeholder="http://<hostname:portnumber>/health"/>
+    </div>
+    <div class="flex-config-row">
       <label for="roomInfo_target">WebSocket endpoint</label>
-      <input type="text" id="roomInfo_target"
+      <input type="url" id="roomInfo_target" name="ri_cd_target"
           ng-model="sites.activeSite.info.connectionDetails.target"
+          ng-pattern='/(wss?):\/\/[^ "]+$/'
           placeholder="ws://<hostname:portnumber>/room"/>
     </div>
     <div class="flex-config-row">
       <label for="roomInfo_token">Token <a href="https://book.gameontext.org/microservices/ApplicationSecurity.html#_signing_websocket_requests_mediator_to_room" target="_blank">(more)</a></label>
-      <input type="text" id="roomInfo_token"
+      <input type="text" id="roomInfo_token" name="ri_cd_token"
           ng-model="sites.activeSite.info.connectionDetails.token"
           placeholder=""/>&nbsp;
-      <button ng-click="play.createConnectionSecret()">
+      <a class="button" ng-click="sites.createConnectionSecret()">
         <i class="fa fa-key"></i> Generate
-      </button>
-    </div>
-    <div class="flex-config-row">
-      <label for="roomInfo_health">Health endpoint</label>
-      <input type="text" id="roomInfo_health"
-          ng-model="sites.activeSite.info.connectionDetails.healthUrl"
-          placeholder="http://<hostname:portnumber>/health"/>
+      </a>
     </div>
     <div class="padded full">
       <h3>Doors</h3>
@@ -130,13 +130,27 @@
       <input type="text" id="roomInfo_w"
       placeholder="" ng-model="sites.activeSite.info.doors.w"/>
     </div>
-    <div class="padded flex-config full" ng-show="!sites.activeSite._id">
-      <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.createRoom()">Register</button>
+    <div ng-if="sites.roomConfig.$invalid || sites.errors">
+      <hr class="padded error"  />
+      <div class="flex-config-row">
+        <ul class="error">
+          <li ng-show="sites.roomConfig.ri_name.$error.required">Short name is required</li>
+          <li ng-repeat="error in sites.errors track by $index">{{error.message}} [{{error.reason}}]</li>
+        </ul>
+      </div>
+      <hr class="padded error" />
     </div>
-    <div class="padded flex-config-row full" ng-show="sites.activeSite._id">
-      <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.updateRoom()"
-              ng-disabled="sites.roomConfig.$pristine">Update</button> &nbsp;
-      <button type="button" class="btn" ng-model="sites.activeSite" ng-click="sites.deleteRoom()">Delete</button>
+    <div class="padded flex-config full" ng-if="!sites.activeSite._id">
+      <button type="button" class="btn"
+              ng-model="sites.activeSite" ng-click="sites.createRoom()"
+              ng-disabled="sites.roomConfig.$invalid">Register</button>
+    </div>
+    <div class="padded flex-config-row full" ng-if="sites.activeSite._id">
+      <button type="button" class="btn"
+              ng-model="sites.activeSite" ng-click="sites.updateRoom()"
+              ng-disabled="sites.roomConfig.$pristine || sites.roomConfig.$invalid">Update</button> &nbsp;
+      <button type="button" class="btn"
+              ng-model="sites.activeSite" ng-click="sites.deleteRoom()">Delete</button>
     </div>
     </form>
   </section>

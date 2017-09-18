@@ -100,6 +100,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', ['clean','wiredep', 'jshint', 'htmlangular']);
   grunt.registerTask('default', ['build']);
   grunt.registerTask('test', ['jshint', 'htmlangular', 'karma']);
+  grunt.registerTask('all', ['build','test']);
 
   return gruntConfig;
 };

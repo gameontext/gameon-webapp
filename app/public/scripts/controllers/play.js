@@ -9,8 +9,8 @@
  */
 angular.module('playerApp')
   .controller('PlayCtrl',
-  [          '$state','$log','playerSocket','user','auth', 'map', 'commandHistory', 'userAndAuth','$window', 'marked',
-    function ($state,  $log,  playerSocket,  user,  auth,   map,   commandHistory,   userAndAuth,  $window,   marked) {
+  [          '$state','$log','$window','$scope','playerSocket','user','auth', 'map', 'commandHistory', 'userAndAuth', 'marked',
+    function ($state,  $log,  $window,  $scope,  playerSocket,  user,  auth,   map,   commandHistory,   userAndAuth,   marked) {
       $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
 
       function setCaretPos(elm, pos) {
@@ -58,34 +58,23 @@ angular.module('playerApp')
           if ( this.profileForm.$invalid ) {
             // bogus form data: don't go yet without correcting
           } else {
-            user.update();
-            this.clientState.username = user.profile.name;
-            $state.go('play.room');
+            user.update().then(function(response) {
+              $log.debug('updateProfile: OK %o', response);
+              this.clientState.username = user.profile.name;
+              $scope.apply();
+              $state.go('play.room');
+            }, function(response) {
+              $log.debug('updateProfile FAILED %o', response);
+            });
           }
       };
 
       this.updateSharedSecret = function( ) {
-        user.updateSharedSecret();
-      };
-
-      this.createConnectionSecret = function( ) {
-        var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var i;
-        var result = "";
-        var length = 32;
-        if($window.crypto && $window.crypto.getRandomValues) {
-          var values = new Uint32Array(length);
-          $window.crypto.getRandomValues(values);
-          for(i=0; i < length; i++) {
-              result += charset[values[i] % charset.length];
-          }
-          return result;
-        } else {
-          for(i=0; i<length; i++) {
-            result += charset[Math.floor(Math.random()*charset.length)];
-          }
-          return result;
-        }
+        user.updateSharedSecret().then(function(response) {
+          $log.debug('updateSharedSecret: OK %o', response);
+        }, function(response) {
+          $log.debug('updateSharedSecret FAILED %o', response);
+        });
       };
 
       this.doorName = function(direction) {

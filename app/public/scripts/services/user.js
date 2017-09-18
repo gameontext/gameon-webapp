@@ -95,8 +95,9 @@ angular.module('playerApp')
       $log.debug("Updating user with: %o", profile);
       // Update user
       var gameonHeaders = {'gameon-jwt': auth.token()};
+      var q;
 
-      $http({
+      q = $http({
         method : 'PUT',
         url : API.PROFILE_URL + 'accounts/' + profile._id,
         cache : false,
@@ -114,20 +115,23 @@ angular.module('playerApp')
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         // TODO: Alert
       }).catch(console.log.bind(console));
+
+      return q;
     };
 
     var updateSharedSecret = function() {
       $log.debug("Updating user sharedSecret for profile : %o", profile);
       // Update user
       var gameonHeaders = {'gameon-jwt': auth.token()};
+      var q;
 
-      $http({
+      q = $http({
         method : 'PUT',
         url : API.PROFILE_URL + 'accounts/' + profile._id + '/credentials/sharedSecret',
         cache : false,
         headers : gameonHeaders
       }).then(function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+        $log.debug(response.status + ' ' + response.statusText + ' %o', response.data);
         go_ga.report('send','event','GameOn','User','secretUpdate');
         //update succeeded, now refresh the profile from the server to pull the new key.
         load(profile._id, profile.name);
@@ -136,6 +140,7 @@ angular.module('playerApp')
         // TODO: Alert
       }).catch(console.log.bind(console));
 
+      return q;
     };
 
     var generateName = function() {

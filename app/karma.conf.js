@@ -4,6 +4,15 @@
 // Generated on Fri Apr 21 2017 19:34:22 GMT-0400 (EDT)
 
 module.exports = function(config) {
+
+  var sourcePreprocessors = 'coverage';
+  function isDebug(argument) {
+      return argument === '--debug';
+  }
+  if (process.argv.some(isDebug)) {
+      sourcePreprocessors = [];
+  }
+
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -32,13 +41,15 @@ module.exports = function(config) {
       'public/scripts/controllers/play.js',
       'public/scripts/controllers/site.js',
       'public/scripts/directives/profileCore.js',
-      'public/scripts/services/go_ga.js',
-      'public/scripts/services/playerSocket.js',
-      'public/scripts/services/playerSession.js',
       'public/scripts/services/auth.js',
-      'public/scripts/services/user.js',
       'public/scripts/services/commandHistory.js',
+      'public/scripts/services/go_ga.js',
       'public/scripts/services/map.js',
+      'public/scripts/services/playerSession.js',
+      'public/scripts/services/playerSocket.js',
+      'public/scripts/services/user.js',
+
+      'public/templates/*.html',
 
       'test/**/*.js'
     ],
@@ -50,7 +61,8 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'public/scripts/**/*.js': ['coverage']
+      'public/scripts/**/*.js': sourcePreprocessors,
+      'public/templates/*.html': 'ng-html2js'
     },
 
     // test results reporter to use
@@ -65,6 +77,11 @@ module.exports = function(config) {
         { type: 'lcov', subdir: '.' },
         { type: 'json', subdir: '.' }
       ]
+    },
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'public/',
+      moduleName: 'templates'
     },
 
     // web server port
@@ -90,6 +107,6 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: Infinity,
   });
 };

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Anonymous+Mono');
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro');
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
@@ -19,7 +19,7 @@ code,
 .game-container nav .input-w,
 .game-container .body,
 section.enter .intro {
-  font-family: 'Anonymous Mono', Courier, 'Menlo', 'Andale Mono';
+  font-family: 'Anonymous Pro', Courier, 'Menlo', 'Andale Mono';
   font-size: 1.2em;
 }
 .game-container .body.me,
