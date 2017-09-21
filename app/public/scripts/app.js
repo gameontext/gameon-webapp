@@ -205,7 +205,8 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         .state('play.me', {
           url: '/me',
           templateUrl: 'templates/play.me.html',
-          onEnter: function(go_ga){
+          onEnter: function(go_ga, user){
+            user.refresh();
             go_ga.hit('profile_editor');
             go_ga.report('send','event','GameOn','App','edit_profile');
           }

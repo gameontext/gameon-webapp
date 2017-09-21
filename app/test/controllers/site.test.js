@@ -1,7 +1,7 @@
 'use strict';
 
 describe('SiteCtrl controller test', function () {
-  var $controller,
+  var controller,
     $log;
 
   beforeEach(module('playerApp'));
@@ -17,17 +17,12 @@ describe('SiteCtrl controller test', function () {
     }
   }));
 
-  beforeEach(inject(function (_$controller_, _$log_) {
+  beforeEach(inject(function ($controller, _$log_) {
     $log = _$log_;
-    $controller = _$controller_;
+    controller = $controller('SiteCtrl', {  });
   }));
 
   describe('.createConnectionSecret()', function() {
-    var controller;
-
-    beforeEach(function() {
-      controller = $controller('SiteCtrl', {  });
-    });
 
     // A simple test to verify the method all exists
     it('should exist', function() {
@@ -38,6 +33,23 @@ describe('SiteCtrl controller test', function () {
       expect(controller.createConnectionSecret).toBeDefined();
       controller.createConnectionSecret();
       expect(controller.activeSite.info.connectionDetails.token).toMatch(/[A-Za-z0-9]{32}/);
+    });
+  });
+
+  describe('.slugify', function() {
+
+    it('should convert "A Long Name" to "a-long-name"', function() {
+      controller.activeSite = {
+        info: {}
+      };
+      expect(controller.activeSite.info.fullName).not.toBeDefined();
+      expect(controller.activeSite.info.name).not.toBeDefined();
+
+      controller.activeSite.info.fullName = 'A Long Name';
+      controller.slugify();
+
+      expect(controller.activeSite.info.fullName).toEqual('A Long Name');
+      expect(controller.activeSite.info.name).toEqual('a-long-name');
     });
   });
 

@@ -75,7 +75,7 @@
         ng-model="sites.activeSite.info.description"></textarea>
     </div>
     <div class="flex-config-row">
-      <label for="roomInfo_repo">Github repository</label>
+      <label for="roomInfo_repo">Public repository (e.g. GitHub)</label>
       <input type="url" id="roomInfo_repo" name="ri_repo"
           ng-model="sites.activeSite.info.repositoryUrl"
           placeholder="https://github.com/owner/repository"/>
@@ -135,6 +135,9 @@
       <div class="flex-config-row">
         <ul class="error">
           <li ng-show="sites.roomConfig.ri_name.$error.required">Short name is required</li>
+          <li ng-show="sites.roomConfig.ri_repo.$invalid ">Repository URL must be a valid http:// or https:// URL</li>
+          <li ng-show="sites.roomConfig.ri_cd_health.$invalid">Health check endpoint must be a valid http:// or https:// URL</li>
+          <li ng-show="sites.roomConfig.ri_cd_target.$invalid">Room endpoint be a valid ws:// or wss:// URL</li>
           <li ng-repeat="error in sites.errors track by $index">{{error.message}} [{{error.reason}}]</li>
         </ul>
       </div>
