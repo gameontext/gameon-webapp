@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Room Editing', function () {
-  var $scope, roomConfig, siteInfo;
+  var $scope, roomConfig, siteInfo, compiled;
 
   beforeEach(module('playerApp'));
   beforeEach(module('templates'));
@@ -18,22 +18,19 @@ describe('Room Editing', function () {
       }
     };
 
-    // Fish the form we want out of template. In this case, there are two
+    // Fish the form out of template
     var element = angular.element($templateCache.get('templates/play.myrooms.html'));
-    expect(element.find('form').length).toBe(1);
+    var forms = element.find('form');
+    expect(forms.length).toBe(1);
 
     // Compile the form
-    var form = element.find('form')[0];
-    $compile(form)($scope);
+    var form = forms[0];
+    compiled = $compile(form)($scope);
     roomConfig = $scope.sites.roomConfig;
     siteInfo = $scope.sites.activeSite.info;
   }));
 
   describe('Room attributes', function() {
-
-    describe('Room Full Name generates Short Name', function() {
-
-    });
 
     describe("Repository URL", function() {
       it('Repo URL should allow http', function() {

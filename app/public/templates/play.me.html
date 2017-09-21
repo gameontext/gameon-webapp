@@ -29,10 +29,10 @@
 
   <section class="userprofile">
     <h2>Update User Profile</h2>
-    <form name="play.profileForm" ng-submit="play.updateProfile()">
+    <form name="play.profileForm">
       <profile-core user="play.user" form="play.profileForm" class="box"></profile-core>
       <div data-ng-hide="ctrl.profileForm.$invalid">
-        <a class="button" data-ng-click="play.user.update()"><i class="fa fa-floppy-o"></i> Done!</a>
+        <a class="button" data-ng-click="play.updateProfile()"><i class="fa fa-floppy-o"></i> Done!</a>
       </div>
     </form>
   </section>

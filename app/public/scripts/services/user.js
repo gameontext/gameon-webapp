@@ -91,6 +91,36 @@ angular.module('playerApp')
       }).catch(console.log.bind(console));
     };
 
+    var refresh = function() {
+      $log.debug("Refreshing user with: %o", profile);
+      // Refresh user
+      var gameonHeaders = {'gameon-jwt': auth.token()};
+      var q;
+
+      q = $http({
+        method : 'GET',
+        url : API.PROFILE_URL + 'accounts/' + profile._id,
+        cache : false,
+        headers : gameonHeaders
+      }).then(function(response) {
+        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+
+        var tmp = angular.fromJson(response.data);
+        $log.debug('profile: %o', tmp);
+
+        angular.extend(profile, tmp);
+
+        return true;
+      }, function(response) {
+        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+        // User can't be found, which is fine, we can go build one!
+        profile.name = name.replace(/ /g , '_');
+        return false;
+      }).catch(console.log.bind(console));
+
+      return q;
+    };
+
     var update = function() {
       $log.debug("Updating user with: %o", profile);
       // Update user
@@ -208,6 +238,7 @@ angular.module('playerApp')
         rules: rules,
         load: load,
         create: create,
+        refresh: refresh,
         update: update,
         updateSharedSecret: updateSharedSecret,
         generateName: generateName,

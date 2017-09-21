@@ -13,6 +13,9 @@ angular.module('playerApp')
     function ($state,  $log,  $window,  $scope,  playerSocket,  user,  auth,   map,   commandHistory,   userAndAuth,   marked) {
       $log.debug('Starting play controller with %o and %o for ', user, playerSocket, user.profile.id);
 
+      // Reference to this for use in promises
+      var playCtrl = this;
+
       function setCaretPos(elm, pos) {
         setTimeout(function() {
           // this works in any non-ancient browser,
@@ -44,36 +47,38 @@ angular.module('playerApp')
         playerSocket.resume(id);
       };
 
-      this.restart = function() {
-        this.sendFixed('/sos-restart');
-        $state.go('play.room');
-      };
-
       this.logout = function() {
         playerSocket.logout();
         $state.go('default');
       };
 
+      this.reset = function() {
+        delete this.errors;
+      };
+
       this.updateProfile = function( ) {
-          if ( this.profileForm.$invalid ) {
-            // bogus form data: don't go yet without correcting
-          } else {
-            user.update().then(function(response) {
-              $log.debug('updateProfile: OK %o', response);
-              this.clientState.username = user.profile.name;
-              $scope.apply();
-              $state.go('play.room');
-            }, function(response) {
-              $log.debug('updateProfile FAILED %o', response);
-            });
-          }
+        delete this.errors;
+        if ( this.profileForm.$invalid ) {
+          // bogus form data: don't go yet without correcting
+        } else {
+          user.update().then(function(response) {
+            $log.debug('updateProfile: OK %o', response);
+            playCtrl.clientState.username = user.profile.name;
+            $state.go('play.room');
+          }, function(response) {
+            $log.debug('updateProfile FAILED %o', response);
+            playCtrl.errors.push(response);
+          });
+        }
       };
 
       this.updateSharedSecret = function( ) {
+        delete this.errors;
         user.updateSharedSecret().then(function(response) {
           $log.debug('updateSharedSecret: OK %o', response);
         }, function(response) {
           $log.debug('updateSharedSecret FAILED %o', response);
+          playCtrl.errors.push(response);
         });
       };
 
