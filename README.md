@@ -36,22 +36,28 @@ If you don't have (or don't want!) node, bower and/or grunt installed, don't wor
     ```
     docker volume create --name webapp-node-modules
     ```
+
   - create the image for building: 
     ```
     docker build -f Dockerfile-node -t webapp-build .
     ```
+
   - To build, use: 
     ```
     docker run --rm -it -v $PWD/app:/app -v webapp-node-modules:/app/node_modules webapp-build docker-build.sh
     ```
+    Note the extra volume for node_modules. This is necessary if you also build locally. Some dependencies (like prebuilt phantomjs on a mac) will tank a container-based build. This second volume allows the two systems to coexist without confusing each other.
+
   - To open a shell: 
     ```
     docker run --rm -it -v $PWD/app:/app -v webapp-node-modules:/app/node_modules webapp-build /bin/bash
     ```
+
   - To test: 
     ```
     docker run --rm -it -v $PWD/app:/app -v webapp-node-modules:/app/node_modules webapp-build docker-build.sh test
     ```
+
   - create the final image: 
     ```
     docker build -t gameontext/webapp .
