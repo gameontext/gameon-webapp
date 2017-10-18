@@ -2,7 +2,9 @@ node_modules
 bower_components
 npm-debug.log
 dist
+access.log
 .idea/
 .tmp
 .DS_Store
 coverage
+test-localhost.*
