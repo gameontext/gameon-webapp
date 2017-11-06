@@ -1,12 +1,10 @@
-.project
-src/.tmp
-src/dist
-src/node_modules
 node_modules
-src/public/bower_components
-src/access.log
+bower_components
 npm-debug.log
+dist
+access.log
 .idea/
+.tmp
 .DS_Store
-.gradle/
 coverage
+test-localhost.*

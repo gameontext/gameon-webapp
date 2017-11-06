@@ -24,17 +24,19 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      // bower:js
       'public/bower_components/angular/angular.js',
       'public/bower_components/angular-ios9-uiwebview-patch/angular-ios9-uiwebview-patch.js',
+      'public/bower_components/marked/lib/marked.js',
+      'public/bower_components/angular-marked/dist/angular-marked.js',
       'public/bower_components/angular-resource/angular-resource.js',
       'public/bower_components/angular-sanitize/angular-sanitize.js',
       'public/bower_components/angular-scroll-glue/src/scrollglue.js',
       'public/bower_components/angular-ui-router/release/angular-ui-router.js',
       'public/bower_components/angular-websocket/dist/angular-websocket.js',
       'public/bower_components/jsrsasign/jsrsasign-latest-all-min.js',
-      'public/bower_components/marked/lib/marked.js',
-      'public/bower_components/angular-marked/dist/angular-marked.js',
       'public/bower_components/angular-mocks/angular-mocks.js',
+      // endbower
 
       'public/scripts/app.js',
       'public/scripts/controllers/default.js',
