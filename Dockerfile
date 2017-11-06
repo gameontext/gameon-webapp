@@ -10,8 +10,6 @@ RUN apt-get update \
      procps \
      wget \
   && rm -rf /var/lib/apt/lists/* \
-  \
-# setup etcd
   && wget https://github.com/coreos/etcd/releases/download/v${ETCD_VERSION}/etcd-v${ETCD_VERSION}-linux-amd64.tar.gz -q \
   && tar xzf etcd-v${ETCD_VERSION}-linux-amd64.tar.gz etcd-v${ETCD_VERSION}-linux-amd64/etcdctl --strip-components=1 \
   && rm etcd-v${ETCD_VERSION}-linux-amd64.tar.gz \
@@ -23,7 +21,7 @@ COPY docker/nginx-nolog.conf  /etc/nginx/nginx-nolog.conf
 COPY docker/startup.sh        /opt/startup.sh
 COPY docker/forwarder.conf    /opt/forwarder.conf
 
-ADD ./dist/ /opt/www
+ADD app/dist/ /opt/www
 
 EXPOSE 8080
 
