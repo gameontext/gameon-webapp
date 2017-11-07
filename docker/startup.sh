@@ -27,8 +27,9 @@ if [ "$ETCDCTL_ENDPOINT" != "" ]; then
 else
   #local environment, no logstash to use.
   echo -n "Making sure application has been built .. "
-  if [ ! -d /opt/www/public/bower_components ]; then
-    echo ".. bower components are missing. The application was not built before packaging."
+  ANGULAR=$(grep -r angular /opt/www/public)
+  if [ -z "$ANGULAR" ]; then
+    echo "The application was not built before packaging."
     exit 1
   else
     echo ".. all is well."

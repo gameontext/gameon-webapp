@@ -21,7 +21,7 @@ COPY docker/nginx-nolog.conf  /etc/nginx/nginx-nolog.conf
 COPY docker/startup.sh        /opt/startup.sh
 COPY docker/forwarder.conf    /opt/forwarder.conf
 
-ADD app/dist/ /opt/www
+ADD app/dist/ /opt/www/public
 
 EXPOSE 8080
 
