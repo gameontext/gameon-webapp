@@ -17,7 +17,7 @@ RUN mkdir /tmp/phantomjs \
          | tar -xj --strip-components=1 -C /tmp/phantomjs \
   && cd /tmp/phantomjs \
   && mv bin/phantomjs /usr/local/bin \
-  && npm install -g grunt-cli \
+  && npm install -g gulp \
   && mkdir /app \
   && touch /root/.bashrc \
   && mkdir /root/lib \

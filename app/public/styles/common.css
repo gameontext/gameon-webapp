@@ -1,5 +1,44 @@
-@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro');
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+@import url(//fonts.googleapis.com/css?family=Anonymous+Pro);
+/*!
+ * CSS (common.css, defaultContainer.css, gameContainer.css)
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor
+ * license agreements; and to You under the Apache License, Version 2.0.
+ */
+:root {
+  --red-orange: #ea6f56;
+  --rust: #aa503e;
+  --chat-green: #32822e;
+  --aqua-blue: #65cfd9;
+  --dark-aqua: #1eaedb;
+  --dark-blue: #35566b;
+  --deep-dark-blue: #1e3341;
+  --viewport: #323232;
+  --smoke: #f1f1f1;
+  --outline: #d1d1d1;
+  --dark-outline: #bbb;
+}
+/* Colors:
+var(--spring-green)
+   - red/orange: var(--red-orange);
+   - aqua blue: var(--aqua-blue);
+   - darker aqua (links): var(--dark-aqua);
+   - dark blue (background): var(--dark-blue)
+   - deep dark blue (text/borders): var(--deep-dark-blue)
+ ------------------------------------ */
+/* Colors:
+   - viewport: var(--viewport);
+   - red/orange: var(--red-orange);
+   - aqua blue: var(--aqua-blue);
+   - darker aqua (links): var(--dark-aqua);
+   - dark blue (background): var(--dark-blue)
+   - deep dark blue (text/borders): var(--deep-dark-blue)
+ ------------------------------------ */
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
   display: none !important;
 }
 html {
@@ -19,7 +58,7 @@ code,
 .game-container nav .input-w,
 .game-container .body,
 section.enter .intro {
-  font-family: 'Anonymous Pro', Courier, 'Menlo', 'Andale Mono';
+  font-family: 'Anonymous Pro', Courier, 'Menlo', 'Andale Mono', monospace;
   font-size: 1.2em;
 }
 .game-container .body.me,
@@ -30,12 +69,12 @@ section.enter .intro {
 }
 .little-text.key,
 code {
-  padding: .5rem;
-  margin: 0 .2rem;
+  padding: 0.5rem;
+  margin: 0 0.2rem;
   font-size: 90%;
   white-space: nowrap;
-  background: #F1F1F1;
-  border: 1px solid #E1E1E1;
+  background: var(--smoke);
+  border: 1px solid var(--outline);
   border-radius: 4px;
 }
 .little-text.key {
@@ -46,7 +85,7 @@ p {
   margin-top: 0;
 }
 .padded {
-  padding: .5rem 0;
+  padding: 0.5rem 0;
 }
 hr.padded {
   padding: 0;
@@ -64,15 +103,16 @@ input[type="button"] {
   font-size: 11px;
   font-weight: 600;
   line-height: 38px;
-  letter-spacing: .1rem;
+  letter-spacing: 0.1rem;
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
   background-color: transparent;
   border-radius: 4px;
-  border: 1px solid #bbb;
+  border: 1px solid var(--dark-outline);
   cursor: pointer;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+}
 .slash,
 .clear,
 input[type="email"],
@@ -87,7 +127,7 @@ select {
   height: 38px;
   padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
   background-color: #fff;
-  border: 1px solid #D1D1D1;
+  border: 1px solid var(--outline);
   border-radius: 4px;
   box-shadow: none;
   box-sizing: border-box;
@@ -104,8 +144,7 @@ input[type="url"],
 input[type="password"],
 textarea {
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
 }
 textarea {
   min-height: 65px;
@@ -121,11 +160,11 @@ input[type="url"]:focus,
 input[type="password"]:focus,
 textarea:focus,
 select:focus {
-  border: 1px solid #33C3F0;
+  border: 1px solid var(--dark-aqua);
   outline: 0;
 }
 input.ng-invalid-required {
-  border: 1px solid #EA6F56;
+  border: 1px solid var(--red-orange);
 }
 /* flex forms
  -------------------------------------- */
@@ -134,15 +173,12 @@ input.ng-invalid-required {
   flex-flow: row wrap;
   justify-content: flex-start;
 }
-.userprofile .box .flex-config {
-  width: 20rem;
-}
 .flex-config,
 .flex-config-row {
   display: flex;
   margin-right: 1rem;
   flex-flow: column nowrap;
-  margin-bottom: .7rem;
+  margin-bottom: 0.7rem;
 }
 .flex-config-row .full,
 .flex-config .row {
@@ -153,6 +189,10 @@ input.ng-invalid-required {
 .flex-config .button {
   margin-bottom: 3px;
 }
+.userprofile .box .flex-config {
+  width: 20rem;
+}
+
 @media (min-width: 600px) {
   .flex-config-row {
     flex-flow: row wrap;
@@ -188,6 +228,7 @@ input.ng-invalid-required {
 .background .icon-bottom {
   display: none;
 }
+
 @media (min-width: 800px) {
   .background .icon-corner {
     display: block;
@@ -198,6 +239,7 @@ input.ng-invalid-required {
     left: -75px;
   }
 }
+
 @media (min-width: 800px) and (min-height: 700px) {
   .background .icon-small-light {
     display: block;
@@ -216,6 +258,7 @@ input.ng-invalid-required {
     left: 75px;
   }
 }
+
 @media (min-width: 1100px) and (min-height: 700px) {
   .background .icon-big-light {
     display: block;
@@ -226,6 +269,7 @@ input.ng-invalid-required {
     left: 400px;
   }
 }
+
 @media (min-width: 1100px) {
   .background .icon-floating-circle {
     display: block;

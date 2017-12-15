@@ -36,7 +36,7 @@ case "$ACTION" in
     ${DOCKER_CMD} build -f Dockerfile-node -t webapp-build .
   ;;
   build)
-    WEBAPP_CMD=/usr/local/bin/docker-build.sh
+    WEBAPP_CMD="/usr/local/bin/docker-build.sh"
   ;;
   debug)
     PORT="-p 9876:9876"

@@ -24,32 +24,30 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      // bower:js
-      'public/bower_components/angular/angular.js',
-      'public/bower_components/angular-ios9-uiwebview-patch/angular-ios9-uiwebview-patch.js',
-      'public/bower_components/marked/lib/marked.js',
-      'public/bower_components/angular-marked/dist/angular-marked.js',
-      'public/bower_components/angular-resource/angular-resource.js',
-      'public/bower_components/angular-sanitize/angular-sanitize.js',
-      'public/bower_components/angular-scroll-glue/src/scrollglue.js',
-      'public/bower_components/angular-ui-router/release/angular-ui-router.js',
-      'public/bower_components/angular-websocket/dist/angular-websocket.js',
-      'public/bower_components/jsrsasign/jsrsasign-latest-all-min.js',
-      'public/bower_components/angular-mocks/angular-mocks.js',
-      // endbower
+      'node_modules/angular/angular.js',
+      'node_modules/angular-ios9-uiwebview-patch/angular-ios9-uiwebview-patch.js',
+      'node_modules/marked/lib/marked.js',
+      'node_modules/angular-marked/dist/angular-marked.js',
+      'node_modules/angular-resource/angular-resource.js',
+      'node_modules/angular-sanitize/angular-sanitize.js',
+      'node_modules/angularjs-scroll-glue/src/scrollglue.js',
+      'node_modules/angular-ui-router/release/angular-ui-router.js',
+      'node_modules/angular-websocket/dist/angular-websocket.js',
+      'node_modules/angular-mocks/angular-mocks.js',
+      'vendor/jsrsasign-all-min.js',
 
-      'public/scripts/app.js',
-      'public/scripts/controllers/default.js',
-      'public/scripts/controllers/play.js',
-      'public/scripts/controllers/site.js',
-      'public/scripts/directives/profileCore.js',
-      'public/scripts/services/auth.js',
-      'public/scripts/services/commandHistory.js',
-      'public/scripts/services/go_ga.js',
-      'public/scripts/services/map.js',
-      'public/scripts/services/playerSession.js',
-      'public/scripts/services/playerSocket.js',
-      'public/scripts/services/user.js',
+      'public/js/app.js',
+      'public/js/controllers/default.js',
+      'public/js/controllers/play.js',
+      'public/js/controllers/site.js',
+      'public/js/directives/profileCore.js',
+      'public/js/services/auth.js',
+      'public/js/services/commandHistory.js',
+      'public/js/services/go_ga.js',
+      'public/js/services/map.js',
+      'public/js/services/playerSession.js',
+      'public/js/services/playerSocket.js',
+      'public/js/services/user.js',
 
       'public/templates/*.html',
 
@@ -74,7 +72,7 @@ module.exports = function(config) {
 
     // configure the coverage reporter
     coverageReporter: {
-      dir : 'coverage',
+      dir : 'reports/coverage',
       reporters: [
         { type: 'lcov', subdir: '.' },
         { type: 'json', subdir: '.' }
@@ -82,7 +80,7 @@ module.exports = function(config) {
     },
 
     ngHtml2JsPreprocessor: {
-      stripPrefix: 'public/',
+      stripPrefix: 'public/templates/',
       moduleName: 'templates'
     },
 
@@ -94,7 +92,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_INFO,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,

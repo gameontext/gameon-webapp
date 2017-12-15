@@ -21,11 +21,8 @@ before_install:
 - phantomjs --version
 install:
 - npm install
-before_script:
-- bower install
 script:
-- grunt build
-- grunt test
+- gulp all
 - cd ..
 after_success:
 - echo "TRAVIS_BRANCH='$TRAVIS_BRANCH'"

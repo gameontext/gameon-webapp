@@ -3,20 +3,11 @@
   <head>
     <meta charset="utf-8">
     <title>Game On!</title>
-    <meta name="description" content="">
+    <meta name="description" content="A text-based adventure game for learning about cloud native development">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="shortcut icon" href="favicon.ico?v=YAAzvGnJvP">
-    <!-- build:css(public) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/font-awesome-bower/css/font-awesome.css" />
-    <link rel="stylesheet" href="bower_components/normalize-css/normalize.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-
-    <!-- build:css({.tmp,public}) styles/flex.css -->
     <link rel="stylesheet" href="styles/flex.css">
-    <!-- endbuild -->
   </head>
   <body>
   <svg style="display: none;">
@@ -149,34 +140,8 @@
     </script>
     <script async src='https://www.google-analytics.com/analytics.js'></script>
 
-    <!-- build:js(public) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-ios9-uiwebview-patch/angular-ios9-uiwebview-patch.js"></script>
-    <script src="bower_components/marked/lib/marked.js"></script>
-    <script src="bower_components/angular-marked/dist/angular-marked.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/angular-websocket/dist/angular-websocket.js"></script>
-    <script src="bower_components/jsrsasign/jsrsasign-latest-all-min.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-
-    <!-- build:js({.tmp,public}) scripts/scripts.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/controllers/default.js"></script>
-    <script src="scripts/controllers/play.js"></script>
-    <script src="scripts/controllers/site.js"></script>
-    <script src="scripts/directives/profileCore.js"></script>
-    <script src="scripts/services/go_ga.js"></script>
-    <script src="scripts/services/playerSocket.js"></script>
-    <script src="scripts/services/playerSession.js"></script>
-    <script src="scripts/services/auth.js"></script>
-    <script src="scripts/services/user.js"></script>
-    <script src="scripts/services/commandHistory.js"></script>
-    <script src="scripts/services/map.js"></script>
-    <!-- endbuild -->
+    <script src="js/vendor.js"></script>
+    <script src="js/jsrsasign-all-min.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>
