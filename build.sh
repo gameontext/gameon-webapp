@@ -1,3 +1,6 @@
+WEBAPP_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd ${WEBAPP_DIR}
+
 if [ $# -lt 1 ]
 then
   ACTION=build
