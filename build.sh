@@ -54,6 +54,19 @@ case "$ACTION" in
   all)
     WEBAPP_CMD="/usr/local/bin/docker-build.sh all"
   ;;
+  final)
+    if [ ! -d ${WEBAPP_DIR}/app/dist ] || [ ! -f ${WEBAPP_DIR}/app/dist/index.html ]
+    then
+      echo "App hasn't been built, running '${BASH_SOURCE[0]} build' first"
+      ${BASH_SOURCE[0]} build
+    fi
+    # Force rebuild of tools/build image
+    ${DOCKER_CMD} build -t gameontext/gameon-webapp .
+    echo
+    echo "Docker images: "
+    ${DOCKER_CMD} images | grep webapp
+    exit 0
+  ;;
 esac
 
 
