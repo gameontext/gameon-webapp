@@ -1,4 +1,6 @@
 # robotstxt.org
 
 User-agent: *
-Disallow:
+Disallow: /
+Allow: /$
+Allow: /swagger/

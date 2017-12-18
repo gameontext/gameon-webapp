@@ -6,5 +6,5 @@ access.log
 .idea/
 .tmp
 .DS_Store
-coverage
+reports
 test-localhost.*

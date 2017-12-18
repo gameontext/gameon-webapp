@@ -1,3 +1,6 @@
+WEBAPP_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd ${WEBAPP_DIR}
+
 if [ $# -lt 1 ]
 then
   ACTION=build
@@ -36,7 +39,7 @@ case "$ACTION" in
     ${DOCKER_CMD} build -f Dockerfile-node -t webapp-build .
   ;;
   build)
-    WEBAPP_CMD=/usr/local/bin/docker-build.sh
+    WEBAPP_CMD="/usr/local/bin/docker-build.sh"
   ;;
   debug)
     PORT="-p 9876:9876"

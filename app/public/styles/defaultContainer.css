@@ -1,18 +1,9 @@
-/* Colors:
-   - red/orange: #EA6F56;
-   - aqua blue: #65CFD9;
-   - darker aqua (links): #1EAEDB;
-   - dark blue (background): #35566B
-   - deep dark blue (text/borders): #1E3341
- ------------------------------------ */
+/*! gameontext defaultContainer.css | APL2.0 License | github.com/gameontext/gameon-webapp */
 a {
-  color: #1EAEDB;
+  color: var(--dark-aqua);
 }
 a:hover {
-  color: #1E3341;
-}
-.main {
-  background-color: #fff;
+  color: var(--deep-dark-blue);
 }
 aside.related,
 aside.related a {
@@ -24,42 +15,35 @@ section.login,
 section.terms,
 section.usersetup,
 .default-container section.userprofile {
-  color: #35566B;
+  color: var(--dark-blue);
 }
 .background,
 aside.related .text,
 aside.related .subtext,
 aside.related .icon {
-  background-color: #35566B;
-}
-section.enter header h1 .on {
-  font-weight: bold;
-  color: #65CFD9;
+  background-color: var(--dark-blue);
 }
 .main a.button {
-  background-color: #EA6F56;
+  background-color: var(--rust);
   color: #fff;
 }
 .background .icon-corner use,
 .background .icon-floating use,
 .background .icon-floating-circle use,
 .background .icon-big-light use,
-.background .icon-small-light use{
-  fill: #65CFD9;
+.background .icon-small-light use {
+  fill: var(--aqua-blue);
 }
 .background .icon-bottom use,
 .background .icon-left use,
 aside.related .button .icon use {
-  fill: #1E3341;
+  fill: var(--deep-dark-blue);
 }
 /* Main section
  ------------------------------------ */
 img.go-logo {
   height: 5rem;
   margin: 2rem;
-}
-.main > header {
-  text-align: center;
 }
 section.auth,
 section.enter,
@@ -76,6 +60,9 @@ section header {
 section header h1 {
   margin: 0;
   font-size: 2rem;
+}
+.main > header {
+  text-align: center;
 }
 .default-container .userprofile .box {
   justify-content: center;
@@ -98,6 +85,7 @@ section.enter header h1 {
 }
 section.enter header h1 .on {
   font-weight: bold;
+  color: var(--aqua-blue);
 }
 section.enter header .lead {
   display: block;
@@ -105,7 +93,7 @@ section.enter header .lead {
   font-weight: 500;
 }
 section.enter > footer {
-  font-size: .8rem;
+  font-size: 0.8rem;
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
@@ -129,14 +117,13 @@ section.enter .terms-link {
 section.login .buttons {
   margin: 1rem auto;
   width: 90%;
-
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
   align-content: center;
 }
 section.login .button {
-  margin: .3rem;
+  margin: 0.3rem;
   width: 30rem;
 }
 /* Scrying/Authenticating page
@@ -166,15 +153,12 @@ aside.related .link {
   text-decoration: none;
   position: relative;
   min-height: 5rem;
-
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-
   text-transform: none;
   font-size: 1.5rem;
   white-space: normal;
-
   margin: 0;
   padding: 1rem 0 1rem 4rem;
 }
@@ -188,14 +172,14 @@ aside.related .link .icon {
 }
 aside.related .link .text {
   display: block;
-  padding-bottom: .5rem;
+  padding-bottom: 0.5rem;
 }
 aside.related .link .subtext {
   display: block;
   font-size: 1.3rem;
   font-weight: 300;
   line-height: 1.6rem;
-  padding-bottom: .5rem;
+  padding-bottom: 0.5rem;
 }
 /* Responsive layout
  ------------------------------------ */
@@ -205,6 +189,7 @@ aside.related .link .subtext {
   height: 100%;
 }
 .main {
+  background-color: #fff;
   min-height: 70vh;
   display: flex;
   flex-flow: column nowrap;
@@ -214,7 +199,6 @@ aside.related .link .subtext {
   .default-container {
     flex-shrink: 0;
     overflow-x: hidden;
-
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;

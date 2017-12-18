@@ -1,14 +1,12 @@
 'use strict';
 
-// Used when building/running tests
+// Will serve content from dist directory, AND mock some server responses
 
 const https = require('https');
 const fs = require('fs');
 const express = require('express');
-const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
 
-var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
 var app = express();
 
 var options = {
@@ -20,18 +18,7 @@ var options = {
 
 var port = process.env.PORT || 8483;
 
-//setup the logger
-//do not log the pings from the proxy (healthcheck)
-app.use(morgan('combined', {stream: accessLogStream, skip: function(req, res) {
-  return req.method === "HEAD" && req.path === "/"
-}}));
-
-if (/^dev|test$/.test(app.get('env'))) {
-  app.use('/', express.static(__dirname + '/.tmp'));
-  app.use('/', express.static(__dirname + '/public'));
-} else {
-  app.use('/', express.static(__dirname + '/dist'));
-}
+app.use('/', express.static(__dirname + '/dist'));
 
 app.get('/auth/PublicCertificate', function(req, res) {
   res.send(new Buffer(options.cert));

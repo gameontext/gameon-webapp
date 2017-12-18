@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=PT+Mono);
+@import 'normalize-css/normalize.css';
+@import 'font-awesome/font-awesome.min.css';
 @import 'common.css';
 @import 'defaultContainer.css';
 @import 'gameContainer.css';
