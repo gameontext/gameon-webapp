@@ -27,6 +27,7 @@ script:
 after_success:
 - echo "TRAVIS_BRANCH='$TRAVIS_BRANCH'"
 - bash <(curl -s https://raw.githubusercontent.com/gameontext/gameon/master/images/dockerhub.sh)
+- bash <(curl -s https://raw.githubusercontent.com/gameontext/gameon/modules/images/rootUpdate.sh)
 - cat app/coverage/lcov.info | app/node_modules/.bin/codacy-coverage -c $TRAVIS_COMMIT
 notifications:
   slack:
