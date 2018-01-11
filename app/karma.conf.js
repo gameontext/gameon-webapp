@@ -6,6 +6,7 @@
 module.exports = function(config) {
 
   var sourcePreprocessors = 'coverage';
+
   function isDebug(argument) {
       return argument === '--debug';
   }
@@ -61,7 +62,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'public/scripts/**/*.js': sourcePreprocessors,
+      'public/js/**/*.js': sourcePreprocessors,
       'public/templates/*.html': 'ng-html2js'
     },
 
@@ -72,11 +73,9 @@ module.exports = function(config) {
 
     // configure the coverage reporter
     coverageReporter: {
-      dir : 'reports/coverage',
-      reporters: [
-        { type: 'lcov', subdir: '.' },
-        { type: 'json', subdir: '.' }
-      ]
+      type: 'lcov',
+      dir : 'reports',
+      subdir: 'coverage'
     },
 
     ngHtml2JsPreprocessor: {
