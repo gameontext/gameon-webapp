@@ -28,7 +28,7 @@ after_success:
 - echo "TRAVIS_BRANCH='$TRAVIS_BRANCH'"
 - bash <(curl -s https://raw.githubusercontent.com/gameontext/gameon/master/build/dockerhub.sh)
 - bash <(curl -s https://raw.githubusercontent.com/gameontext/gameon/master/build/launchBuild.sh)
-- cat app/coverage/lcov.info | app/node_modules/.bin/codacy-coverage -c $TRAVIS_COMMIT
+- cat app/reports/coverage/lcov.info | app/node_modules/.bin/codacy-coverage -c $TRAVIS_COMMIT
 notifications:
   slack:
     secure: DaekD2e7w2UJwMdaBZ7/CPfaEec7pIAJ/LryutTM7ZLYXrvmkUxPWXAigjPwQhB899j/SBrisQiXxfBMYLCLdZ1OlZQZXS9ZGntqyfATd7a/txV9mfMatYesLdA15iGbNwwD2jrA8pjmtLV9Wk7mq/Sm/csTTVk8sldXm4kFNgw33mFPZR/IowvVNxB+GrS63g8tb/6IpAL66NdGxpyy48K4QP8iD1272nhrkO7nnQ3UBDCYXsG96jrnpnhPTxHXPYfi9GO/U1oaa3I0mLEJWh1B0ueXa+ZOmt4ZQVllBimpmstihi3sLkeENo06TNQQ8Qfd6Zqa+li6aEznULtqtc7LYBcP1BJjSnmWSCsRleE1CIedtnEjXF1mWLd0U7Tk8XnHLmErcKJt+n4nqlved+I446YgNehmJZCgAaKE4h6ukxQIGxQDwwFJcRNH3dfA96N0XZ7ipZcZD2RKLqcR4ZvV0zCunlUjR1AobwJMjgP5xjmhVYsiAtCfs+fjED2BcfQq6EoK2Yem5qOysoJzdEfpEcdbwQgdcTiK0OuInX3QWj1Y2NkXd9md7rEUf675+2PSb1S3CMz/4tiWWzLvS8/S7r7TnYHBvD6dD4I+IVDBD0NpLZaJVZp4repPioT3814nA2qWctW/cdEvsKF9fmTMzngKvHFU3TGlcWdlrI8=
