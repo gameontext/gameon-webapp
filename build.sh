@@ -15,8 +15,8 @@ then
     DOCKER_CMD="sudo docker"
 fi
 
-## Ensure volume exists for node modules (avoid putting in
-## filesystem because of OS differences)
+# Ensure volume exists for node modules (avoid putting in
+# filesystem because of OS differences)
 ${DOCKER_CMD} volume inspect webapp-node-modules &> /dev/null
 rc=$?
 if [ $rc -ne 0 ]
@@ -24,19 +24,35 @@ then
   ${DOCKER_CMD} volume create --name webapp-node-modules
 fi
 
+# make sure node_modules directory exsts (mount point)
+mkdir -p app/node_modules
+
+# Modify this if your distribution gets UID/GID differently
+userId=$(id -u)
+groupId=$(id -g)
+
+build_tools() {
+  ${DOCKER_CMD} build \
+    --build-arg userId=${userId}  \
+    --build-arg groupId=${groupId} \
+    -f Dockerfile-node \
+    -t webapp-build .
+}
+
+PORT=
+
 ## Ensure the tools/build image exists.
 tools_image=$(docker images -q webapp-build 2>/dev/null)
 if [ "$tools_image" == "" ]
 then
-  ${DOCKER_CMD} build -f Dockerfile-node -t webapp-build .
+  build_tools
 fi
-
-PORT=
 
 case "$ACTION" in
   tools)
-    # Force rebuild of tools/build image
-    ${DOCKER_CMD} build -f Dockerfile-node -t webapp-build .
+    # Force rebuild of tools/build image, clear node modules for future changes
+    ${DOCKER_CMD} volume rm webapp-node-modules
+    build_tools
   ;;
   build)
     WEBAPP_CMD="/usr/local/bin/docker-build.sh"
@@ -71,6 +87,7 @@ esac
 
 
 ${DOCKER_CMD} run --rm -it \
+   --user="${userId}:${groupId}" \
    -v $PWD/app:/app \
    -v webapp-node-modules:/app/node_modules \
    ${PORT} \

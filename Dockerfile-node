@@ -1,6 +1,9 @@
 FROM node:7.5
 MAINTAINER Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)
 
+ARG userId=1000
+ARG groupId=1000
+
 ENV DEBIAN_FRONTEND noninteractive
 ENV PHANTOMJS_VERSION 2.1.1
 
@@ -17,11 +20,9 @@ RUN mkdir /tmp/phantomjs \
          | tar -xj --strip-components=1 -C /tmp/phantomjs \
   && cd /tmp/phantomjs \
   && mv bin/phantomjs /usr/local/bin \
-  && npm install -g gulp \
-  && mkdir /app \
-  && touch /root/.bashrc \
-  && mkdir /root/lib \
-  && echo "/usr/local/bin/docker-build.sh" >> /root/.bashrc
+  && echo 'export PATH=$PATH:/app/node_modules/.bin' >> /etc/bash.bashrc \
+  && mkdir -p /app/node_modules \
+  && chown -R ${userId}:${groupId} /app
 
 WORKDIR /app
 
@@ -34,4 +35,4 @@ EXPOSE 3000
 #Grunt watch
 EXPOSE 35729
 
-CMD [ "echo", "To reach a shell for building, use\n docker run --rm -it -v $PWD/app:/app -v /app/node_modules webapp-build /bin/bash" ]
+CMD [ "echo", "To reach a shell for building, use ./build.sh shell" ]

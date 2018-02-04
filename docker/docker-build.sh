@@ -1,4 +1,5 @@
 #!/bin/bash
+PATH=$PATH:/app/node_modules/.bin
 
 # Used when building inside a Docker image!
 if [ ! -f /app/gulpfile.babel.js ]; then
@@ -6,7 +7,7 @@ if [ ! -f /app/gulpfile.babel.js ]; then
 else
     cd /app
 
-echo $1
+    echo $1
     if [ $# -lt 1 ]
     then
       ACTION=default
