@@ -1,3 +1,6 @@
+.babel*
+.node-gyp
+.v8flags*
 node_modules
 bower_components
 npm-debug.log

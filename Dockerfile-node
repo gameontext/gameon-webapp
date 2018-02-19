@@ -6,6 +6,7 @@ ARG groupId=1000
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PHANTOMJS_VERSION 2.1.1
+ENV HOME /app/node_modules/.home
 
 RUN apt-get update \
   && apt-get install -y \
