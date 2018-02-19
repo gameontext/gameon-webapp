@@ -1,6 +1,9 @@
 #!/bin/bash
 PATH=$PATH:/app/node_modules/.bin
 
+mkdir -p /app/node_modules/.home
+HOME=/app/node_modules/.home
+
 # Used when building inside a Docker image!
 if [ ! -f /app/gulpfile.babel.js ]; then
     echo "You forgot to mount the volume, see README.md"
