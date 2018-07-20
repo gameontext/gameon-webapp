@@ -20,6 +20,7 @@
     "babel-plugin-angularjs-annotate": "^0.8.2",
     "babel-preset-env": "^1.6.1",
     "browser-sync": "^2.18.13",
+    "check-node-version": "^3.2.0",
     "codacy-coverage": "^2.0.2",
     "del": "^3.0.0",
     "express": "^4.14.1",
@@ -61,10 +62,6 @@
   },
   "scripts": {
     "test": "gulp test"
-  },
-  "engines": {
-    "node": "6.9.2",
-    "npm": ">= 3"
   },
   "babel": {
     "plugins": [

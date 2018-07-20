@@ -3,7 +3,7 @@ cd ${WEBAPP_DIR}
 
 if [ $# -lt 1 ]
 then
-  ACTION=build
+  ACTION=default
 else
   ACTION=$1
   shift
@@ -54,15 +54,15 @@ case "$ACTION" in
     ${DOCKER_CMD} volume rm webapp-node-modules
     build_tools
   ;;
-  build)
-    WEBAPP_CMD="/usr/local/bin/docker-build.sh"
-  ;;
   debug)
     PORT="-p 9876:9876"
     WEBAPP_CMD=/bin/bash
   ;;
   shell)
     WEBAPP_CMD=/bin/bash
+  ;;
+  build)
+    WEBAPP_CMD="/usr/local/bin/docker-build.sh build"
   ;;
   test)
     WEBAPP_CMD="/usr/local/bin/docker-build.sh test"
@@ -83,13 +83,28 @@ case "$ACTION" in
     ${DOCKER_CMD} images | grep webapp
     exit 0
   ;;
+  * )
+    WEBAPP_CMD="/usr/local/bin/docker-build.sh default"
+    ACTION=default
 esac
 
-
-${DOCKER_CMD} run --rm -it \
-   --user="${userId}:${groupId}" \
-   -v $PWD/app:/app \
-   -v webapp-node-modules:/app/node_modules \
-   ${PORT} \
-   webapp-build \
-   ${WEBAPP_CMD}
+if [ -n ${DOCKER_HOST} ]; then
+  echo "DOCKER_HOST is set to ${DOCKER_HOST}. Bind-mounted volumes are unlikely to work. Trying native build for ${ACTION}"
+  cd app
+  npm install
+  $(npm bin)/check-node-version --print --node 8
+  rc=$?
+  if [ $rc != 0 ]; then
+    echo "Incorrect version of node installed. This project requires node 8."
+    exit 1
+  fi
+  $(npm bin)/gulp ${ACTION}
+else
+  ${DOCKER_CMD} run --rm -it \
+     --user="${userId}:${groupId}" \
+     -v $PWD/app:/app \
+     -v webapp-node-modules:/app/node_modules \
+     ${PORT} \
+     webapp-build \
+     ${WEBAPP_CMD}
+fi
