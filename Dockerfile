@@ -5,7 +5,7 @@ LABEL maintainer="Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)"
 COPY docker/nginx.conf        /etc/nginx/nginx.conf
 COPY docker/startup.sh        /opt/startup.sh
 
-ADD app/dist/ /opt/www/public
+COPY app/dist/ /opt/www/public
 
 EXPOSE 8080
 
