@@ -3,7 +3,7 @@
   "private": true,
   "main": "gulpfile.babel.js",
   "dependencies": {
-    "angular": "^1.6.4",
+    "angular": "^1.7.9",
     "angular-ios9-uiwebview-patch": "^1.1.1",
     "angular-marked": "^1.2.2",
     "angular-resource": "^1.6.4",
