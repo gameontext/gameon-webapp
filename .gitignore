@@ -1,4 +1,3 @@
-.babel*
 .node-gyp
 .v8flags*
 node_modules

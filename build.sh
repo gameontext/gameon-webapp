@@ -1,3 +1,5 @@
+#!/bin/bash
+
 WEBAPP_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${WEBAPP_DIR}
 
@@ -53,6 +55,7 @@ case "$ACTION" in
     # Force rebuild of tools/build image, clear node modules for future changes
     ${DOCKER_CMD} volume rm webapp-node-modules
     build_tools
+    exit
   ;;
   debug)
     PORT="-p 9876:9876"
@@ -92,7 +95,7 @@ if [ -n ${DOCKER_HOST} ]; then
   echo "DOCKER_HOST is set to ${DOCKER_HOST}. Bind-mounted volumes are unlikely to work. Trying native build for ${ACTION}"
   cd app
   npm install
-  $(npm bin)/check-node-version --print --node 8
+  $(npm bin)/check-node-version --print --node 10
   rc=$?
   if [ $rc != 0 ]; then
     echo "Incorrect version of node installed. This project requires node 8."
