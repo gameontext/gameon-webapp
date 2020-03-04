@@ -18,6 +18,6 @@ angular.module('playerApp')
       form: '='
     },
     restrict: 'E',
-    templateUrl: 'profileCore.html'
+    templateUrl: '/profileCore.html'
   };
 });

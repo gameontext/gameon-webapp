@@ -5,14 +5,14 @@
  * license agreements; and to You under the Apache License, Version 2.0.
  */
 :root {
-  --red-orange: #ea6f56;
-  --rust: #aa503e;
-  --chat-green: #32822e;
-  --aqua-blue: #65cfd9;
-  --dark-aqua: #1eaedb;
-  --dark-blue: #35566b;
-  --deep-dark-blue: #1e3341;
-  --viewport: #323232;
+  --red-orange:  #aa5500;
+  --rust:        #aa5500;
+  --chat-green:  #32822e;
+  --aqua:        #65cfd9;
+  --dark-aqua:   #3e98aa;
+  --mid-teal:    #35566b;
+  --deep-teal:   #1e3341;
+  --viewport:    #323232;
   --smoke: #f1f1f1;
   --outline: #d1d1d1;
   --dark-outline: #bbb;
@@ -20,18 +20,18 @@
 /* Colors:
 var(--spring-green)
    - red/orange: var(--red-orange);
-   - aqua blue: var(--aqua-blue);
+   - aqua blue: var(--aqua);
    - darker aqua (links): var(--dark-aqua);
-   - dark blue (background): var(--dark-blue)
-   - deep dark blue (text/borders): var(--deep-dark-blue)
+   - dark blue (background): var(--mid-teal)
+   - deep dark blue (text/borders): var(--deep-teal)
  ------------------------------------ */
 /* Colors:
    - viewport: var(--viewport);
    - red/orange: var(--red-orange);
-   - aqua blue: var(--aqua-blue);
+   - aqua blue: var(--aqua);
    - darker aqua (links): var(--dark-aqua);
-   - dark blue (background): var(--dark-blue)
-   - deep dark blue (text/borders): var(--deep-dark-blue)
+   - dark blue (background): var(--mid-teal)
+   - deep dark blue (text/borders): var(--deep-teal)
  ------------------------------------ */
 [ng\:cloak],
 [ng-cloak],
@@ -109,7 +109,6 @@ input[type="button"] {
   white-space: nowrap;
   background-color: transparent;
   border-radius: 4px;
-  border: 1px solid var(--dark-outline);
   cursor: pointer;
   box-sizing: border-box;
 }

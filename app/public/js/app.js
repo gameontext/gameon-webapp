@@ -16,18 +16,20 @@
 var baseUrl = window.location.host;
 
 // Angular templates (used to feed $templateCache)
-angular.module('templates', []);
+//angular.module('templates', []);
 
 angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives', 'hc.marked', 'templates'])
   .run(
-  [          '$rootScope', '$state', '$stateParams',
-    function ($rootScope,   $state,   $stateParams) {
+  [          '$rootScope', '$state', '$stateParams', '$templateCache',
+    function ($rootScope,   $state,   $stateParams,   $templateCache) {
       // make life easier
       $rootScope.$on("$stateChangeError", console.log.bind(console));
 
       // From https://github.com/angular-ui/ui-router/blob/gh-pages/sample/app/app.js
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
+
+      console.log("templates", $templateCache.get('default.html'));
     }
   ])
   .constant("API", {
@@ -62,7 +64,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
       $stateProvider
         .state('default', {
           url: '/',
-          templateUrl: 'default.html',
+          templateUrl: '/default.html',
           controller: 'DefaultCtrl as ctrl',
           onEnter: function(go_ga){
             console.info("state -> default");
@@ -171,7 +173,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
           // It can only be implicitly activated by activating one of its children.
           abstract: true,
           url: '/play',
-          templateUrl: 'play.html',
+          templateUrl: '/play.html',
           controller: 'PlayCtrl as play',
           resolve: {
             // a fictional var that we'll have injected to onEntry and into the PlayCtrl.
@@ -195,7 +197,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('play.room', {
           url: '',
-          templateUrl: 'play.room.html',
+          templateUrl: '/play.room.html',
           onEnter: function(go_ga){
             go_ga.hit('game_screen');
             go_ga.report('send','event','GameOn','App','play');
@@ -203,7 +205,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('play.myrooms', {
           url: '/myrooms',
-          templateUrl: 'play.myrooms.html',
+          templateUrl: '/play.myrooms.html',
           onEnter: function(go_ga){
             go_ga.hit('room_editor');
             go_ga.report('send','event','GameOn','App','edit_rooms');
@@ -211,7 +213,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('play.me', {
           url: '/me',
-          templateUrl: 'play.me.html',
+          templateUrl: '/play.me.html',
           onEnter: function(go_ga, user){
             user.refresh();
             go_ga.hit('profile_editor');

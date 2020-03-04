@@ -3,7 +3,7 @@ a {
   color: var(--dark-aqua);
 }
 a:hover {
-  color: var(--deep-dark-blue);
+  color: var(--deep-teal);
 }
 aside.related,
 aside.related a {
@@ -15,13 +15,13 @@ section.login,
 section.terms,
 section.usersetup,
 .default-container section.userprofile {
-  color: var(--dark-blue);
+  color: var(--mid-teal);
 }
 .background,
 aside.related .text,
 aside.related .subtext,
 aside.related .icon {
-  background-color: var(--dark-blue);
+  background-color: var(--mid-teal);
 }
 .main a.button {
   background-color: var(--rust);
@@ -32,12 +32,12 @@ aside.related .icon {
 .background .icon-floating-circle use,
 .background .icon-big-light use,
 .background .icon-small-light use {
-  fill: var(--aqua-blue);
+  fill: var(--aqua);
 }
 .background .icon-bottom use,
 .background .icon-left use,
 aside.related .button .icon use {
-  fill: var(--deep-dark-blue);
+  fill: var(--deep-teal);
 }
 /* Main section
  ------------------------------------ */
@@ -85,7 +85,7 @@ section.enter header h1 {
 }
 section.enter header h1 .on {
   font-weight: bold;
-  color: var(--aqua-blue);
+  color: var(--aqua);
 }
 section.enter header .lead {
   display: block;
@@ -93,21 +93,16 @@ section.enter header .lead {
   font-weight: 500;
 }
 section.enter > footer {
-  font-size: 0.8rem;
+  font-size: 1rem;
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 section.enter .intro {
   text-align: justify;
   line-height: 2rem;
-  font-size: 1.1rem;
 }
-section.enter .terms-link {
-  font-size: 1rem;
-}
-section.enter .intro,
-section.enter .terms-link {
-  max-width: 30rem;
+section.enter .intro {
+  max-width: 35rem;
   padding-right: 5rem;
   padding-left: 5rem;
   margin: 2rem auto;

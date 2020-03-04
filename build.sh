@@ -12,10 +12,6 @@ else
 fi
 
 DOCKER_CMD="docker"
-if [ "$(uname)" != "Darwin" ] && [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]
-then
-    DOCKER_CMD="sudo docker"
-fi
 
 # Ensure volume exists for node modules (avoid putting in
 # filesystem because of OS differences)

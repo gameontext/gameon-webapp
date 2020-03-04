@@ -46,7 +46,7 @@
   color: var(--chat-green);
 }
 .interaction .chat.me {
-  color: var(--aqua-blue);
+  color: var(--aqua);
 }
 
 /* links &  buttons
@@ -66,7 +66,7 @@
   color: #fff;
 }
 .game-container nav .clear a {
-  color: var(--aqua-blue);
+  color: var(--aqua);
   width: 2.2rem;
   font-size: 1.8rem;
 }
@@ -169,7 +169,7 @@ label[for="roomInfo_name"]::after {
 }
 .game-container nav .slash {
   color: #fff;
-  background-color: var(--aqua-blue);
+  background-color: var(--aqua);
   border: none;
   border-radius: 0;
   width: 4rem;
@@ -208,7 +208,7 @@ label[for="roomInfo_name"]::after {
   width: auto;
   height: 4rem;
   padding: 0.3rem 0.5rem;
-  background-image: linear-gradient(90deg, var(--dark-blue), var(--aqua-blue));
+  background-image: linear-gradient(90deg, var(--mid-teal), var(--aqua));
   background-size: 100% 0.5rem;
   background-position: 0 100%;
   background-repeat: no-repeat;

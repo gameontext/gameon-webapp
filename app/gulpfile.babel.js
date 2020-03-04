@@ -136,21 +136,24 @@ gulp.task('css', () => {
     .pipe(postcss([
       cssImport({from: 'public/styles/flex.css'}),
       cssnext()]))
-    .pipe(hash()) // Add hashes to the files' names
+//    .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
     .pipe(cssnano())
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest('dist'))
-    .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
+//    .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
     .pipe(gulp.dest('dist')) // Write the manifest file
     .pipe(plumber.stop());
 });
 
 // js: create template cache for partials
-function prepareTemplates() {
+gulp.task('js:templates', () => {
   return gulp.src('public/templates/**/*.html')
-    .pipe(templateCache());
-}
+    .pipe(templateCache({
+      standalone: true
+    }))
+    .pipe(gulp.dest('dist/js/'));
+});
 
 // js: Minify & uglify angular application
 gulp.task('js:app', () => {
@@ -158,16 +161,15 @@ gulp.task('js:app', () => {
     .pipe(plumber({ errorHandler: onError }))
     .pipe(print())
     .pipe(babel())
-    .pipe(addStream.obj(prepareTemplates())) // templates
     .pipe(concat('js/app.js'))
-    .pipe(hash()) // Add hashes to the files' names
+    // .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
-    .pipe(uglify())
-    .pipe(rename({ extname: '.min.js' }))
-    .pipe(size({ gzip: true, showFiles: true }))
-    .pipe(gulp.dest('dist'))
-    .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
-    .pipe(gulp.dest('dist')) // Write the manifest file
+    // .pipe(uglify())
+    // .pipe(rename({ extname: '.min.js' }))
+    // .pipe(size({ gzip: true, showFiles: true }))
+    // .pipe(gulp.dest('dist'))
+    // .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
+    // .pipe(gulp.dest('dist')) // Write the manifest file
     .pipe(plumber.stop());
 });
 
@@ -187,14 +189,14 @@ gulp.task('js:npm', () => {
     .pipe(plumber({ errorHandler: onError }))
     .pipe(print())
     .pipe(concat('js/vendor.js'))
-    .pipe(hash()) // Add hashes to the files' names
+    // .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
-    .pipe(uglify())
-    .pipe(rename({ extname: '.min.js' }))
-    .pipe(size({ gzip: true, showFiles: true }))
-    .pipe(gulp.dest('dist'))
-    .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
-    .pipe(gulp.dest('dist')) // Write the manifest file
+    // .pipe(uglify())
+    // .pipe(rename({ extname: '.min.js' }))
+    // .pipe(size({ gzip: true, showFiles: true }))
+    // .pipe(gulp.dest('dist'))
+    // .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
+    // .pipe(gulp.dest('dist')) // Write the manifest file
     .pipe(plumber.stop());
 });
 
@@ -205,7 +207,7 @@ gulp.task('js:vendor',() => {
 });
 
 // js: all steps
-gulp.task('js', gulp.parallel('js:app', 'js:npm', 'js:vendor'));
+gulp.task('js', gulp.parallel('js:app', 'js:npm', 'js:vendor', 'js:templates'));
 
 // hash
 gulp.task('hashref', () => {
@@ -214,6 +216,7 @@ gulp.task('hashref', () => {
     .pipe(gulp.dest('dist'));
 });
 
+// lint: css
 gulp.task('lint:css', () => {
   return gulp.src('public/styles/*.css')
     .pipe(stylelint({
@@ -275,6 +278,35 @@ gulp.task('test', function(done) {
 
 // lint: all steps
 gulp.task('lint',    gulp.parallel('lint:css', 'lint:js', 'lint:html', 'lint:templates', 'lint:infra'));
-gulp.task('build',   gulp.series(gulp.parallel('css','js','static'), 'hashref'));
+//gulp.task('build',   gulp.series(gulp.parallel('css','js','static'), 'hashref'));
+gulp.task('build',   gulp.parallel('css','js','static'));
 gulp.task('default', gulp.series('clean', 'build'));
 gulp.task('all',     gulp.series('clean', 'lint', 'test', 'build'));
+
+
+
+// local dev/iteration
+function reload(done) {
+  console.log('Reload browser');
+  browserSync.reload();
+  done();
+}
+
+function server(done) {
+  browserSync.init({
+    server: {
+      baseDir: 'dist'
+    }
+  });
+  done();
+}
+
+const watchCss =     () => gulp.watch( 'public/styles/**/*',     gulp.series('css', reload));
+const watchScripts = () => gulp.watch(['public/js/**/*',
+                                       'public/templates/**/*'], gulp.series('js', reload));
+const watchStatic =  () => gulp.watch(['public/images/**/*',
+                                       'public/fonts/**/*',
+                                       'public/*'],     gulp.series('static', reload));
+
+// Development server with browsersync
+gulp.task('serve', gulp.series('build', server, gulp.parallel(watchCss, watchScripts, watchStatic)));

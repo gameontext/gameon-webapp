@@ -13,8 +13,8 @@
       <a class="button play" ng-class="{disabled: $state.current.name !='default'}"
          ui-sref="default.login">Enter</a>
 
-      <p class="terms-link">By entering this site you are agreeing to our <a ui-sref="default.terms">terms</a></p>
       <footer>
+        <div class="terms-link">By entering this site you are agreeing to our <a ui-sref="default.terms">terms</a></div>
         <div title="peace, love, play"><i class="fa fa-hand-peace-o"></i> <i class="fa fa-heart-o"></i> <i class="fa fa-play"></i></div>
       </footer>
     </section>
@@ -24,7 +24,7 @@
         <h1>Terms and Conditions</h1>
         <span class="close" data-ng-click="ctrl.backToTheBeginning()">&times;</span>
       </header>
-      <div ng-include="'terms.html'"></div>
+      <div ng-include="'/terms.html'"></div>
     </section>
 
     <section class="auth" data-ng-switch-when="default.auth">
@@ -87,7 +87,7 @@
       <span class="text"><b>Join us on Slack!</b></span>
       <span class="subtext slack"><img src="https://gameontext.org/slackin/badge.svg" alt="slack"></span>
     </a>
-    <a class="link" href="https://book.gameontext.org/">
+    <a class="link" href="https://www.gameontext.org/">
       <svg class="icon">
         <use xlink:href="#shape-catalog_32"/>
       </svg>
@@ -97,7 +97,7 @@
         Read on!
       </span>
     </a>
-    <a class="link" href="http://blog.gameontext.org/">
+    <a class="link" href="http://www.gameontext.org/blog/">
       <svg class="icon">
         <use xlink:href="#shape-news_32"/>
       </svg>
