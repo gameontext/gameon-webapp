@@ -11,7 +11,7 @@
     "angular-ui-router": "^0.3.2",
     "angular-websocket": "^2.0.0",
     "angularjs-scroll-glue": "^2.2.0",
-    "marked": "^0.4.0"
+    "marked": "^0.7.0"
   },
   "devDependencies": {
     "add-stream": "^1.0.0",
