@@ -51,7 +51,10 @@ case "$ACTION" in
     # Force rebuild of tools/build image, clear node modules for future changes
     ${DOCKER_CMD} volume rm webapp-node-modules
     build_tools
-    exit
+    exit 0
+  ;;
+  cert)
+    WEBAPP_CMD="/usr/local/bin/docker-build.sh cert"
   ;;
   debug)
     PORT="-p 9876:9876"
@@ -75,7 +78,7 @@ case "$ACTION" in
       echo "App hasn't been built, running '${BASH_SOURCE[0]} build' first"
       ${BASH_SOURCE[0]} build
     fi
-    # Force rebuild of tools/build image
+    # Rebuild the webapp
     ${DOCKER_CMD} build -t gameontext/gameon-webapp .
     echo
     echo "Docker images: "
@@ -87,23 +90,18 @@ case "$ACTION" in
     ACTION=default
 esac
 
-if [ -n ${DOCKER_HOST} ]; then
-  echo "DOCKER_HOST is set to ${DOCKER_HOST}. Bind-mounted volumes are unlikely to work. Trying native build for ${ACTION}"
-  cd app
-  npm install
-  $(npm bin)/check-node-version --print --node 10
-  rc=$?
-  if [ $rc != 0 ]; then
-    echo "Incorrect version of node installed. This project requires node 8."
-    exit 1
-  fi
-  $(npm bin)/gulp ${ACTION}
-else
+if [ ! -f $PWD/app/.test-localhost-cert.pem ]; then
   ${DOCKER_CMD} run --rm -it \
-     --user="${userId}:${groupId}" \
-     -v $PWD/app:/app \
-     -v webapp-node-modules:/app/node_modules \
-     ${PORT} \
-     webapp-build \
-     ${WEBAPP_CMD}
+      --user="${userId}:${groupId}" \
+      -v $PWD/app:/app \
+      webapp-build \
+      /usr/local/bin/docker-build.sh cert
 fi
+
+${DOCKER_CMD} run --rm -it \
+    --user="${userId}:${groupId}" \
+    -v $PWD/app:/app \
+    -v webapp-node-modules:/app/node_modules \
+    -p 9876:9876 \
+    webapp-build \
+    ${WEBAPP_CMD}

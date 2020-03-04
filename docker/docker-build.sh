@@ -19,6 +19,21 @@ else
       shift
     fi
 
+    if [ "$ACTION" == "cert" ] ||  [ ! -f /app/.test-localhost-cert.pem ]; then
+      openssl req
+        -newkey rsa:2048 -x509 -nodes -keyout /app/.test-localhost-keytmp.pem \
+        -new -out /app/.test-localhost-cert.pem \
+        -subj /CN=localhost -reqexts SAN -extensions SAN \
+        -config <(cat /etc/ssl/openssl.cnf <(printf '[SAN]\nsubjectAltName=DNS:localhost')) \
+        -sha256 -days 3650
+
+      openssl rsa -in /app/.test-localhost-keytmp.pem -out /app/.test-localhost-key.pem
+      rm /app/.test-localhost-keytmp.pem
+    fi
+    if [ "$ACTION" == "cert" ]; then
+      exit 0
+    fi
+
     npm install
     gulp ${ACTION}
 fi

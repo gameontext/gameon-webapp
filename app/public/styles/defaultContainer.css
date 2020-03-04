@@ -100,8 +100,6 @@ section.enter > footer {
 section.enter .intro {
   text-align: justify;
   line-height: 2rem;
-}
-section.enter .intro {
   max-width: 35rem;
   padding-right: 5rem;
   padding-left: 5rem;

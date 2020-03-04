@@ -5,14 +5,14 @@
  * license agreements; and to You under the Apache License, Version 2.0.
  */
 :root {
-  --red-orange:  #aa5500;
-  --rust:        #aa5500;
-  --chat-green:  #32822e;
-  --aqua:        #65cfd9;
-  --dark-aqua:   #3e98aa;
-  --mid-teal:    #35566b;
-  --deep-teal:   #1e3341;
-  --viewport:    #323232;
+  --red-orange: #a50;
+  --rust: #a50;
+  --chat-green: #32822e;
+  --aqua: #65cfd9;
+  --dark-aqua: #3e98aa;
+  --mid-teal: #35566b;
+  --deep-teal: #1e3341;
+  --viewport: #323232;
   --smoke: #f1f1f1;
   --outline: #d1d1d1;
   --dark-outline: #bbb;

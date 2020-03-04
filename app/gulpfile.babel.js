@@ -16,9 +16,7 @@ import stylelint from 'gulp-stylelint';
 import templateCache from 'gulp-angular-templatecache';
 import uglify from 'gulp-uglify';
 import gutil from 'gulp-util';
-import watch from 'gulp-watch';
 
-import addStream from 'add-stream';
 import browserSync from 'browser-sync';
 import del from 'del';
 import karma from 'karma';
@@ -26,6 +24,9 @@ import cssImport from 'postcss-import';
 import cssnext from 'postcss-cssnext';
 import htmlValidate from 'html-angular-validate';
 import through from 'through2';
+
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 const onError = (err) => {
   console.log(err);
@@ -78,7 +79,7 @@ function wrapper(file, options, cb) {
     gutil.log(gutil.colors.red('htmlangular error: ' + err));
     cb(err);
   });
-};
+}
 
 function validate(options) {
   options = options || {};
@@ -96,7 +97,7 @@ function validate(options) {
     }
   });
   return stream;
-};
+}
 
 gulp.task('clean', () => del([
   '.tmp/*',
@@ -136,12 +137,12 @@ gulp.task('css', () => {
     .pipe(postcss([
       cssImport({from: 'public/styles/flex.css'}),
       cssnext()]))
-//    .pipe(hash()) // Add hashes to the files' names
+    .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
     .pipe(cssnano())
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest('dist'))
-//    .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
+    .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
     .pipe(gulp.dest('dist')) // Write the manifest file
     .pipe(plumber.stop());
 });
@@ -149,10 +150,14 @@ gulp.task('css', () => {
 // js: create template cache for partials
 gulp.task('js:templates', () => {
   return gulp.src('public/templates/**/*.html')
+    .pipe(plumber({ errorHandler: onError }))
     .pipe(templateCache({
       standalone: true
     }))
-    .pipe(gulp.dest('dist/js/'));
+    .pipe(print())
+    .pipe(concat('js/templates.js'))
+    .pipe(gulp.dest('dist'))
+    .pipe(plumber.stop());
 });
 
 // js: Minify & uglify angular application
@@ -162,14 +167,14 @@ gulp.task('js:app', () => {
     .pipe(print())
     .pipe(babel())
     .pipe(concat('js/app.js'))
-    // .pipe(hash()) // Add hashes to the files' names
+    .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
-    // .pipe(uglify())
-    // .pipe(rename({ extname: '.min.js' }))
-    // .pipe(size({ gzip: true, showFiles: true }))
-    // .pipe(gulp.dest('dist'))
-    // .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
-    // .pipe(gulp.dest('dist')) // Write the manifest file
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(size({ gzip: true, showFiles: true }))
+    .pipe(gulp.dest('dist'))
+    .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
+    .pipe(gulp.dest('dist')) // Write the manifest file
     .pipe(plumber.stop());
 });
 
@@ -189,14 +194,14 @@ gulp.task('js:npm', () => {
     .pipe(plumber({ errorHandler: onError }))
     .pipe(print())
     .pipe(concat('js/vendor.js'))
-    // .pipe(hash()) // Add hashes to the files' names
+    .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
-    // .pipe(uglify())
-    // .pipe(rename({ extname: '.min.js' }))
-    // .pipe(size({ gzip: true, showFiles: true }))
-    // .pipe(gulp.dest('dist'))
-    // .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
-    // .pipe(gulp.dest('dist')) // Write the manifest file
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(size({ gzip: true, showFiles: true }))
+    .pipe(gulp.dest('dist'))
+    .pipe(hash.manifest('assets.json', hash_mf)) // Switch to the manifest file
+    .pipe(gulp.dest('dist')) // Write the manifest file
     .pipe(plumber.stop());
 });
 
@@ -253,7 +258,10 @@ gulp.task('lint:templates', () => {
     tmplext: 'html',
     angular: true,
     customattrs: ['scroll-glue', 'marked'],
-    customtags: ['profile-core']
+    customtags: ['profile-core'],
+    relaxerror: [
+      'Consider adding a “lang” attribute to the “html” start tag to declare the language of this document.'
+    ],
   };
   return gulp.src('public/templates/**/*.html')
     .pipe(validate(options));
@@ -268,6 +276,9 @@ gulp.task('lint:infra', () => {
     .pipe(jshint.reporter('default'));
 });
 
+// lint: all steps
+gulp.task('lint',    gulp.series('lint:css', 'lint:js', 'lint:html', 'lint:templates', 'lint:infra'));
+
 gulp.task('test', function(done) {
   new karma.Server({
     configFile: __dirname + '/karma.conf.js',
@@ -276,16 +287,12 @@ gulp.task('test', function(done) {
   }, done).start();
 });
 
-// lint: all steps
-gulp.task('lint',    gulp.parallel('lint:css', 'lint:js', 'lint:html', 'lint:templates', 'lint:infra'));
-//gulp.task('build',   gulp.series(gulp.parallel('css','js','static'), 'hashref'));
-gulp.task('build',   gulp.parallel('css','js','static'));
+gulp.task('build',   gulp.series(gulp.parallel('css','js','static'), 'hashref'));
 gulp.task('default', gulp.series('clean', 'build'));
 gulp.task('all',     gulp.series('clean', 'lint', 'test', 'build'));
 
+// -- local dev/iteration
 
-
-// local dev/iteration
 function reload(done) {
   console.log('Reload browser');
   browserSync.reload();
@@ -293,10 +300,93 @@ function reload(done) {
 }
 
 function server(done) {
+  var names = {
+    key: '.test-localhost-key.pem',
+    cert: '.test-localhost-cert.pem',
+  };
+  var certs = {
+    key: fs.readFileSync(names.key),
+    cert: fs.readFileSync(names.cert),
+  };
   browserSync.init({
+    https: {
+      key: names.key,
+      cert: names.cert
+    },
     server: {
       baseDir: 'dist'
-    }
+    },
+    callbacks: {
+      /**
+       * This 'ready' callback can be used
+       * to access the Browsersync instance
+       */
+      ready: function(err, bs) {
+        bs.addMiddleware('/auth/PublicCertificate', function (req, res) {
+          res.end(Buffer.from(certs.cert));
+        });
+
+        bs.addMiddleware('/auth/DummyAuth', function (req, res) {
+          var token = jwt.sign({
+            name: 'Social UserName',
+            id: 'dummy:pretend',
+            email: 'dummy@usersareawesome.com'
+          }, certs.key, {
+            expiresIn: '1h',
+            algorithm: 'RS256'
+          });
+
+          res.writeHead(302, {
+            location: '/#/login/callback/' + token
+          });
+          res.end();
+        });
+
+        bs.addMiddleware('/players/v1/accounts/undefined', function (req, res) {
+          res.writeHead(404);
+          res.end();
+        });
+
+        bs.addMiddleware('/players/v1/accounts/', function (req, res) {
+          const body = JSON.stringify({
+            "_id": "oauthProvider:userid",
+            "name": "Harriet",
+            "favoriteColor": "Tangerine",
+            "location": {
+              "location": "room_id_1"
+            },
+            "credentials": {
+              "sharedSecret": "fjhre8h49hf438u9h45",
+              "email": "myroomisbroken@gmail.com"
+            }
+          });
+
+          res.writeHead(201, {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(body)
+          });
+          res.write(body);
+          res.end();
+        });
+      }
+    },
+    // middleware: [
+    //   {
+    //     route: '/auth/DummyAuth',
+    //     handle: function (req, res, next) {
+    //       var token = jwt.sign({
+    //         name: 'Social UserName',
+    //         id: 'dummy:pretend',
+    //         email: 'dummy@usersareawesome.com'
+    //       }, options.key, {
+    //         expiresIn: '1h',
+    //         algorithm: 'RS256'
+    //       });
+
+    //       res.redirect(302, '/#/login/callback/' + token);
+    //     }
+    //   }
+    // ]
   });
   done();
 }

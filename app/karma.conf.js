@@ -79,7 +79,7 @@ module.exports = function(config) {
     },
 
     ngHtml2JsPreprocessor: {
-      stripPrefix: 'public/templates/',
+      stripPrefix: 'public/templates',
       moduleName: 'templates'
     },
 

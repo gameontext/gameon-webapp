@@ -19,7 +19,7 @@ describe('Room Editing', function () {
     };
 
     // Fish the form out of template
-    var element = angular.element($templateCache.get('play.myrooms.html'));
+    var element = angular.element($templateCache.get('/play.myrooms.html'));
     var forms = element.find('form');
     expect(forms.length).toBe(1);
 

@@ -20,16 +20,14 @@ var baseUrl = window.location.host;
 
 angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket','luegg.directives', 'hc.marked', 'templates'])
   .run(
-  [          '$rootScope', '$state', '$stateParams', '$templateCache',
-    function ($rootScope,   $state,   $stateParams,   $templateCache) {
+  [          '$rootScope', '$state', '$stateParams',
+    function ($rootScope,   $state,   $stateParams) {
       // make life easier
       $rootScope.$on("$stateChangeError", console.log.bind(console));
 
       // From https://github.com/angular-ui/ui-router/blob/gh-pages/sample/app/app.js
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
-
-      console.log("templates", $templateCache.get('default.html'));
     }
   ])
   .constant("API", {

@@ -9,4 +9,4 @@ access.log
 .tmp
 .DS_Store
 *.bak
-test-localhost.*
+.test-localhost*
