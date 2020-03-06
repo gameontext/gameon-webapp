@@ -32,11 +32,11 @@
 .game-container .viewport h3,
 .game-container .error,
 .interaction .exits::before {
-  color: var(--red-orange);
+  color: var(--chat-orange);
 }
 .game-container hr.error {
-  color: var(--red-orange);
-  border-color: var(--red-orange);
+  color: var(--chat-orange);
+  border-color: var(--chat-orange);
 }
 .interaction .little-text,
 .interaction .command {
@@ -46,7 +46,7 @@
   color: var(--chat-green);
 }
 .interaction .chat.me {
-  color: var(--aqua);
+  color: var(--chat-aqua);
 }
 
 /* links &  buttons
@@ -60,13 +60,13 @@
 }
 .interaction .key a,
 .interaction .objects li a {
-  color: var(--red-orange);
+  color: var(--chat-orange);
 }
 .game-container a.button {
   color: #fff;
 }
 .game-container nav .clear a {
-  color: var(--aqua);
+  color: var(--chat-aqua);
   width: 2.2rem;
   font-size: 1.8rem;
 }
@@ -86,20 +86,20 @@
 .interaction .key a:hover,
 .interaction .paused a:hover,
 .interaction .objects li a:hover {
-  color: var(--rust);
+  color: var(--chat-orange);
 }
 .interaction .exits table tr td.key a,
 .interaction .commands table tr td.key a {
   padding-right: 1em;
 }
 .game-container #scroll-to-bottom a {
-  color: var(--red-orange);
+  color: var(--chat-orange);
 }
 .game-container .flex-config-row a.button,
 .game-container .flex-config button:enabled,
 .game-container .flex-config-row button:enabled {
-  color: var(--red-orange);
-  border-color: var(--red-orange);
+  color: var(--chat-orange);
+  border-color: var(--chat-orange);
 }
 .game-container .flex-config-row button:disabled {
   color: #999;
@@ -151,7 +151,7 @@
 }
 label[for="roomInfo_name"]::after {
   content: ' *';
-  color: var(--red-orange);
+  color: var(--chat-orange);
 }
 .game-container .flex-config-row ul.error {
   margin: 0;
@@ -169,7 +169,7 @@ label[for="roomInfo_name"]::after {
 }
 .game-container nav .slash {
   color: #fff;
-  background-color: var(--aqua);
+  background-color: var(--dark-aqua);
   border: none;
   border-radius: 0;
   width: 4rem;

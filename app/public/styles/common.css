@@ -6,18 +6,20 @@
  */
 :root {
   --red-orange: #a50;
-  --rust: #a50;
-  --chat-green: #32822e;
   --aqua: #65cfd9;
   --dark-aqua: #3e98aa;
   --mid-teal: #35566b;
   --deep-teal: #1e3341;
-  --viewport: #323232;
   --smoke: #f1f1f1;
   --outline: #d1d1d1;
   --dark-outline: #bbb;
+
+  --viewport: #323232;
+  --chat-aqua: #65cfd9;
+  --chat-green: #65d96f;
+  --chat-orange: #d96f65;
 }
-/* Colors:
+/* Colors:q
 var(--spring-green)
    - red/orange: var(--red-orange);
    - aqua blue: var(--aqua);

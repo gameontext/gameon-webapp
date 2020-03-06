@@ -24,7 +24,7 @@ aside.related .icon {
   background-color: var(--mid-teal);
 }
 .main a.button {
-  background-color: var(--rust);
+  background-color: var(--red-orange);
   color: #fff;
 }
 .background .icon-corner use,

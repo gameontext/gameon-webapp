@@ -370,23 +370,6 @@ function server(done) {
         });
       }
     },
-    // middleware: [
-    //   {
-    //     route: '/auth/DummyAuth',
-    //     handle: function (req, res, next) {
-    //       var token = jwt.sign({
-    //         name: 'Social UserName',
-    //         id: 'dummy:pretend',
-    //         email: 'dummy@usersareawesome.com'
-    //       }, options.key, {
-    //         expiresIn: '1h',
-    //         algorithm: 'RS256'
-    //       });
-
-    //       res.redirect(302, '/#/login/callback/' + token);
-    //     }
-    //   }
-    // ]
   });
   done();
 }
