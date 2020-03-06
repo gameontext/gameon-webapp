@@ -66,7 +66,7 @@
   color: #fff;
 }
 .game-container nav .clear a {
-  color: var(--chat-aqua);
+  color: var(--dark-aqua);
   width: 2.2rem;
   font-size: 1.8rem;
 }
@@ -95,11 +95,12 @@
 .game-container #scroll-to-bottom a {
   color: var(--chat-orange);
 }
+.game-container .me-session a.button,
 .game-container .flex-config-row a.button,
 .game-container .flex-config button:enabled,
 .game-container .flex-config-row button:enabled {
-  color: var(--chat-orange);
-  border-color: var(--chat-orange);
+  color: var(--smoke);
+  border-color: var(--dark-outline);
 }
 .game-container .flex-config-row button:disabled {
   color: #999;
@@ -298,6 +299,7 @@ label[for="roomInfo_name"]::after {
   padding: 2px;
   margin: 1px;
   font-size: 0.9em;
+
 }
 .interaction .event::after,
 .top::after {

@@ -28,6 +28,8 @@ import through from 'through2';
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
+var bs = {};
+
 const onError = (err) => {
   console.log(err);
 };
@@ -293,12 +295,6 @@ gulp.task('all',     gulp.series('clean', 'lint', 'test', 'build'));
 
 // -- local dev/iteration
 
-function reload(done) {
-  console.log('Reload browser');
-  browserSync.reload();
-  done();
-}
-
 function server(done) {
   var names = {
     key: '.test-localhost-key.pem',
@@ -308,7 +304,8 @@ function server(done) {
     key: fs.readFileSync(names.key),
     cert: fs.readFileSync(names.cert),
   };
-  browserSync.init({
+  bs = browserSync.create()
+  bs.init({
     https: {
       key: names.key,
       cert: names.cert
@@ -374,12 +371,18 @@ function server(done) {
   done();
 }
 
-const watchCss =     () => gulp.watch( 'public/styles/**/*',     gulp.series('css', reload));
+function reload(done) {
+  console.log('Reload browser');
+  bs.exit();
+  server(done);
+}
+
+const watchCss =     () => gulp.watch( 'public/styles/**/*',     gulp.series('build', reload));
 const watchScripts = () => gulp.watch(['public/js/**/*',
-                                       'public/templates/**/*'], gulp.series('js', reload));
+                                       'public/templates/**/*'], gulp.series('build', reload));
 const watchStatic =  () => gulp.watch(['public/images/**/*',
                                        'public/fonts/**/*',
-                                       'public/*'],     gulp.series('static', reload));
+                                       'public/*'],     gulp.series('build', reload));
 
 // Development server with browsersync
 gulp.task('serve', gulp.series('build', server, gulp.parallel(watchCss, watchScripts, watchStatic)));
