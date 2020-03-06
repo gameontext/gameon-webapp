@@ -299,7 +299,6 @@ label[for="roomInfo_name"]::after {
   padding: 2px;
   margin: 1px;
   font-size: 0.9em;
-
 }
 .interaction .event::after,
 .top::after {
