@@ -67,6 +67,9 @@ TL;DR: Use the `build.sh` script, with the following actions:
   - `final` -- build the final docker container (after running `build`)
   - `tools` -- create or recreate the docker tools image and dependency volume
 
+**Note:** if you see an error like `setrlimit `RLIMIT_NOFILE`: Operation not permitted` on Linux, then you need to raise your file handle limit. How to do this varies by distribution, as the configuration value is kept in /etc/security/limits.conf, /etc/systemd/user.conf and /etc/systemd/system.conf (or some subset, or combination, depending on how the system is configured). 
+
+
 ### Build using Docker Compose (from the gameon project)
 
 If you're building from the top-level `gameon` project with docker-compose, copy the following from `docker/docker-compose.override.yml.example` into `docker/docker-compose.override.yml`:
