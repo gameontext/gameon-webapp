@@ -20,7 +20,7 @@ else
     fi
 
     if [ "$ACTION" == "cert" ] ||  [ ! -f /app/.test-localhost-cert.pem ]; then
-      openssl req
+      openssl req \
         -newkey rsa:2048 -x509 -nodes -keyout /app/.test-localhost-keytmp.pem \
         -new -out /app/.test-localhost-cert.pem \
         -subj /CN=localhost -reqexts SAN -extensions SAN \
@@ -35,5 +35,5 @@ else
     fi
 
     npm install
-    gulp ${ACTION}
+    npx gulp ${ACTION}
 fi

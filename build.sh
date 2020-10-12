@@ -19,7 +19,7 @@ ${DOCKER_CMD} volume inspect webapp-node-modules &> /dev/null
 rc=$?
 if [ $rc -ne 0 ]
 then
-  ${DOCKER_CMD} volume create --name webapp-node-modules
+  ${DOCKER_CMD} volume create webapp-node-modules
 fi
 
 # make sure node_modules directory exsts (mount point)
@@ -31,16 +31,17 @@ groupId=$(id -g)
 
 build_tools() {
   ${DOCKER_CMD} build \
+    --ulimit nofile=65535:65535 \
     --build-arg userId=${userId}  \
     --build-arg groupId=${groupId} \
     -f Dockerfile-node \
-    -t webapp-build .
+    -t localhost/webapp-build .
 }
 
 PORT=
 
 ## Ensure the tools/build image exists.
-tools_image=$(docker images -q webapp-build 2>/dev/null)
+tools_image=$(docker images -q localhost/webapp-build 2>/dev/null)
 if [ "$tools_image" == "" ]
 then
   build_tools
@@ -90,18 +91,24 @@ case "$ACTION" in
     ACTION=default
 esac
 
+which podman 2>&1 >/dev/null
+PODMAN_RC=$?
+if [ "$PODMAN_RC" == "0" ];then 
+  podman unshare chown "${userId}:${groupId}" $PWD/app
+fi
+
 if [ ! -f $PWD/app/.test-localhost-cert.pem ]; then
   ${DOCKER_CMD} run --rm -it \
       --user="${userId}:${groupId}" \
-      -v $PWD/app:/app \
-      webapp-build \
-      /usr/local/bin/docker-build.sh cert
+      -v $PWD/app:/app:Z \
+      localhost/webapp-build \
+      sh -x /usr/local/bin/docker-build.sh cert
 fi
 
 ${DOCKER_CMD} run --rm -it \
     --user="${userId}:${groupId}" \
-    -v $PWD/app:/app \
-    -v webapp-node-modules:/app/node_modules \
+    -v $PWD/app:/app:Z \
+    -v webapp-node-modules:/app/node_modules:Z \
     -p 9876:9876 \
-    webapp-build \
+    localhost/webapp-build \
     ${WEBAPP_CMD}
