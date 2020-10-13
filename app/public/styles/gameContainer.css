@@ -201,6 +201,14 @@ label[for="roomInfo_name"]::after {
 }
 /* Absolute elements
  ------------------------------------ */
+ .game-container .viewport {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
 .game-container .viewport header {
   position: absolute;
   top: 0;
@@ -245,17 +253,6 @@ label[for="roomInfo_name"]::after {
   bottom: 4.5rem;
   height: 1rem;
   z-index: 12;
-}
-
-@media (max-width: 759px) {
-  .game-container .viewport {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
 }
 
 @media (min-width: 800px) {
