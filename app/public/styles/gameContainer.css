@@ -336,6 +336,9 @@ label[for="roomInfo_name"]::after {
 .interaction .objects ul {
   margin-bottom: 0.2em;
 }
+.interaction .objects li a p {
+  display: inline;
+}
 .interaction .command {
   font-size: 1rem;
   font-style: italic;
