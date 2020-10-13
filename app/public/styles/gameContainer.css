@@ -1,7 +1,4 @@
 /*! gameontext gameContainer.css | APL2.0 License | github.com/gameontext/gameon-webapp */
-.game-container .viewport {
-  background-color: var(--viewport);
-}
 .game-container .flex-config-row select {
   background-color: #ccc;
 }
@@ -201,7 +198,8 @@ label[for="roomInfo_name"]::after {
 }
 /* Absolute elements
  ------------------------------------ */
- .game-container .viewport {
+.game-container .viewport {
+  background-color: var(--viewport);
   position: fixed;
   top: 0;
   left: 0;
@@ -333,9 +331,6 @@ label[for="roomInfo_name"]::after {
 .interaction .objects ul {
   margin-bottom: 0.2em;
 }
-.interaction .objects li a p {
-  display: inline;
-}
 .interaction .command {
   font-size: 1rem;
   font-style: italic;
@@ -366,6 +361,9 @@ label[for="roomInfo_name"]::after {
 .interaction .description blockquote p,
 .interaction .event blockquote p {
   margin-bottom: 2px;
+}
+.interaction .objects li a p {
+  display: inline;
 }
 .interaction .exits table tr td p,
 .interaction .commands table tr td p {
