@@ -52,6 +52,9 @@
 .game-container header a {
   color: #000;
 }
+.game-container .body a {
+  color: var(--chat-aqua);
+}
 .interaction .paused a {
   color: #fff;
 }
@@ -63,7 +66,7 @@
   color: #fff;
 }
 .game-container nav .clear a {
-  color: var(--dark-aqua);
+  color: var(--aqua);
   width: 2.2rem;
   font-size: 1.8rem;
 }
@@ -79,6 +82,9 @@
 .game-container header .top-nav-item a,
 .game-container header .title a {
   cursor: pointer;
+}
+.game-container .body a:hover {
+  color: var(--chat-hover);
 }
 .interaction .key a:hover,
 .interaction .paused a:hover,
@@ -167,7 +173,7 @@ label[for="roomInfo_name"]::after {
 }
 .game-container nav .slash {
   color: #fff;
-  background-color: var(--dark-aqua);
+  background-color: var(--aqua);
   border: none;
   border-radius: 0;
   width: 4rem;

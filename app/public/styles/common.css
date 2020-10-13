@@ -5,18 +5,19 @@
  * license agreements; and to You under the Apache License, Version 2.0.
  */
 :root {
-  --red-orange: #a50;
+  --red-orange: #c05648;
   --aqua: #65cfd9;
-  --dark-aqua: #3e98aa;
+  --dark-aqua: #32818e;
   --mid-teal: #35566b;
   --deep-teal: #1e3341;
   --smoke: #f1f1f1;
   --outline: #d1d1d1;
   --dark-outline: #bbb;
   --viewport: #323232;
+  --chat-hover: #26a7c0;
   --chat-aqua: #65cfd9;
   --chat-green: #65d96f;
-  --chat-orange: #d96f65;
+  --chat-orange: #e27d69;
 }
 /* Colors:q
 var(--spring-green)

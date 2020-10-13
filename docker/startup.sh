@@ -1,6 +1,15 @@
 #!/bin/sh
 
-echo "using /tmp for config"
+log() {
+  if [ "${GAMEON_LOG_FORMAT}" == "json" ]; then
+    # This needs to be escaped using jq
+    echo '{"message":"'$@'"}'
+  else
+    echo $@
+  fi
+}
+
+log "using /tmp for config"
 cp /etc/nginx/nginx.conf /tmp/nginx.conf
 
 if [ "${GAMEON_MODE}" == "development" ]
@@ -25,5 +34,4 @@ else
   sed -i -e "s/access\.log .*$/access.log combined;/" /tmp/nginx.conf
 fi
 
-
-nginx -c /tmp/nginx.conf
+exec nginx -c /tmp/nginx.conf
