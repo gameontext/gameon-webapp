@@ -6,7 +6,8 @@
       <div class="input-w">
         <input type="search" id="inputbox" ng-model="play.userInput"
           ng-keypress="play.input($event)" ng-keydown="play.inputKeyDown($event)"
-          ng-click="play.inputFocus($event)" ng-focus="play.inputFocus($event)" ng-blur="play.inputBlur($event)"/>
+          ng-click="play.inputFocus($event)" ng-focus="play.inputFocus($event)" ng-blur="play.inputBlur($event)"
+          autocomplete="off" />
       </div>
       <div class="clear"><a ng-click="play.fillin('')"><i class="fa fa-times-circle"></i></a></div>
     </nav>
