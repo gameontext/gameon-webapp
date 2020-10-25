@@ -23,5 +23,12 @@ angular.module('playerApp')
           auth.logout(); // reset to try again
           $state.go('default');
       };
+
+      this.showDummy = function() {
+        if ( this.api.HOST === "gameontext.org" ) {
+            return false;
+        }
+        return true;
+      };
     }
   ]);

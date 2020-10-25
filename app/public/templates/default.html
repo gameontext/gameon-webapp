@@ -44,7 +44,7 @@
         <a class="button" ng-href="{{ctrl.api.GOOGLE}}">Google</a>
         <a class="button" ng-href="{{ctrl.api.FACEBOOK}}">Facebook</a>
         <a class="button" ng-href="{{ctrl.api.GITHUB}}">GitHub</a>
-        <a ng-if="(!ctrl.api.HOST.includes('.org'))" class="button" ng-href="{{ctrl.api.DUMMY}}">Anonymous user</a>
+        <a ng-if="ctrl.showDummy()" class="button" ng-href="{{ctrl.api.DUMMY}}">Anonymous user</a>
       </div>
     </section>
 
