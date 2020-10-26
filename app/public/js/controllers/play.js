@@ -48,8 +48,10 @@ angular.module('playerApp')
       };
 
       this.logout = function() {
+        var start = auth.getStartingState();
         playerSocket.logout();
-        $state.go('default');
+        auth.logout();
+        $state.go(start);
       };
 
       this.reset = function() {

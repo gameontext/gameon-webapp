@@ -17,29 +17,32 @@ angular.module('playerApp')
 
     var _token = null,
         _publicKey = null,
+        _startingState = null,
         _authenticated = null;
 
     function get_public_key(success,failure){
       $log.debug('Requesting public cert to validate jwts with');
-      if(_publicKey === null) {
+      _publicKey = playerSession.get('publicKey', _publicKey);
+
+      if(_publicKey != null) {
+        // if _publicKey is defined and not null...
+        console.log("Already had cert: %o", _publicKey);
+        success();
+      } else {
         $http({
           method : 'GET',
           url : API.CERT_URL,
           cache : false
         }).then(function (data) {
-          $log.debug('Obtained certificate', data.data);
+          $log.debug('Obtained certificate %o', data.data);
           _publicKey = data.data;
           playerSession.set('publicKey', _publicKey);
           success();
         }, failure).catch(console.log.bind(console));
-      } else {
-        console.log("Already had cert");
-        console.log(_publicKey);
-        success();
       }
     }
 
-    function remember_jwt(jwt){
+    function remember_jwt(jwt) {
       _token = jwt;
     }
 
@@ -51,21 +54,27 @@ angular.module('playerApp')
       playerSession.remove('token');
       $log.debug("old token flushed");
 
-      if(typeof _token === 'undefined') {
+      if( typeof _token === 'undefined' ) {
         $log.debug("token validation failed, null token");
         return false;
       }
 
-      var pubkey = KEYUTIL.getKey(_publicKey);
-      var isValid = KJUR.jws.JWS.verifyJWT(_token,pubkey,{alg: ['RS256'] });
+      try{
+        var pubkey = KEYUTIL.getKey(_publicKey);
+        var isValid = KJUR.jws.JWS.verifyJWT(_token,pubkey,{alg: ['RS256'] });
 
-      if(isValid) {
-        playerSession.set('token', _token);
-        $log.debug("token validation passed");
-        _authenticated = Promise.resolve(true);
-        return true;
-      } else {
-        $log.debug("token validation failed, invalid token");
+        if(isValid) {
+          playerSession.set('token', _token);
+          $log.debug("token validation passed");
+          _authenticated = Promise.resolve(true);
+          return true;
+        } else {
+          $log.debug("token validation failed, invalid token");
+          _authenticated = Promise.resolve(false);
+          return false;
+        }
+      } catch (ex) {
+        $log.error("Error parsing JWS %o ",ex);
         _authenticated = Promise.resolve(false);
         return false;
       }
@@ -73,14 +82,16 @@ angular.module('playerApp')
 
     function logout() {
       _authenticated = Promise.resolve(false);
+      _token = null;
       playerSession.reset();
     }
 
     return {
       getAuthenticationState: function () {
         $log.debug('isAuthenticated: %o %o', this, _authenticated);
-        if (_authenticated !== null) {
-            $log.debug('user already authenticated %o %o', _authenticated, _token);
+        if (_authenticated != null) {
+          // if _authenticated is defined and not null...
+          $log.debug('user already authenticated %o %o', _authenticated, _token);
         } else {
           _token = playerSession.get('token');
           _publicKey = playerSession.get('publicKey');
@@ -93,8 +104,8 @@ angular.module('playerApp')
       remember_jwt: remember_jwt,
       validate_jwt: validate_jwt,
       get_jwt: function () {
-        $log.debug("Obtaining JWT payload, performing revalidation of jwt first");
-        if(validate_jwt()){
+        if(_token != null) {
+          // if _token is defined and not null, pull out the pieces
           var result=0;
           try{
             var jws = new KJUR.jws.JWS();
@@ -110,8 +121,15 @@ angular.module('playerApp')
       },
       get_public_key: get_public_key,
       logout: logout,
-      token: function (){
+      token: function () {
           return _token;
+      },
+      setStartingState: function (state) {
+        _startingState = state;
+        playerSession.set('startingState', state);
+      },
+      getStartingState: function () {
+        return playerSession.get('startingState');
       }
     };
 }]);

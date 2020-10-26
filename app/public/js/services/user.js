@@ -27,7 +27,7 @@ angular.module('playerApp')
     rules.colorPattern = /^\w{3,}$/;
 
     var load = function(id,name) {
-      $log.debug('quering token %o',auth.token());
+      $log.debug('quering token %o', auth.token());
 
       //we're using the id from the token introspect as our player db id.
       profile._id = id;
@@ -44,23 +44,17 @@ angular.module('playerApp')
         cache : false,
         headers : gameonHeaders
       }).then(function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
+        $log.debug(response.status + ' ' + response.statusText);
         var tmp = angular.fromJson(response.data);
         $log.debug('profile: %o', tmp);
-
         angular.extend(profile, tmp);
-
         return true;
       }, function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
+        $log.debug(response.status + ' ' + response.statusText);
         // User can't be found, which is fine, we can go build one!
         profile.name = name.replace(/ /g , '_');
-
         return false;
       }).catch(console.log.bind(console));
-
       return q;
     };
 

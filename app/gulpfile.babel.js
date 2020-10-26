@@ -18,6 +18,7 @@ import uglify from 'gulp-uglify';
 import gutil from 'gulp-util';
 
 import browserSync from 'browser-sync';
+import getBody from 'raw-body';
 import del from 'del';
 import karma from 'karma';
 import cssImport from 'postcss-import';
@@ -139,6 +140,7 @@ gulp.task('css', () => {
     .pipe(postcss([
       cssImport({from: 'public/styles/flex.css'}),
       cssnext()]))
+    .pipe(gulp.dest('dist'))
     .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
     .pipe(cssnano())
@@ -169,6 +171,7 @@ gulp.task('js:app', () => {
     .pipe(print())
     .pipe(babel())
     .pipe(concat('js/app.js'))
+    .pipe(gulp.dest('dist'))
     .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
@@ -196,6 +199,7 @@ gulp.task('js:npm', () => {
     .pipe(plumber({ errorHandler: onError }))
     .pipe(print())
     .pipe(concat('js/vendor.js'))
+    .pipe(gulp.dest('dist'))
     .pipe(hash()) // Add hashes to the files' names
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
@@ -215,6 +219,7 @@ gulp.task('js:vendor',() => {
 
 // js: all steps
 gulp.task('js', gulp.parallel('js:app', 'js:npm', 'js:vendor', 'js:templates'));
+
 
 // hash
 gulp.task('hashref', () => {
@@ -289,7 +294,8 @@ gulp.task('test', function(done) {
   }, done).start();
 });
 
-gulp.task('build',   gulp.series(gulp.parallel('css','js','static'), 'hashref'));
+gulp.task('compile', gulp.parallel('css','js','static'));
+gulp.task('build',   gulp.series('compile', 'hashref'));
 gulp.task('default', gulp.series('clean', 'build'));
 gulp.task('all',     gulp.series('clean', 'lint', 'test', 'build'));
 
@@ -340,9 +346,16 @@ function server(done) {
         });
 
         bs.addMiddleware('/auth/RedHatAuth', function (req, res) {
+          if ( req.method !== 'POST' ) {
+            res.writeHead(500, { "Content-Type": "text/plain" });
+            return res.end(output.join("must use post\n"));
+          }
+
           var token = jwt.sign({
-            name: 'username',
-            id: 'redhat:groupid:uniqueplayerid'
+            name: 'authname',
+            id: 'redhat:groupid:uniqueplayerid',
+            story: 'entryroomid',
+            playermode: 'guided'
           }, certs.key, {
             expiresIn: '1h',
             algorithm: 'RS256'
@@ -354,31 +367,58 @@ function server(done) {
           res.end();
         });
 
-        bs.addMiddleware('/players/v1/accounts/undefined', function (req, res) {
-          res.writeHead(404);
-          res.end();
-        });
-
-        bs.addMiddleware('/players/v1/accounts/', function (req, res) {
-          const body = JSON.stringify({
-            "_id": "oauthProvider:userid",
-            "name": "Harriet",
-            "favoriteColor": "Tangerine",
-            "location": {
-              "location": "room_id_1"
-            },
-            "credentials": {
-              "sharedSecret": "fjhre8h49hf438u9h45",
-              "email": "myroomisbroken@gmail.com"
-            }
-          });
-
-          res.writeHead(201, {
+        bs.addMiddleware('/players/v1/color', function (req, res) {
+          const body = JSON.stringify(["Orange", "Magenta", "LimeGreen"]);
+          res.writeHead(200, {
             'Content-Type': 'application/json',
             'Content-Length': Buffer.byteLength(body)
           });
           res.write(body);
           res.end();
+        });
+
+        bs.addMiddleware('/players/v1/name', function (req, res) {
+          const body = JSON.stringify(["Matilda", "Harriet", "Sampson"]);
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(body)
+          });
+          res.write(body);
+          res.end();
+        });
+
+        bs.addMiddleware('/players/v1/accounts/', function (req, res) {
+          var token = jwt.decode(req.headers['gameon-jwt']);
+          console.log(token);
+
+          if ( req.method === 'POST' ) {
+            return getBody(req, function(err, body) {
+              if (err) {
+                const output = [
+                    "Error: could not parse JSON.",
+                ];
+                res.writeHead(500, { "Content-Type": "text/plain" });
+                return res.end(output.join("\n"));
+              }
+
+              var profile = JSON.parse(body.toString());
+              if ( token.story != null ) {
+                profile.story = token.story;
+              }
+              if ( token.playermode != null ) {
+                profile.playermode = token.playermode;
+              }
+              profile.name = 'HarrietTheSpy';
+
+              var respBody = JSON.stringify(profile);
+              res.writeHead(201, {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(respBody)
+              });
+              res.write(respBody);
+              res.end();
+            });
+          }
         });
       }
     },
@@ -392,12 +432,12 @@ function reload(done) {
   server(done);
 }
 
-const watchCss =     () => gulp.watch( 'public/styles/**/*',     gulp.series('build', reload));
+const watchCss =     () => gulp.watch( 'public/styles/**/*',     gulp.series('css', reload));
 const watchScripts = () => gulp.watch(['public/js/**/*',
-                                       'public/templates/**/*'], gulp.series('build', reload));
+                                       'public/templates/**/*'], gulp.series('js', reload));
 const watchStatic =  () => gulp.watch(['public/images/**/*',
                                        'public/fonts/**/*',
-                                       'public/*'],     gulp.series('build', reload));
+                                       'public/*'],     gulp.series('static', reload));
 
 // Development server with browsersync
-gulp.task('serve', gulp.series('build', server, gulp.parallel(watchCss, watchScripts, watchStatic)));
+gulp.task('serve', gulp.series('compile', server, gulp.parallel(watchCss, watchScripts, watchStatic)));
