@@ -14,6 +14,7 @@ RUN apt-get update \
      curl  \
   && apt-get autoremove \
   && apt-get clean \
+  && npm -g install npm \
   && rm -rf /tmp/* /var/lib/apt/lists/*
 
 RUN mkdir /tmp/phantomjs \

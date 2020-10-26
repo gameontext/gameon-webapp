@@ -57,12 +57,11 @@ case "$ACTION" in
   cert)
     WEBAPP_CMD="/usr/local/bin/docker-build.sh cert"
   ;;
-  debug)
-    PORT="-p 9876:9876"
-    WEBAPP_CMD=/bin/bash
-  ;;
   shell)
     WEBAPP_CMD=/bin/bash
+  ;;
+  serve)
+    WEBAPP_CMD="/usr/local/bin/docker-build.sh serve"
   ;;
   build)
     WEBAPP_CMD="/usr/local/bin/docker-build.sh build"
@@ -93,7 +92,7 @@ esac
 
 which podman 2>&1 >/dev/null
 PODMAN_RC=$?
-if [ "$PODMAN_RC" == "0" ];then 
+if [ "$PODMAN_RC" == "0" ];then
   podman unshare chown "${userId}:${groupId}" $PWD/app
 fi
 

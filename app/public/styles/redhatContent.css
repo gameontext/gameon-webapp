@@ -1,0 +1,163 @@
+/*! gameontext redhatContent.css | APL2.0 License | github.com/gameontext/gameon-webapp */
+/** Red Hat Co.Lab */
+#redhat .main {
+  background-color: #fff;
+  padding-top: 2em;
+}
+#redhat .main a {
+  color: #cf0000;
+}
+#redhat .main a:hover {
+  color: #600;
+}
+#redhat .main .logo {
+  text-align: right;
+  padding-right: 1em;
+  height: 25px;
+}
+#redhat .main .logo img {
+  height: 100%;
+  width: auto;
+}
+#redhat section.enter,
+#redhat section.login,
+#redhat section.terms {
+  color: #000;
+  display: flex;
+  min-height: 90vh;
+  flex-direction: column;
+  align-items: center;
+}
+#redhat .loginForm .box {
+  width: 20rem;
+}
+#redhat section.login label {
+  text-align: left;
+}
+#redhat .main a.button,
+#redhat .main button,
+#redhat .main input[type="submit"] {
+  background-color: #cf0000;
+  border-color: #a00;
+  color: #fff;
+}
+#redhat .main button:disabled,
+#redhat .main button[disabled],
+#redhat .main input[type="submit"]:disabled {
+  background-color: #bbb;
+  border-color: #ccc;
+  color: #000;
+}
+#redhat .colab {
+  position: relative;
+  height: 20px;
+  color: #000;
+}
+#redhat .colab img {
+  height: 100%;
+  width: auto;
+}
+.silhouettes {
+  box-sizing: border-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0 -.5em;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  position: relative;
+  overflow: hidden;
+  padding-top: 80px;
+  text-align: center;
+  font-size: 0;
+}
+.silhouettes div {
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+.silhouettes div img {
+  width: 70%;
+  height: auto;
+}
+.silhouettes.animate > div:nth-child(1) {
+  animation: slideUp1 1s forwards 1;
+}
+@keyframes slideUp1 {
+  0% {
+      transform: translateY(285px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+.silhouettes.animate > div:nth-child(2) {
+  animation: slideUp2 1s forwards 1;
+}
+@keyframes slideUp2 {
+  0% {
+      transform: translateY(484px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+.silhouettes.animate > div:nth-child(3) {
+  animation: slideUp3 1s forwards 1;
+}
+@keyframes slideUp3 {
+  0% {
+      transform: translateY(81px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+.silhouettes.animate > div:nth-child(4) {
+  animation: slideUp4 1s forwards 1;
+}
+@keyframes slideUp4 {
+  0% {
+      transform: translateY(664px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+.silhouettes.animate > div:nth-child(5) {
+  animation: slideUp5 1s forwards 1;
+}
+@keyframes slideUp5 {
+  0% {
+      transform: translateY(52px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+.silhouettes.animate > div:nth-child(6) {
+  animation: slideUp6 1s forwards 1;
+}
+@keyframes slideUp6 {
+  0% {
+      transform: translateY(297px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+.silhouettes.animate > div:nth-child(7) {
+  animation: slideUp7 1s forwards 1;
+}
+@keyframes slideUp7 {
+  0% {
+      transform: translateY(372px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}

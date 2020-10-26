@@ -39,6 +39,7 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
     "TWITTER": "https://"+baseUrl+"/auth/TwitterAuth",
     "FACEBOOK": "https://"+baseUrl+"/auth/FacebookAuth",
     "GITHUB": "https://"+baseUrl+"/auth/GitHubAuth",
+    "REDHAT": "https://"+baseUrl+"/auth/RedHatAuth",
     "DUMMY": "https://"+baseUrl+"/auth/DummyAuth?dummyUserName=DevUser&callbackHost=https://"+baseUrl
   })
   .config(['markedProvider', function (markedProvider) {
@@ -165,6 +166,24 @@ angular.module('playerApp', ['ngResource','ngSanitize','ui.router','ngWebSocket'
         })
         .state('default.yuk', {
           url: '^/yuk',
+        })
+        .state('redhat', {
+          url: '^/redhat',
+          templateUrl: '/redhat.html',
+          controller: 'RedHatCtrl as redhatCtrl',
+          onEnter: function(go_ga){
+            console.info("state -> redhat");
+            go_ga.hit('redhat');
+            go_ga.report('send','event','GameOn','App','redhat-intro');
+          }
+        })
+        .state('redhat.login', {
+          url: '^/redhat/login',
+          onEnter: function(go_ga){
+            console.info("state -> redhat.login");
+            go_ga.hit('redhat');
+            go_ga.report('send','event','GameOn','App','redhat-login');
+          }
         })
         .state('play', {
           // With abstract set to true, that means this state can not be explicitly activated.
