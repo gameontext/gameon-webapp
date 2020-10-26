@@ -24,6 +24,7 @@ angular.module('playerApp')
       var retryCount = 0;
       var pingCount = 0;
       var lastPauseId = 0;
+      var keepGoing = true;
 
       function userActive() {
         return pingCount < 150;
@@ -103,6 +104,7 @@ angular.module('playerApp')
         });
 
         $log.debug('PAUSE %o %o', message, button);
+        keepGoing = false;
         ws.close();
       };
 
@@ -113,6 +115,7 @@ angular.module('playerApp')
 
         retryCount = 0;
         lastPauseId = 0;
+        keepGoing = true;
         ws.reconnect();
         for (var i = roomEvents.length - 1; i >= 0; --i) {
           $log.debug('i %o: %o', i, roomEvents[i]);
@@ -126,11 +129,11 @@ angular.module('playerApp')
       };
 
       var logout = function() {
+        keepGoing = false;
         clientState = {};
         gameData = {};
         ws.close();
         go_ga.report('send','event','GameOn','Socket','logout');
-        auth.logout(); // will also reset the session
       };
 
       var parseJson = function(message) {
@@ -427,27 +430,28 @@ angular.module('playerApp')
       // On close, update the player session,
       // and indicate that we can no longer send outbound messages
       ws.onClose(function(event) {
-        $log.debug('connection closed: %o %o', event.code, event);
+        $log.debug('connection closed: %o %o %o', event.code, event, keepGoing);
         go_ga.report('send','event','GameOn','Socket','close');
         canSend = false;
 
         playerSession.set('clientState', clientState);
         playerSession.set('gameData', gameData);
 
-        if ( event.code === 1008 ) {
-          $log.debug('WEBSOCKET POLICY CLOSE', event);
-          pause("You've been here so long your session expired! Please [log in again](/#/login).", false);
-          $rootScope.$apply(); // process addition to array, not a usual render loop
-
-        } else if ( event.code !== 1000 ) {
-          retryCount++;
-
-          if ( userActive() && retryCount <= 5 ) {
-            $log.debug('error shut down, retry %o', retryCount);
-            ws.reconnect();
-          } else {
-            pause("Paused. Are you still here? Press the button when you're ready to play again!", true);
+        if ( keepGoing ) {
+          if ( event.code === 1008 ) {
+            $log.debug('WEBSOCKET POLICY CLOSE', event);
+            pause("You've been here so long your session expired! Please [log in again](/#/login).", false);
             $rootScope.$apply(); // process addition to array, not a usual render loop
+          } else if ( event.code !== 1000 ) {
+            retryCount++;
+
+            if ( userActive() && retryCount <= 5 ) {
+              $log.debug('error shut down, retry %o', retryCount);
+              ws.reconnect();
+            } else {
+              pause("Paused. Are you still here? Press the button when you're ready to play again!", true);
+              $rootScope.$apply(); // process addition to array, not a usual render loop
+            }
           }
         }
       });

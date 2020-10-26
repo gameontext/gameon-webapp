@@ -3,16 +3,17 @@
   "private": true,
   "main": "gulpfile.babel.js",
   "dependencies": {
-    "angular": "^1.7.9",
+    "angular": "^1.8.0",
     "angular-ios9-uiwebview-patch": "^1.1.1",
     "angular-marked": "^1.2.2",
-    "angular-resource": "^1.7.9",
-    "angular-sanitize": "^1.7.9",
-    "angular-ui-router": "^0.3.2",
+    "angular-resource": "^1.8.0",
+    "angular-sanitize": "^1.8.0",
+    "angular-ui-router": "^1.0.0",
     "angular-websocket": "^2.0.0",
     "angularjs-scroll-glue": "^2.2.0",
     "marked": "^0.7.0",
-    "natives": "^1.1.6"
+    "natives": "^1.1.6",
+    "raw-body": "^2.4.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

@@ -20,8 +20,9 @@ angular.module('playerApp')
       this.auth = auth;
 
       this.backToTheBeginning = function() {
+          var start = auth.getStartingState();
           auth.logout(); // reset to try again
-          $state.go('default');
+          $state.go(start);
       };
 
       this.showDummy = function() {
