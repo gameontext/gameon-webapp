@@ -79,12 +79,12 @@ section header h1 {
 /* Enter page
  ------------------------------------ */
 section.enter header h1 {
-  font-size: 6.5rem;
-  font-weight: normal;
+  font-size: 7rem;
+  font-weight: 400;
   margin: 0;
 }
 section.enter header h1 .on {
-  font-weight: bold;
+  font-weight: bolder;
   color: var(--aqua);
 }
 section.enter header .lead {

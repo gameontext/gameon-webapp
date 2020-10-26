@@ -1,0 +1,73 @@
+<div id="redhat" class="default-container" data-ng-switch="$state.current.name" ng-cloak>
+  <div class="main">
+    <div class="logo">
+      <a href="/#/redhat"><img src="../images/Red_Hat_Logo_2019.svg" alt="Red Hat"/></a>
+    </div>
+
+    <section class="enter" data-ng-switch-when="redhat">
+      <header>
+        <h2 class="colab">
+          <img src="../images/icon-oss-colab-256x256.png" alt="Red Hat"/>CO.LAB presents
+        </h2>
+        <h1>GAME<span class="on">ON</span></h1>
+        <span class="lead">A Throwback Adventure in Cloud Native Development</span>
+      </header>
+
+      <div>
+        <p class="intro">You are in a maze of little interconnected rooms, none alike. And you aren't alone...</p>
+        <a class="button play" ng-class="{disabled: $state.current.name !='default'}"
+           ui-sref="redhat.login">Enter</a>
+      </div>
+
+      <footer>
+        <div class="terms-link">By entering this site you are agreeing to our <a ui-sref="redhat.terms">terms</a></div>
+        <div title="peace, love, play"><i class="fa fa-hand-peace-o"></i> <i class="fa fa-heart-o"></i> <i class="fa fa-play"></i></div>
+      </footer>
+    </section>
+
+    <section class="login" data-ng-switch-when="redhat.login">
+      <header>
+        HELLA
+      </header>
+
+      <div class="box" >
+        <form action="{{redhatCtrl.api.REDHAT}}">
+
+          <div class="flex-config">
+            <label for="groupid">Group ID</label>
+            <input type="text" id="groupid" name="groupid" ng-model="redhatCtrl.userLogin.groupid"
+                   required />
+          </div>
+          <div class="flex-config">
+            <label for="grouppwd">Group Password</label>
+            <input type="text" id="grouppwd" name="grouppwd" ng-model="redhatCtrl.userLogin.grouppwd"
+                   required />
+          </div>
+          <div class="flex-config">
+            <label for="grouppwd">Player ID</label>
+            <input type="text" id="name" name="name" ng-model="redhatCtrl.userLogin.name"
+                   required />
+          </div>
+          <div  class="flex-config" >
+            <input type="submit" class="btn" value="Login" ng-disabled="redhatCtrl.userLogin.$invalid" />
+          </div>
+        </form>
+      </div>
+
+      <div class="silhouettes animate">
+          <div><img src="../images/silhouette-1_0.png" alt="silhouette"></div>
+          <!-- div><img src="/rhdc/managed-files/silhouette-2.png" alt="silhouette"/></div -->
+          <div><img src="../images/silhouette-3_0_0.png" alt="silhouette"></div>
+          <div><img src="../images/silhouette-4_0.png" alt="silhouette"></div>
+          <div><img src="../images/silhouette-5_0.png" alt="silhouette"></div>
+          <div><img src="../images/silhouette-6_0.png" alt="silhouette"></div>
+          <div><img src="../images/silhouette-7_0.png" alt="silhouette"></div>
+      </div>
+    </section>
+
+
+
+  </div>
+
+  <aside class="related" ng-include="'/sidebar.html'"></aside>
+</div>

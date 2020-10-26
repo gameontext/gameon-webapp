@@ -2,8 +2,8 @@
 
 angular.module('playerApp')
   .controller('SiteCtrl',
-  [       '$log', '$http','$window', 'user', 'map',
-  function($log,   $http,  $window,   user,   map) {
+  [       '$log','$window', 'user', 'map',
+  function($log,  $window,   user,   map) {
     $log.debug('MAP : controller %o and %o', user, map);
 
     // Reference to this for use in promises

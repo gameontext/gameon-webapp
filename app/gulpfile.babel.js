@@ -306,6 +306,7 @@ function server(done) {
   };
   bs = browserSync.create()
   bs.init({
+    open: false,
     https: {
       key: names.key,
       cert: names.cert
@@ -325,9 +326,23 @@ function server(done) {
 
         bs.addMiddleware('/auth/DummyAuth', function (req, res) {
           var token = jwt.sign({
-            name: 'Social UserName',
-            id: 'dummy:pretend',
-            email: 'dummy@usersareawesome.com'
+            name: 'username',
+            id: 'dummy:pretend'
+          }, certs.key, {
+            expiresIn: '1h',
+            algorithm: 'RS256'
+          });
+
+          res.writeHead(302, {
+            location: '/#/login/callback/' + token
+          });
+          res.end();
+        });
+
+        bs.addMiddleware('/auth/RedHatAuth', function (req, res) {
+          var token = jwt.sign({
+            name: 'username',
+            id: 'redhat:groupid:uniqueplayerid'
           }, certs.key, {
             expiresIn: '1h',
             algorithm: 'RS256'
