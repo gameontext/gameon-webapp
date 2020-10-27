@@ -26,6 +26,29 @@ angular.module('playerApp')
     rules.colorRule = "At least 3 characters, no spaces.";
     rules.colorPattern = /^\w{3,}$/;
 
+    var refresh = function() {
+      $log.debug('loading user %o', profile._id);
+      var gameonHeaders = {'gameon-jwt': auth.token()};
+      var q;
+
+      q = $http({
+        method : 'GET',
+        url : API.PROFILE_URL + 'accounts/' + profile._id,
+        cache : false,
+        headers : gameonHeaders
+      }).then(function(response) {
+        $log.debug('%o: %o %o', API.PROFILE_URL + 'accounts/' + profile._id, response.status, response.statusText);
+        angular.extend(profile, angular.fromJson(response.data));
+        $log.debug('updated profile: %o', profile);
+        return true;
+      }, function(response) {
+        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+        return false;
+      }).catch(console.log.bind(console));
+
+      return q;
+    };
+
     var load = function() {
       var jwt = auth.get_jwt();
       $log.debug('loading user %o', jwt.id);
@@ -63,29 +86,6 @@ angular.module('playerApp')
         $state.go('default.yuk');
       })
       .catch(console.log.bind(console));
-    };
-
-    var refresh = function() {
-      $log.debug('loading user %o', profile._id);
-      var gameonHeaders = {'gameon-jwt': auth.token()};
-      var q;
-
-      q = $http({
-        method : 'GET',
-        url : API.PROFILE_URL + 'accounts/' + profile._id,
-        cache : false,
-        headers : gameonHeaders
-      }).then(function(response) {
-        $log.debug('%o: %o %o', API.PROFILE_URL + 'accounts/' + profile._id, response.status, response.statusText);
-        angular.extend(profile, angular.fromJson(response.data));
-        $log.debug('updated profile: %o', profile);
-        return true;
-      }, function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-        return false;
-      }).catch(console.log.bind(console));
-
-      return q;
     };
 
     var update = function() {

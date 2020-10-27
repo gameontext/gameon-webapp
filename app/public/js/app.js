@@ -160,14 +160,16 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             url: '^/yuk',
             onEnter: function (auth, go_ga) {
               console.info("state -> yuk");
+              go_ga.hit('yuk');
               var start = auth.getStartingState();
               auth.logout(); // reset to try again
               auth.setStartingState(start);
             }
           })
           .state('default.logout', {
-            onEnter: function (auth, go_ga) {
+            onEnter: function ($state, auth, go_ga) {
               console.info("state -> logout");
+              go_ga.hit('logout');
               var start = auth.getStartingState();
               auth.logout(); // reset to try again
               return $state.target(start);
@@ -186,9 +188,8 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
           .state('redhat.login', {
             url: '^/redhat/login',
             onEnter: function (auth, go_ga) {
-              console.info("state -> redhat.login");
+              console.info('state -> redhat.login');
               auth.setStartingState('redhat');
-              go_ga.hit('redhat');
               go_ga.report('send', 'event', 'GameOn', 'App', 'redhat-login');
             }
           })
@@ -203,7 +204,7 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
               // a fictional var that we'll have injected to onEntry and into the PlayCtrl.
               // resolve will make sure we don't create PlayCtrl or enter onEntry until
               // the promises below are all complete.
-              "userAndAuth": function (auth, user, $state) {
+              "userAndAuth": function (auth, user) {
                 return auth.getAuthenticationState().then(function (isAuthenticated) {
                   if (!isAuthenticated || typeof user.profile._id === 'undefined') {
                       return false;
@@ -216,7 +217,7 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             onEnter: function ($state, auth, user, userAndAuth) {
               console.info("state -> play", user.profile, userAndAuth);
               if ( ! userAndAuth ) {
-                return $state.go(auth.getStartingState());
+                return $state.target(auth.getStartingState());
               }
             }
           })
