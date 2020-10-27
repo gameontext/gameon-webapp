@@ -12,7 +12,7 @@
       <i class="fa fa-user fa-fw"></i>
     </a>
   </div>
-  <div class="top-nav-item">
+  <div class="top-nav-item"  data-ng-hide="play.user.profile.playerMode==='guided'">
     <a ui-sref="play.myrooms" title="Edit registered rooms">
       <i class="fa fa-building fa-fw"></i>
     </a>
@@ -31,13 +31,13 @@
     <h2>Update User Profile</h2>
     <form name="play.profileForm">
       <profile-core user="play.user" form="play.profileForm" class="box"></profile-core>
-      <div data-ng-hide="ctrl.profileForm.$invalid">
+      <div>
         <a class="button" data-ng-click="play.updateProfile()"><i class="fa fa-floppy-o"></i> Done!</a>
       </div>
     </form>
   </section>
 
-  <section class="me-api-key">
+  <section class="me-api-key" data-ng-hide="play.user.profile.playerMode==='guided'">
     <h2>API key (JWT)</h2>
     <p>Use the following key to experiment with authenticated API calls <a href="https://gameontext.org/swagger/">using Swagger</a>.</p>
     <div class="config"><div class="little-text key" id="jwt" ng-bind="play.auth.token()"></div></div>
