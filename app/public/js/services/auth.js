@@ -11,23 +11,23 @@
  */
 angular.module('playerApp')
   .factory('auth',
-  [        '$log','API','$http','playerSession','go_ga',
-  function ($log,  API,  $http,  playerSession,  go_ga) {
+  [        '$log','API','$http','$q','playerSession','go_ga',
+  function ($log,  API,  $http,  $q,  playerSession,  go_ga) {
     $log.debug("Loading AUTH", go_ga);
 
     var _token = null,
         _publicKey = null,
-        _startingState = null,
         _authenticated = null;
 
-    function get_public_key(success,failure){
+    function get_public_key() {
       $log.debug('Requesting public cert to validate jwts with');
       _publicKey = playerSession.get('publicKey', _publicKey);
 
+      var q = $q.defer();
       if(_publicKey != null) {
         // if _publicKey is defined and not null...
         console.log("Already had cert: %o", _publicKey);
-        success();
+        q.resolve(true);
       } else {
         $http({
           method : 'GET',
@@ -37,9 +37,12 @@ angular.module('playerApp')
           $log.debug('Obtained certificate %o', data.data);
           _publicKey = data.data;
           playerSession.set('publicKey', _publicKey);
-          success();
-        }, failure).catch(console.log.bind(console));
+          q.resolve(true);
+        }, function() {
+          q.resolve(false);
+        }).catch(console.log.bind(console));
       }
+      return q.promise;
     }
 
     function remember_jwt(jwt) {
@@ -125,7 +128,6 @@ angular.module('playerApp')
           return _token;
       },
       setStartingState: function (state) {
-        _startingState = state;
         playerSession.set('startingState', state);
       },
       getStartingState: function () {

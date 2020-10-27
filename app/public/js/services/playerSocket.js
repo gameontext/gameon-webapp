@@ -27,7 +27,7 @@ angular.module('playerApp')
       var keepGoing = true;
 
       function userActive() {
-        return pingCount < 150;
+        return pingCount < 300;
       }
 
       // There is no way to add additional HTTP headers to the outbound
@@ -330,7 +330,7 @@ angular.module('playerApp')
 
           if ( res.hasOwnProperty('playerUpdate') ) {
             go_ga.report('send','event','GameOn','Socket','playerUpdate');
-            user.load(user.profile._id, user.profile.name);
+            user.load();
           } else {
             roomSwitch = clientState.roomId !== res.roomId;
             oldRoom = clientState.roomId;
