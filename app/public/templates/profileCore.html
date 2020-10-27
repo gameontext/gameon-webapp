@@ -4,15 +4,17 @@
            required title="{{user.rules.nameRule}}" data-ng-pattern="user.rules.namePattern" />
     <a class="button" data-ng-click="user.generateName()">Generate a username</a>
     <div class="full" ng-show="form.username.$error.required">&lt;?&gt; moves the chair.</div>
-    <div class="full" ng-hide="form.username.$error.required">{{ form.username.$viewValue }} moves the chair.</div>
-    <div class="full" ng-show="form.username.$error.pattern">{{ user.rules.nameRule }}</div>&nbsp;
+    <div class="full" ng-hide="form.username.$error.required">{{ form.username.$viewValue }} moves the chair, and </div>
+    <div class="full" ng-show="form.username.$error.pattern">{{ user.rules.nameRule }}</div>
+    <div class="full" ng-hide="form.username.$error.pattern">&nbsp;</div>&nbsp;
   </div>
   <div class="flex-config">
     <label class="full" for="favoriteColor">Favorite color</label>
     <input type="text" name="favoriteColor" id="favoriteColor" data-ng-model="user.profile.favoriteColor"
            required title="{{user.rules.colorRule}}" data-ng-pattern="user.rules.colorPattern">
     <a class="button" data-ng-click="user.generateColor()">Generate a color</a>
-    <div class="full" ng-show="form.favoriteColor.$error.required">{{ form.username.$viewValue }} loves the color &lt;?&gt;</div>
-    <div class="full" ng-hide="form.favoriteColor.$error.required">{{ form.username.$viewValue }} loves the color {{ form.favoriteColor.$viewValue }}</div>
-    <div class="full" ng-show="form.favoriteColor.$error.pattern">{{ user.rules.colorRule }}</div>&nbsp;
+    <div class="full" ng-show="form.favoriteColor.$error.required">... loves the color &lt;?&gt;</div>
+    <div class="full" ng-hide="form.favoriteColor.$error.required">... loves the color {{ form.favoriteColor.$viewValue }}</div>
+    <div class="full" ng-show="form.favoriteColor.$error.pattern">{{ user.rules.colorRule }}</div>
+    <div class="full" ng-hide="form.favoriteColor.$error.pattern">&nbsp;</div>&nbsp;
   </div>

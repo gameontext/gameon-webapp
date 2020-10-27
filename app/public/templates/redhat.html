@@ -7,27 +7,27 @@
     <section class="enter" data-ng-switch-when="redhat">
       <header>
         <h2 class="colab">
-          <img src="../images/icon-oss-colab-256x256.png" alt="Red Hat"/>CO.LAB presents
+          <img src="../images/icon-oss-colab-256x256.png" alt="Red Hat"/>CO.LAB
         </h2>
-        <h1>GAME<span class="on">ON</span></h1>
-        <span class="lead">A Throwback Adventure in Cloud Native Development</span>
+        <h1>Breaking the Code</h1>
       </header>
 
       <div>
-        <p class="intro">You are in a maze of little interconnected rooms, none alike. And you aren't alone...</p>
+        <p class="intro">online text adventure game</p>
         <a class="button play" ng-class="{disabled: $state.current.name !='default'}"
            ui-sref="redhat.login">Enter</a>
       </div>
 
       <footer>
-        <div class="terms-link">By entering this site you are agreeing to our <a ui-sref="redhat.terms">terms</a></div>
+        <div class="terms-link">By entering this site you are agreeing to our
+          <a href="https://www.redhat.com/en/about/terms-use" target="_blank" rel="noopener">terms.</a></div>
         <div title="peace, love, play"><i class="fa fa-hand-peace-o"></i> <i class="fa fa-heart-o"></i> <i class="fa fa-play"></i></div>
       </footer>
     </section>
 
     <section class="login" data-ng-switch-when="redhat.login">
       <header>
-        HELLA
+        <h1>Welcome!</h1>
       </header>
 
       <div class="box" >
@@ -64,9 +64,30 @@
       </div>
     </section>
 
-
-
   </div>
 
-  <aside class="related" ng-include="'/sidebar.html'"></aside>
+  <aside class="related">
+    <h2>The Future of Tech is Collaborative</h2>
+
+    <a class="link" href="https://www.redhat.com/en/open-source-stories/colab" target="_blank" rel="noopener">
+      <span class="text">CO.LAB</span>
+      <span class="subtext">Learn more about the CO.LAB program.
+      </span>
+    </a>
+    <a class="link" href="https://www.sparkfun.com/red_hat" target="_blank" rel="noopener">
+      <span class="text">CO.LAB and SparkFun</span>
+      <span class="subtext">Check out the Red Hat Co.Lab Robot Kit.
+      </span>
+    </a>
+    <a class="link" href="https://www.redhat.com/en/open-source-stories/" target="_blank" rel="noopener">
+      <span class="text">Open Source Stories</span>
+      <span class="subtext">Celebrate the creators who bring the power of open source to everything people do.
+      </span>
+    </a>
+    <a class="link" href="https://www.gameontext.org/" target="_blank" rel="noopener">
+      <span class="text">Game On! Text Adventure</span>
+      <span class="subtext">Learn more about the engine behind the game.
+      </span>
+    </a>
+  </aside>
 </div>

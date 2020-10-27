@@ -2,6 +2,7 @@
 /** Red Hat Co.Lab */
 #redhat .main {
   background-color: #fff;
+  color: #000;
   padding-top: 2em;
 }
 #redhat .main a {
@@ -22,11 +23,15 @@
 #redhat section.enter,
 #redhat section.login,
 #redhat section.terms {
-  color: #000;
   display: flex;
   min-height: 90vh;
   flex-direction: column;
   align-items: center;
+}
+#redhat section.enter header h1 {
+  color: #000;
+  font-weight: 500;
+  font-size: 4rem;
 }
 #redhat .loginForm .box {
   width: 20rem;
