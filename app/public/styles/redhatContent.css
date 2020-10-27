@@ -16,6 +16,14 @@
   padding-right: 1em;
   height: 25px;
 }
+#redhat .colab img {
+  height: 100%;
+  width: auto;
+}
+#redhat .silhouettes div img {
+  width: 70%;
+  height: auto;
+}
 #redhat .main .logo img {
   height: 100%;
   width: auto;
@@ -58,22 +66,12 @@
   height: 20px;
   color: #000;
 }
-#redhat .colab img {
-  height: 100%;
-  width: auto;
-}
-.silhouettes {
+#redhat .silhouettes {
   box-sizing: border-box;
-  display: -ms-flexbox;
+  margin: 0 -0.5em;
   display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin: 0 -.5em;
-  -ms-flex-pack: center;
   justify-content: center;
-  -ms-flex-align: end;
   align-items: flex-end;
-  -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
   position: relative;
   overflow: hidden;
@@ -81,88 +79,91 @@
   text-align: center;
   font-size: 0;
 }
-.silhouettes div {
+#redhat .silhouettes div {
   transform: translateY(100%);
   transition: transform 0.3s ease;
 }
-.silhouettes div img {
-  width: 70%;
-  height: auto;
-}
-.silhouettes.animate > div:nth-child(1) {
+#redhat .silhouettes.animate > div:nth-child(1) {
   animation: slideUp1 1s forwards 1;
 }
-@keyframes slideUp1 {
-  0% {
-      transform: translateY(285px);
-  }
-  100% {
-      transform: translateY(0);
-  }
-}
-.silhouettes.animate > div:nth-child(2) {
+#redhat .silhouettes.animate > div:nth-child(2) {
   animation: slideUp2 1s forwards 1;
 }
-@keyframes slideUp2 {
-  0% {
-      transform: translateY(484px);
-  }
-  100% {
-      transform: translateY(0);
-  }
-}
-.silhouettes.animate > div:nth-child(3) {
+#redhat .silhouettes.animate > div:nth-child(3) {
   animation: slideUp3 1s forwards 1;
 }
-@keyframes slideUp3 {
-  0% {
-      transform: translateY(81px);
-  }
-  100% {
-      transform: translateY(0);
-  }
-}
-.silhouettes.animate > div:nth-child(4) {
+#redhat .silhouettes.animate > div:nth-child(4) {
   animation: slideUp4 1s forwards 1;
 }
-@keyframes slideUp4 {
-  0% {
-      transform: translateY(664px);
-  }
-  100% {
-      transform: translateY(0);
-  }
-}
-.silhouettes.animate > div:nth-child(5) {
+#redhat .silhouettes.animate > div:nth-child(5) {
   animation: slideUp5 1s forwards 1;
 }
-@keyframes slideUp5 {
-  0% {
-      transform: translateY(52px);
-  }
-  100% {
-      transform: translateY(0);
-  }
-}
-.silhouettes.animate > div:nth-child(6) {
+#redhat .silhouettes.animate > div:nth-child(6) {
   animation: slideUp6 1s forwards 1;
 }
-@keyframes slideUp6 {
-  0% {
-      transform: translateY(297px);
-  }
-  100% {
-      transform: translateY(0);
-  }
-}
-.silhouettes.animate > div:nth-child(7) {
+#redhat .silhouettes.animate > div:nth-child(7) {
   animation: slideUp7 1s forwards 1;
 }
-@keyframes slideUp7 {
+
+@keyframes slideUp1 {
   0% {
-      transform: translateY(372px);
+    transform: translateY(285px);
   }
   100% {
-      transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp2 {
+  0% {
+    transform: translateY(484px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp3 {
+  0% {
+    transform: translateY(81px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp4 {
+  0% {
+    transform: translateY(664px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp5 {
+  0% {
+    transform: translateY(52px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp6 {
+  0% {
+    transform: translateY(297px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp7 {
+  0% {
+    transform: translateY(372px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }

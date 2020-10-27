@@ -9,8 +9,8 @@
  */
 angular.module('playerApp')
   .controller('RedHatCtrl',
-  [            '$state','$log', 'API', 'user', 'auth',
-    function (  $state,  $log,   API,   user,   auth) {
+  [            '$state','API', 'user', 'auth',
+    function (  $state,  API,   user,   auth) {
 
       // Login links
       this.api = API;
@@ -19,10 +19,8 @@ angular.module('playerApp')
       this.user = user;
       this.auth = auth;
 
-      this.userLogin = {};
-
       this.backToTheBeginning = function() {
-          $state.go('logout');
+        $state.go('logout');
       };
     }
   ]);

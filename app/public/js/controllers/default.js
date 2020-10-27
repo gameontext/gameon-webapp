@@ -9,8 +9,8 @@
  */
 angular.module('playerApp')
   .controller('DefaultCtrl',
-  [            '$state','$log', 'API', 'user', 'auth',
-    function (  $state,  $log,   API,   user,   auth) {
+  [            '$state','API', 'user', 'auth',
+    function (  $state,  API,   user,   auth) {
 
       // Login links
       this.api = API;
@@ -20,9 +20,7 @@ angular.module('playerApp')
       this.auth = auth;
 
       this.backToTheBeginning = function() {
-          var start = auth.getStartingState();
-          auth.logout(); // reset to try again
-          $state.go(start);
+        $state.go('logout');
       };
 
       this.showDummy = function() {

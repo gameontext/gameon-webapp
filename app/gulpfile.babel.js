@@ -267,7 +267,8 @@ gulp.task('lint:templates', () => {
     customattrs: ['scroll-glue', 'marked'],
     customtags: ['profile-core'],
     relaxerror: [
-      'Consider adding a “lang” attribute to the “html” start tag to declare the language of this document.'
+      'Consider adding a “lang” attribute to the “html” start tag to declare the language of this document.',
+      'Illegal character in path segment: “{” is not allowed.'
     ],
   };
   return gulp.src('public/templates/**/*.html')
@@ -290,6 +291,7 @@ gulp.task('test', function(done) {
   new karma.Server({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true,
+    autoWatch: false,
     browsers: ['PhantomJS']
   }, done).start();
 });

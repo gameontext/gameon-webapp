@@ -40,6 +40,7 @@ module.exports = function(config) {
       'public/js/app.js',
       'public/js/controllers/default.js',
       'public/js/controllers/play.js',
+      'public/js/controllers/redhat.js',
       'public/js/controllers/site.js',
       'public/js/directives/profileCore.js',
       'public/js/services/auth.js',
