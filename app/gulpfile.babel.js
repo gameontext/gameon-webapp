@@ -301,6 +301,8 @@ gulp.task('all',     gulp.series('clean', 'lint', 'test', 'build'));
 
 // -- local dev/iteration
 
+var users = {};
+
 function server(done) {
   var names = {
     key: '.test-localhost-key.pem',
@@ -346,16 +348,15 @@ function server(done) {
         });
 
         bs.addMiddleware('/auth/RedHatAuth', function (req, res) {
-          if ( req.method !== 'POST' ) {
-            res.writeHead(500, { "Content-Type": "text/plain" });
-            return res.end(output.join("must use post\n"));
-          }
-
+          // if ( req.method !== 'POST' ) {
+          //   res.writeHead(500, { "Content-Type": "text/plain" });
+          //   return res.end("BrowserSync mock: must use POST\n");
+          // }
           var token = jwt.sign({
             name: 'authname',
             id: 'redhat:groupid:uniqueplayerid',
             story: 'entryroomid',
-            playermode: 'guided'
+            playerMode: 'guided'
           }, certs.key, {
             expiresIn: '1h',
             algorithm: 'RS256'
@@ -387,7 +388,7 @@ function server(done) {
           res.end();
         });
 
-        bs.addMiddleware('/players/v1/accounts/', function (req, res) {
+        bs.addMiddleware('/players/v1/accounts', function (req, res) {
           var token = jwt.decode(req.headers['gameon-jwt']);
           console.log(token);
 
@@ -405,10 +406,13 @@ function server(done) {
               if ( token.story != null ) {
                 profile.story = token.story;
               }
-              if ( token.playermode != null ) {
-                profile.playermode = token.playermode;
+              if ( token.playerMode != null ) {
+                profile.playerMode = token.playerMode;
               }
               profile.name = 'HarrietTheSpy';
+
+              users[profile._id] = profile;
+              console.log(users);
 
               var respBody = JSON.stringify(profile);
               res.writeHead(201, {
@@ -419,6 +423,23 @@ function server(done) {
               res.end();
             });
           }
+
+          var fixed = '/players/v1/accounts/';
+          var id = req.originalUrl.substring(fixed.length);
+          console.log("%s -> %s", req.originalUrl, id);
+
+          if ( users[id] != null ) {
+            var respBody = JSON.stringify(users[id]);
+            res.writeHead(200, {
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(respBody)
+            });
+            res.write(respBody);
+            res.end();
+          }
+
+          res.writeHead(404, { "Content-Type": "text/plain" });
+          return res.end("BrowserSync mock: Unknown player id\n");
         });
       }
     },

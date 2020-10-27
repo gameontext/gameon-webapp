@@ -26,36 +26,17 @@ angular.module('playerApp')
     rules.colorRule = "At least 3 characters, no spaces.";
     rules.colorPattern = /^\w{3,}$/;
 
-    var load = function(id,name) {
-      $log.debug('quering token %o', auth.token());
+    var load = function() {
+      var jwt = auth.get_jwt();
+      $log.debug('loading user %o', jwt.id);
 
       //we're using the id from the token introspect as our player db id.
-      profile._id = id;
+      profile._id = jwt.id;
+      profile.name = jwt.name.replace(/ /g , '_');
+      profile.playerMode = "default";
+      profile.story = "none";
 
-      // Load the user's information from the DB and/or session
-      // Load needs to come from the Auth token
-      var gameonHeaders = {'gameon-jwt': auth.token()};
-      var q;
-
-      // Fetch data about the user
-      q = $http({
-        method : 'GET',
-        url : API.PROFILE_URL + 'accounts/' + profile._id,
-        cache : false,
-        headers : gameonHeaders
-      }).then(function(response) {
-        $log.debug(response.status + ' ' + response.statusText);
-        var tmp = angular.fromJson(response.data);
-        $log.debug('profile: %o', tmp);
-        angular.extend(profile, tmp);
-        return true;
-      }, function(response) {
-        $log.debug(response.status + ' ' + response.statusText);
-        // User can't be found, which is fine, we can go build one!
-        profile.name = name.replace(/ /g , '_');
-        return false;
-      }).catch(console.log.bind(console));
-      return q;
+      return refresh();
     };
 
     var create = function() {
@@ -63,7 +44,6 @@ angular.module('playerApp')
       // CREATE -- needs to test for ID uniqueness.. so only go on to
       // the next state if all data could validate properly.
       var gameonHeaders = {'gameon-jwt': auth.token()};
-
       $http({
         method : 'POST',
         url : API.PROFILE_URL + 'accounts/',
@@ -71,23 +51,22 @@ angular.module('playerApp')
         data : profile,
         headers : gameonHeaders
       }).then(function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         go_ga.report('send','event','GameOn','User','create');
-        //post succeeded, now refresh the profile from the server to pull the new key.
-        load(profile._id, profile.name).finally(function(){
-          $state.go('play.room');
-        });
+        $log.debug('%o: %o %o', API.PROFILE_URL + 'accounts/', response.status, response.statusText);
+        angular.extend(profile, angular.fromJson(response.data));
+        $log.debug('updated profile: %o', profile);
+        // ONWARD! =)
+        $state.go('play.room');
       }, function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
+        $log.debug('%o: %o', response.status, response.statusText);
         // go to the sad state.. (Can't find the player information, and can't save it either)
         $state.go('default.yuk');
-      }).catch(console.log.bind(console));
+      })
+      .catch(console.log.bind(console));
     };
 
     var refresh = function() {
-      $log.debug("Refreshing user with: %o", profile);
-      // Refresh user
+      $log.debug('loading user %o', profile._id);
       var gameonHeaders = {'gameon-jwt': auth.token()};
       var q;
 
@@ -97,18 +76,12 @@ angular.module('playerApp')
         cache : false,
         headers : gameonHeaders
       }).then(function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-
-        var tmp = angular.fromJson(response.data);
-        $log.debug('profile: %o', tmp);
-
-        angular.extend(profile, tmp);
-
+        $log.debug('%o: %o %o', API.PROFILE_URL + 'accounts/' + profile._id, response.status, response.statusText);
+        angular.extend(profile, angular.fromJson(response.data));
+        $log.debug('updated profile: %o', profile);
         return true;
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
-        // User can't be found, which is fine, we can go build one!
-        profile.name = name.replace(/ /g , '_');
         return false;
       }).catch(console.log.bind(console));
 
@@ -128,13 +101,10 @@ angular.module('playerApp')
         data : profile,
         headers : gameonHeaders
       }).then(function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
+        $log.debug('%o: %o %o', API.PROFILE_URL + 'accounts/' + profile._id, response.status, response.statusText);
+        angular.extend(profile, angular.fromJson(response.data));
+        $log.debug('updated profile: %o', profile);
         go_ga.report('send','event','GameOn','User','update');
-        //put succeeded, now refresh the profile from the server to pull the new key.
-        load(profile._id, profile.name).finally(function(){
-          $state.go('play.room');
-        });
-
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         // TODO: Alert
@@ -155,14 +125,15 @@ angular.module('playerApp')
         cache : false,
         headers : gameonHeaders
       }).then(function(response) {
-        $log.debug(response.status + ' ' + response.statusText + ' %o', response.data);
+        $log.debug('%o: %o %o', API.PROFILE_URL + 'accounts/' + profile._id, response.status, response.statusText);
+        angular.extend(profile, angular.fromJson(response.data));
+        $log.debug('updated profile: %o', profile);
         go_ga.report('send','event','GameOn','User','secretUpdate');
-        //update succeeded, now refresh the profile from the server to pull the new key.
-        load(profile._id, profile.name);
       }, function(response) {
         $log.debug(response.status + ' ' + response.statusText + ' ' + response.data);
         // TODO: Alert
-      }).catch(console.log.bind(console));
+      })
+      .catch(console.log.bind(console));
 
       return q;
     };

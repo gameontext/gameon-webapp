@@ -22,8 +22,7 @@ angular.module('playerApp')
       this.userLogin = {};
 
       this.backToTheBeginning = function() {
-          auth.logout(); // reset to try again
-          $state.go('redhat');
+          $state.go('logout');
       };
     }
   ]);

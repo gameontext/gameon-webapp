@@ -66,7 +66,6 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             templateUrl: '/default.html',
             controller: 'DefaultCtrl as ctrl',
             onEnter: function (go_ga) {
-              console.info("state -> default");
               go_ga.hit('default');
             }
           })
@@ -87,17 +86,16 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             // State triggered by authentication callback (only).
             onEnter: function ($state, $stateParams, auth) {
               console.info("state -> default.auth using %o", auth);
-              auth.get_public_key(
-                function () {
+              return auth.get_public_key().then((result) => {
+                if ( result ) {
                   console.log("got public cert.. proceeding to jwt validation.");
                   // remember jwt for later
                   auth.remember_jwt($stateParams.jwt);
-                  $state.go('default.validatejwt');
-                },
-                function () {
-                  auth.logout();
-                  $state.go('default.yuk');
-                });
+                  return $state.target('default.validatejwt');
+                } else {
+                  return $state.target('default.yuk');
+                }
+              });
             }
           })
           .state('default.validatejwt', {
@@ -107,11 +105,11 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
               if (auth.validate_jwt()) {
                 console.log("token callback from auth service was valid");
                 go_ga.report('send', 'event', 'GameOn', 'App', 'login-pass');
-                $state.go('default.usersetup');
+                return $state.target('default.usersetup');
               } else {
                 //TODO: goto a login failed page..
                 go_ga.report('send', 'event', 'GameOn', 'App', 'login-fail');
-                $state.go(auth.getStartingState());
+                return $state.target(auth.getStartingState());
               }
             }
           })
@@ -126,41 +124,54 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
                 go_ga.hit('usersetup');
                 console.log("building user object; token info object was %o", jwt);
                 // user.load returns a promise that resolves to true if the user was found, or false.
-                user.load(jwt.id, jwt.name).then(function (userKnownToDB) {
+                return user.load().then(function (userKnownToDB) {
                   if (userKnownToDB) {
                     go_ga.report('send', 'event', 'GameOn', 'App', 'login-existing');
-                    $state.go('play.room');
+                    return $state.target('play.room');
                   } else {
                     go_ga.report('send', 'event', 'GameOn', 'App', 'login-new');
-                    $state.go('default.profile');
+                    return $state.target('default.profile');
                   }
                 });
               } else {
                 // cached / recovered token was invalid.
                 // TODO: goto a login failed page..
                 go_ga.report('send', 'event', 'GameOn', 'App', 'login-missing-token');
-                $state.go(auth.getStartingState());
+                return $state.target(auth.getStartingState());
               }
             }
           })
           .state('default.profile', { // initial profile creation
             url: '^/login/profile',
             onEnter: function ($state, user, auth, go_ga) {
-              console.info("state: default.profile: %o", user);
+              console.info("state: default.profile: %o", user.profile);
               // if we're missing our auth token info.. user may have hit refresh here..
               // since we've just lost all our context, send them back to the start..
               // mebbe can make this nicer ;p
               if ( user.profile.name != null ) {
                 go_ga.hit('profile');
-                console.log("default.profile.onEnter has this %o with %o", user.profile.name, auth);
               } else {
                 console.log("Missing user info.. redirecting.. ");
-                $state.go('default.usersetup');
+                return $state.target('default.usersetup');
               }
             }
           })
           .state('default.yuk', {
             url: '^/yuk',
+            onEnter: function (auth, go_ga) {
+              console.info("state -> yuk");
+              var start = auth.getStartingState();
+              auth.logout(); // reset to try again
+              auth.setStartingState(start);
+            }
+          })
+          .state('default.logout', {
+            onEnter: function (auth, go_ga) {
+              console.info("state -> logout");
+              var start = auth.getStartingState();
+              auth.logout(); // reset to try again
+              return $state.target(start);
+            }
           })
           .state('redhat', {
             url: '^/redhat',
@@ -194,18 +205,19 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
               // the promises below are all complete.
               "userAndAuth": function (auth, user, $state) {
                 return auth.getAuthenticationState().then(function (isAuthenticated) {
-                  if (!isAuthenticated) {
-                    $state.go(auth.getStartingState());
+                  if (!isAuthenticated || typeof user.profile._id === 'undefined') {
+                      return false;
                   } else {
-                    if (typeof user.profile._id === 'undefined') {
-                      $state.go('default.usersetup');
-                    }
+                      return true;
                   }
                 });
               }
             },
             onEnter: function ($state, auth, user, userAndAuth) {
-              console.log("In play state", user, auth, userAndAuth);
+              console.info("state -> play", user.profile, userAndAuth);
+              if ( ! userAndAuth ) {
+                return $state.go(auth.getStartingState());
+              }
             }
           })
           .state('play.room', {
