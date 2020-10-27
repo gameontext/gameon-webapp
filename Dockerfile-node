@@ -1,35 +1,34 @@
-FROM node:10
+FROM alpine:edge
 MAINTAINER Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)
 
 ARG userId=1000
 ARG groupId=1000
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV PHANTOMJS_VERSION 2.1.1
+# Install chromium, node, vim, bash, ...
+RUN apk add --no-cache \
+      bash curl chromium nss freetype freetype-dev harfbuzz ca-certificates ttf-freefont \
+      nodejs npm vim wget xvfb
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/xvfb-chromium
+ENV CHROME_BIN=/usr/bin/xvfb-chromium
 ENV HOME /app/node_modules/.home
 
-RUN apt-get update \
-  && apt-get install -y \
-     bzip2 \
-     curl  \
-  && apt-get autoremove \
-  && apt-get clean \
-  && npm -g install npm \
-  && rm -rf /tmp/* /var/lib/apt/lists/*
+COPY docker/docker-build.sh /usr/local/bin
+COPY docker/xvfb-chromium /usr/bin/xvfb-chromium
 
-RUN mkdir /tmp/phantomjs \
-  && curl -L https://github.com/Medium/phantomjs/releases/download/v$PHANTOMJS_VERSION/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 \
-         | tar -xj --strip-components=1 -C /tmp/phantomjs \
-  && cd /tmp/phantomjs \
-  && mv bin/phantomjs /usr/local/bin \
-  && echo 'export PATH=$PATH:/app/node_modules/.bin' >> /etc/bash.bashrc \
-  && mkdir -p /app/node_modules \
-  && chown -R ${userId}:${groupId} /app
+RUN chmod +x /usr/local/bin/docker-build.sh /usr/bin/xvfb-chromium \
+ && ln -s /usr/bin/xvfb-chromium /usr/bin/google-chrome \
+ && echo 'export PATH=$PATH:/app/node_modules/.bin' >> /etc/bash.bashrc \
+ && addgroup chrome \
+ && adduser -H -D -s /bin/bash -u ${userId} -G chrome -h /app/node_modules/.home chrome \
+ && addgroup chrome audio \
+ && addgroup chrome video \
+ && mkdir -p /app/node_modules \
+ && chown -R ${userId}:${groupId} /app
 
 WORKDIR /app
-
-COPY docker/docker-build.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/docker-build.sh
+USER ${userId}
 
 #Express port
 EXPOSE 3000

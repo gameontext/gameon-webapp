@@ -292,7 +292,7 @@ gulp.task('test', function(done) {
     configFile: __dirname + '/karma.conf.js',
     singleRun: true,
     autoWatch: false,
-    browsers: ['PhantomJS']
+    browsers: ['ChromeHeadless']
   }, done).start();
 });
 
