@@ -95,7 +95,7 @@ angular.module('playerApp')
       }
 
       var pause = function(message, button) {
-        lastPauseId = id++;
+        lastPauseId = ++id;
         roomEvents.push({
           type: 'paused',
           content: message,
@@ -441,7 +441,6 @@ angular.module('playerApp')
           if ( event.code === 1008 ) {
             $log.debug('WEBSOCKET POLICY CLOSE', event);
             pause("You've been here so long your session expired! Please [log in again](/#/login).", false);
-            $rootScope.$apply(); // process addition to array, not a usual render loop
           } else if ( event.code !== 1000 ) {
             retryCount++;
 
@@ -450,7 +449,6 @@ angular.module('playerApp')
               ws.reconnect();
             } else {
               pause("Paused. Are you still here? Press the button when you're ready to play again!", true);
-              $rootScope.$apply(); // process addition to array, not a usual render loop
             }
           }
         }

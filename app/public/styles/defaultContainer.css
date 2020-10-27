@@ -3,7 +3,7 @@ a {
   color: var(--dark-aqua);
 }
 a:hover {
-  color: var(--deep-teal);
+  color: var(--mid-teal);
 }
 aside.related,
 aside.related a {
@@ -15,7 +15,7 @@ section.login,
 section.terms,
 section.usersetup,
 .default-container section.userprofile {
-  color: var(--mid-teal);
+  color: var(--deep-teal);
 }
 .background,
 aside.related .text,
@@ -23,13 +23,22 @@ aside.related .subtext,
 aside.related .icon {
   background-color: var(--mid-teal);
 }
-.main a.button {
+.main a.button,
+.main button,
+.main input[type="submit"] {
   background-color: var(--red-orange);
+  border: none;
+  color: #fff;
+}
+.main button:disabled,
+.main button[disabled],
+.main input[type="submit"]:disabled {
+  background-color: #bbb;
+  border: none;
   color: #fff;
 }
 .background .icon-corner use,
 .background .icon-floating use,
-.background .icon-floating-circle use,
 .background .icon-big-light use,
 .background .icon-small-light use {
   fill: var(--aqua);
@@ -82,6 +91,7 @@ section.enter header h1 {
   font-size: 7rem;
   font-weight: 400;
   margin: 0;
+  color: var(--mid-teal);
 }
 section.enter header h1 .on {
   font-weight: bolder;

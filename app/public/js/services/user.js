@@ -55,8 +55,8 @@ angular.module('playerApp')
         $log.debug('%o: %o %o', API.PROFILE_URL + 'accounts/', response.status, response.statusText);
         angular.extend(profile, angular.fromJson(response.data));
         $log.debug('updated profile: %o', profile);
-        // ONWARD! =)
-        $state.go('play.room');
+        // Replace browser history (now existing player)
+        $state.go('play.room', {}, {location: "replace"});
       }, function(response) {
         $log.debug('%o: %o', response.status, response.statusText);
         // go to the sad state.. (Can't find the player information, and can't save it either)
@@ -134,7 +134,6 @@ angular.module('playerApp')
         // TODO: Alert
       })
       .catch(console.log.bind(console));
-
       return q;
     };
 

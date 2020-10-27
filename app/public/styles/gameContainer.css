@@ -261,7 +261,7 @@ label[for="roomInfo_name"]::after {
 @media (min-width: 800px) {
   .game-container .viewport {
     position: relative;
-    width: 800px;
+    width: 60%;
     height: 100vh;
     min-height: 100vh;
     max-height: 100vh;
