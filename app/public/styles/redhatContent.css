@@ -41,6 +41,15 @@
   font-weight: 500;
   font-size: 4rem;
 }
+#redhat section.enter p.intro {
+  padding-bottom: 6em;
+}
+#redhat section.enter p.intro .right {
+  padding-left: 6em;
+}
+#redhat section.enter p.intro .left {
+  padding-right: 6em;
+}
 #redhat .loginForm .box {
   width: 20rem;
 }
