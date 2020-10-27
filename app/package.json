@@ -11,7 +11,7 @@
     "angular-ui-router": "^1.0.0",
     "angular-websocket": "^2.0.0",
     "angularjs-scroll-glue": "^2.2.0",
-    "marked": "^0.7.0",
+    "marked": "^1.1.1",
     "natives": "^1.1.6",
     "raw-body": "^2.4.1"
   },

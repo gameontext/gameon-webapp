@@ -54,8 +54,7 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
 
         // Use $urlServiceProvider to configure any redirects (when) and invalid urls (otherwise).
         // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
-        $urlServiceProvider.rules
-          .otherwise('/');
+        $urlServiceProvider.rules.otherwise('/');
 
         //////////////////////////
         // State Configurations
@@ -65,8 +64,18 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             url: '/',
             templateUrl: '/default.html',
             controller: 'DefaultCtrl as ctrl',
-            onEnter: function (go_ga) {
+            onEnter: function ($window, $location, go_ga) {
               go_ga.hit('default');
+              var original = $window.location.href;
+              var path = original.replace(baseUrl, '').replace(/https?:\/\/\//, '');
+              var bits = path.split('#');
+              if ( bits[0].length > 1 ) {
+                if ( bits[0] === 'redhat' ) {
+                  $window.location.href = original.replace(bits[0]+'#', '#') + 'redhat';
+                } else {
+                  $window.location.href = original.replace(bits[0]+'#', '#');
+                }
+              }
             }
           })
           .state('default.terms', {
