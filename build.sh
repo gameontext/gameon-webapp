@@ -104,8 +104,9 @@ if [ ! -f $PWD/app/.test-localhost-cert.pem ]; then
       sh -x /usr/local/bin/docker-build.sh cert
 fi
 
-${DOCKER_CMD} run --rm -it \
+${DOCKER_CMD} run --rm --init -it \
     --user="${userId}:${groupId}" \
+    --security-opt seccomp=docker/chromium.json \
     -v $PWD/app:/app:Z \
     -v webapp-node-modules:/app/node_modules:Z \
     -p 9876:9876 \

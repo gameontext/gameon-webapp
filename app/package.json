@@ -49,19 +49,20 @@
     "jshint": "^2.11.0",
     "jsonwebtoken": "^8.5.1",
     "karma": "^4.4.1",
+    "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.0.1",
     "karma-jasmine": "^3.1.1",
     "karma-ng-html2js-preprocessor": "^1.0.0",
-    "karma-phantomjs-launcher": "^1.0.4",
     "karma-spec-reporter": "0.0.32",
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^12.0.1",
+    "puppeteer": "^5.4.1",
     "stylelint": "^13.2.0",
     "stylelint-config-standard": "^20.0.0",
     "through2": "^3.0.1"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "npx gulp test"
   },
   "babel": {
     "plugins": [

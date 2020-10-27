@@ -1,7 +1,7 @@
 #!/bin/bash
 PATH=$PATH:/app/node_modules/.bin
 
-mkdir -p /app/node_modules/.home
+mkdir -p /app/node_modules/.home/Downloads
 HOME=/app/node_modules/.home
 
 # Used when building inside a Docker image!
