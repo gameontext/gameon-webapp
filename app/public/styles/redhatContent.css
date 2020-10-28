@@ -16,11 +16,11 @@
   padding-right: 1em;
   height: 25px;
 }
-#redhat .colab img {
+#redhat .main .colab img {
   height: 100%;
   width: auto;
 }
-#redhat .silhouettes div img {
+#redhat .main .silhouettes div img {
   width: 70%;
   height: auto;
 }
@@ -28,32 +28,32 @@
   height: 100%;
   width: auto;
 }
-#redhat section.enter,
-#redhat section.login,
-#redhat section.terms {
+#redhat .main section.enter,
+#redhat .main section.login,
+#redhat .main section.terms {
   display: flex;
   min-height: 90vh;
   flex-direction: column;
   align-items: center;
 }
-#redhat section.enter header h1 {
+#redhat .main section.enter header h1 {
   color: #000;
   font-weight: 500;
   font-size: 4rem;
 }
-#redhat section.enter p.intro {
+#redhat .main section.enter p.intro {
   padding-bottom: 6em;
 }
-#redhat section.enter p.intro .right {
+#redhat .main section.enter p.intro .right {
   padding-left: 6em;
 }
-#redhat section.enter p.intro .left {
+#redhat .main section.enter p.intro .left {
   padding-right: 6em;
 }
-#redhat .loginForm .box {
+#redhat .main section.login .loginForm .box {
   width: 20rem;
 }
-#redhat section.login label {
+#redhat .main section.login label {
   text-align: left;
 }
 #redhat .main a.button,
@@ -70,12 +70,12 @@
   border-color: #ccc;
   color: #000;
 }
-#redhat .colab {
+#redhat .main .colab {
   position: relative;
   height: 20px;
   color: #000;
 }
-#redhat .silhouettes {
+#redhat .main .silhouettes {
   box-sizing: border-box;
   margin: 0 -0.5em;
   display: flex;
@@ -88,30 +88,51 @@
   text-align: center;
   font-size: 0;
 }
-#redhat .silhouettes div {
+#redhat .main .silhouettes div {
   transform: translateY(100%);
   transition: transform 0.3s ease;
 }
-#redhat .silhouettes.animate > div:nth-child(1) {
+#redhat .main .silhouettes.animate > div:nth-child(1) {
   animation: slideUp1 1s forwards 1;
 }
-#redhat .silhouettes.animate > div:nth-child(2) {
+#redhat .main .silhouettes.animate > div:nth-child(2) {
   animation: slideUp2 1s forwards 1;
 }
-#redhat .silhouettes.animate > div:nth-child(3) {
+#redhat .main .silhouettes.animate > div:nth-child(3) {
   animation: slideUp3 1s forwards 1;
 }
-#redhat .silhouettes.animate > div:nth-child(4) {
+#redhat .main .silhouettes.animate > div:nth-child(4) {
   animation: slideUp4 1s forwards 1;
 }
-#redhat .silhouettes.animate > div:nth-child(5) {
+#redhat .main .silhouettes.animate > div:nth-child(5) {
   animation: slideUp5 1s forwards 1;
 }
-#redhat .silhouettes.animate > div:nth-child(6) {
+#redhat .main .silhouettes.animate > div:nth-child(6) {
   animation: slideUp6 1s forwards 1;
 }
-#redhat .silhouettes.animate > div:nth-child(7) {
+#redhat .main .silhouettes.animate > div:nth-child(7) {
   animation: slideUp7 1s forwards 1;
+}
+#redhat aside.related p,
+#redhat aside.related a.p,
+#redhat aside.related a.block,
+#redhat aside.related ul {
+  margin-bottom: 1.5em;
+}
+#redhat aside.related ul {
+  list-style-type: none;
+  padding-left: 1em;
+  margin-top: 0;
+}
+#redhat aside.related ul > li,
+#redhat aside.related a.block,
+#redhat aside.related a.block span {
+  text-decoration: none;
+  display: block;
+}
+#redhat aside.related a.block span.text {
+  text-decoration: underline;
+  padding-bottom: 5px;
 }
 
 @keyframes slideUp1 {
