@@ -20,13 +20,13 @@
   height: 100%;
   width: auto;
 }
-#redhat .main .silhouettes div img {
-  width: 70%;
-  height: auto;
-}
 #redhat .main .logo img {
   height: 100%;
   width: auto;
+}
+#redhat .main .silhouettes div img {
+  width: 70%;
+  height: auto;
 }
 #redhat .main section.enter,
 #redhat .main section.login,
