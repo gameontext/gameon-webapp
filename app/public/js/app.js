@@ -67,13 +67,15 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             onEnter: function ($window, $location, go_ga) {
               go_ga.hit('default');
               var original = $window.location.href;
-              var path = original.replace(baseUrl, '').replace(/https?:\/\/\//, '');
-              var bits = path.split('#');
-              if ( bits[0].length > 1 ) {
-                if ( bits[0] === 'redhat' ) {
-                  $window.location.href = original.replace(bits[0]+'#', '#') + 'redhat';
-                } else {
-                  $window.location.href = original.replace(bits[0]+'#', '#');
+              if ( original.indexOf('gameontext.org') >= 0 ) {
+                var path = original.replace(baseUrl, '').replace(/https?:\/\/\//, '');
+                var bits = path.split('#');
+                if ( bits[0].length > 1 ) {
+                  if ( bits[0] === 'redhat' ) {
+                    $window.location.href = original.replace(bits[0]+'#', '#') + 'redhat';
+                  } else {
+                    $window.location.href = original.replace(bits[0]+'#', '#');
+                  }
                 }
               }
             }

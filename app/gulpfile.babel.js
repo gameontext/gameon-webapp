@@ -314,7 +314,7 @@ function server(done) {
     key: fs.readFileSync(names.key),
     cert: fs.readFileSync(names.cert),
   };
-  bs = browserSync.create()
+  bs = browserSync.create();
   bs.init({
     open: false,
     https: {
