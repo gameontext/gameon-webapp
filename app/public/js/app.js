@@ -192,7 +192,7 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             url: '^/redhat',
             templateUrl: '/redhat.html',
             controller: 'RedHatCtrl as redhatCtrl',
-            onEnter: function (go_ga) {
+            onEnter: function (auth, go_ga) {
               console.info("state -> redhat");
               auth.setStartingState('redhat');
               go_ga.hit('redhat');
