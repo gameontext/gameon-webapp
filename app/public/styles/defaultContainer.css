@@ -79,9 +79,9 @@ section header h1 {
 }
 .default-container section .close {
   display: block;
-  position: absolute;
-  top: 12rem;
-  right: 1rem;
+  float: right;
+  margin-top: 1rem;
+  margin-right: 1rem;
   font-size: 2rem;
   z-index: 9;
 }

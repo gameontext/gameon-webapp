@@ -20,14 +20,15 @@
     </section>
 
     <section class="terms" data-ng-switch-when="default.terms">
+      <a class="close" ng-click="ctrl.backToTheBeginning()">&times;</a>
       <header>
         <h1>Terms and Conditions</h1>
-        <span class="close" data-ng-click="ctrl.backToTheBeginning()">&times;</span>
       </header>
       <div ng-include="'/terms.html'"></div>
     </section>
 
     <section class="auth" data-ng-switch-when="default.auth">
+      <a class="close" ng-click="ctrl.backToTheBeginning()">&times;</a>
       <header>
         <h1 class="signin">Sign in</h1>
       </header>
@@ -35,9 +36,9 @@
     </section>
 
     <section class="login" data-ng-switch-when="default.login">
+      <a class="close" ng-click="ctrl.backToTheBeginning()">&times;</a>
       <header>
         <h1 class="signin">Sign in</h1>
-        <span class="close" data-ng-click="ctrl.backToTheBeginning()">&times;</span>
       </header>
       <div class="buttons">
         <a class="button" ng-href="{{ctrl.api.TWITTER}}">Twitter</a>

@@ -20,7 +20,7 @@ angular.module('playerApp')
       this.auth = auth;
 
       this.backToTheBeginning = function() {
-        $state.go('logout');
+        $state.go('default.logout');
       };
 
       this.showDummy = function() {

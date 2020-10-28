@@ -64,8 +64,9 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             url: '/',
             templateUrl: '/default.html',
             controller: 'DefaultCtrl as ctrl',
-            onEnter: function ($window, $location, go_ga) {
+            onEnter: function ($window, auth, go_ga) {
               go_ga.hit('default');
+              auth.setStartingState('default');
               var original = $window.location.href;
               if ( original.indexOf('gameontext.org') >= 0 ) {
                 var path = original.replace(baseUrl, '').replace(/https?:\/\/\//, '');
@@ -87,7 +88,7 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             url: '^/login',
             onEnter: function (auth, go_ga) {
               console.info("state -> default.login");
-              auth.setStartingState('default.login');
+              auth.setStartingState('default');
               go_ga.hit('login');
               go_ga.report('send', 'event', 'GameOn', 'App', 'login');
             }
@@ -178,6 +179,7 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             }
           })
           .state('default.logout', {
+            url: '^/logout',
             onEnter: function ($state, auth, go_ga) {
               console.info("state -> logout");
               go_ga.hit('logout');
@@ -192,6 +194,7 @@ angular.module('playerApp', ['ngResource', 'ngSanitize', 'ui.router', 'ngWebSock
             controller: 'RedHatCtrl as redhatCtrl',
             onEnter: function (go_ga) {
               console.info("state -> redhat");
+              auth.setStartingState('redhat');
               go_ga.hit('redhat');
               go_ga.report('send', 'event', 'GameOn', 'App', 'redhat-intro');
             }
