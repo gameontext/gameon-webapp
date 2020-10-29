@@ -20,7 +20,7 @@ angular.module('playerApp')
     function ($rootScope,  $websocket,  $log,  user,  auth,  API,  playerSession,   go_ga) {
 
       var ws;
-      var id = 0;
+      var id = 1;
       var retryCount = 0;
       var pingCount = 0;
       var lastPauseId = 0;
@@ -95,7 +95,7 @@ angular.module('playerApp')
       }
 
       var pause = function(message, button) {
-        lastPauseId = ++id;
+        lastPauseId = id++;
         roomEvents.push({
           type: 'paused',
           content: message,
