@@ -8,7 +8,7 @@ Check out our [core system architecture](https://book.gameontext.org/microservic
 
 Want to help! Pile On! 
 
-[Contributing to Game On!](https://github.com/gameontext/gameon/blob/master/CONTRIBUTING.md)
+[Contributing to Game On!](https://github.com/gameontext/gameon/blob/main/CONTRIBUTING.md)
 
 ## Building and testing the web front end 
 
