@@ -31,26 +31,26 @@ angular.module('playerApp')
     var ga_tracker;
 
     var report = function(p1, p2, p3, p4, p5) {
-      if (googleAnalytics && ga_tracker ) {
-        ga_tracker.send(p1, p2, p3, p4, p5);
-      } else {
-          $log.debug("GA Svc: ga.send(%o %o %o %o %o)", p1, p2, p3, p4, p5);
-      }
+      // if (googleAnalytics && ga_tracker ) {
+      //   ga_tracker.send(p1, p2, p3, p4, p5);
+      // } else {
+      //     $log.debug("GA Svc: ga.send(%o %o %o %o %o)", p1, p2, p3, p4, p5);
+      // }
     };
 
     var hit = function(pageview) {
-      if (googleAnalytics && ga_tracker ) {
-        ga_tracker.set('page', pageview);
-        ga_tracker.send('pageview');
-      } else {
-        $log.debug("GA Svc: ga.send('pageview') for %s", pageview);
-      }
+      // if (googleAnalytics && ga_tracker ) {
+      //   ga_tracker.set('page', pageview);
+      //   ga_tracker.send('pageview');
+      // } else {
+      //   $log.debug("GA Svc: ga.send('pageview') for %s", pageview);
+      // }
     };
 
     if (googleAnalytics) {
-      $window.ga(function() {
-        ga_tracker = $window.ga.getByName('gameontext');
-      });
+      // $window.ga(function() {
+      //   ga_tracker = $window.ga.getByName('gameontext');
+      // });
     }
 
     return {
