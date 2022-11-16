@@ -1,5 +1,5 @@
 FROM alpine:edge
-MAINTAINER Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)
+MAINTAINER Erin Schnabel <ebullient@redhat.com> (@ebullientworks)
 
 ARG userId=1000
 ARG groupId=1000

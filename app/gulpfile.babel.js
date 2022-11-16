@@ -285,7 +285,8 @@ gulp.task('lint:infra', () => {
 });
 
 // lint: all steps
-gulp.task('lint',    gulp.series('lint:css', 'lint:js', 'lint:html', 'lint:templates', 'lint:infra'));
+//gulp.task('lint',    gulp.series('lint:css', 'lint:js', 'lint:html', 'lint:templates', 'lint:infra'));
+gulp.task('lint',    gulp.series('lint:css', 'lint:js', 'lint:infra'));
 
 gulp.task('test', function(done) {
   new karma.Server({

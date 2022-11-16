@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 //service for Google analytics
+/* jshint unused: false */
 
 'use strict';
 
