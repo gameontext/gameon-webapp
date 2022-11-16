@@ -1,6 +1,6 @@
 FROM nginx:stable-alpine
 
-LABEL maintainer="Erin Schnabel <schnabel@us.ibm.com> (@ebullientworks)"
+LABEL maintainer="Erin Schnabel <ebullient@redhat.com>"
 
 # support running as arbitrary user which belogs to the root group
 RUN touch /var/run/nginx.pid \

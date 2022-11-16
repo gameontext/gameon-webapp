@@ -2,6 +2,10 @@
   "name": "gameontext-webapp",
   "private": true,
   "main": "gulpfile.babel.js",
+  "scripts": {
+    "test": "npx gulp test",
+    "build": "npx gulp all"
+  },
   "dependencies": {
     "angular": "^1.8.0",
     "angular-ios9-uiwebview-patch": "^1.1.1",
@@ -60,9 +64,6 @@
     "stylelint": "^13.2.0",
     "stylelint-config-standard": "^20.0.0",
     "through2": "^3.0.1"
-  },
-  "scripts": {
-    "test": "npx gulp test"
   },
   "babel": {
     "plugins": [

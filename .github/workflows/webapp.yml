@@ -1,0 +1,55 @@
+name: Build and Test GO! Text Webapp
+on: [push, pull_request]
+
+env:
+  GO_REPO: gameontext/gameon-webapp
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        cache: 'npm'
+        cache-dependency-path: app/package-lock.json
+
+    - run: |
+        cd app
+        npm install
+        npx gulp all
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a
+      with:
+        images: ${{ env.GO_REPO }}
+        tags: |
+          type=schedule,pattern={{date 'YYYYMMDD'}}
+          type=raw,value=latest,enable={{is_default_branch}}
+          type=raw,enable=true,priority=200,prefix=,suffix=,value=gh-${{ GITHUB_REF_NAME }}-${{ env.GITHUB_RUN_NUMBER }}
+
+    - name: Login to Docker Hub
+      if: github.ref == 'refs/heads/main'
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        push: ${{ github.ref == 'refs/heads/main' }}
+        tags: gameontext/gameon-webapp:latest
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        file: Dockerfile
+        push: ${{ github.repository == ${{ env.GO_REPO }} }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
