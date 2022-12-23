@@ -51,7 +51,7 @@
     "gulp-watch": "^5.0.1",
     "html-angular-validate": "^0.2.3",
     "jshint": "^2.11.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "karma": "^4.4.1",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.0.1",
